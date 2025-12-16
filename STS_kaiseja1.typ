@@ -1133,12 +1133,12 @@
   stroke: 0.5pt,
   
   // Header row
-  [*(1) Verteilung der Grundgesamtheit*],
+  [*(1) Verteilung Grundgesamtheit*],
   [*(2) Param.*],
   [*(3) Schätzfunktionen*],
-  [*(4) zugehörige standardisierte Zufallsvariable*],
-  [*(5) Verteilung und benötigte Quantile*],
-  [*(6) Zufallsvariablen für Intervallgrenzen*],
+  [*(4) standardisierte Zufallsvariable*],
+  [*(5) Verteilung, benötigte Quantile*],
+  [*(6) Intervallgrenzen*],
   
   // Row 1: Normalverteilung (Varianz bekannt) - GRÜN
   table.cell(fill: vi_farbe1)[Normalverteilung (Varianz $sigma^2$ bekannt)],
@@ -1191,21 +1191,16 @@
     *Gewichte ($sigma = 2$ kg, $n = 100$, $overline(x) = 75$ kg, 95%-Niveau):*
     
     + *Vertrauensniveau festlegen:* 95% → $alpha = 0.05$
-    
     + *Quantil aus Tabelle 2:* $z_(1-alpha\/2) = z_(0.975) = 1.960$
-    
     + *Halbbreite berechnen:*
-    $ h = z dot sigma/sqrt(n) = 1.960 dot 2/sqrt(100) = 0.392 $
-    
+      $ h = z dot sigma/sqrt(n) = 1.960 dot 2/sqrt(100) = 0.392 $
     + *Intervallgrenzen:*
-    $ theta_u = overline(x) - h = 75 - 0.392 = 74.608 $
-    $ theta_o = overline(x) + h = 75 + 0.392 = 75.392 $
+      $ theta_u = overline(x) - h = 75 - 0.392 = 74.608 $
+      $ theta_o = overline(x) + h = 75 + 0.392 = 75.392 $
     
     *Vertrauensintervall:* $[74.608, 75.392]$
   ]
 
-
-  
   #colbreak()
   #block(fill: rgb("#e3f2fd"), inset: 4pt, radius: 3pt)[
     *Vertrauensintervall für $mu$ ($sigma$ unbekannt)*
@@ -1215,17 +1210,13 @@
     *Marroni ($n = 8$, $overline(x) = 18$, $s = 2.39$, 95%-Niveau):*
     
     + *Vertrauensniveau:* 95% → $alpha = 0.05$
-    
     + *Freiheitsgrade:* $f = n - 1 = 7$
-    
     + *t-Quantil aus Tabelle 4:* $t_(7\; 0.975) = 2.365$
-    
     + *Halbbreite berechnen:*
-    $ h = t dot s/sqrt(n) = 2.365 dot 2.39/sqrt(8) approx 2.0 $
-    
+      $ h = t dot s/sqrt(n) = 2.365 dot 2.39/sqrt(8) approx 2.0 $
     + *Intervallgrenzen:*
-    $ theta_u = 18 - 2.0 = 16.0 $
-    $ theta_o = 18 + 2.0 = 20.0 $
+      $ theta_u = 18 - 2.0 = 16.0 $
+      $ theta_o = 18 + 2.0 = 20.0 $
     
     *Vertrauensintervall:* $[16.0, 20.0]$
   ]
@@ -1239,16 +1230,13 @@
     *Marroni ($n = 8$, $s^2 = 5.71$, 95%-Niveau):*
     
     + *Vertrauensniveau:* 95% → $alpha = 0.05$
-    
     + *Freiheitsgrade:* $f = n - 1 = 7$
-    
     + *$chi^2$-Quantile aus Tabelle 3:*
       - $chi^2_(7\; 0.975) = 16.01$ (für untere Grenze)
       - $chi^2_(7\; 0.025) = 1.69$ (für obere Grenze)
-    
     + *Intervallgrenzen:*
-    $ theta_u = ((n-1) dot s^2)/chi^2_(0.975) = (7 dot 5.71)/16.01 = 2.50 $
-    $ theta_o = ((n-1) dot s^2)/chi^2_(0.025) = (7 dot 5.71)/1.69 = 23.66 $
+      $ theta_u = ((n-1) dot s^2)/chi^2_(0.975) = (7 dot 5.71)/16.01 = 2.50 $
+      $ theta_o = ((n-1) dot s^2)/chi^2_(0.025) = (7 dot 5.71)/1.69 = 23.66 $
     
     *Vertrauensintervall:* $[2.50, 23.66]$
   ]
@@ -1262,25 +1250,22 @@
     *Umfrage ($n = 1200$, $k = 473$ Ja, 99%-Niveau):*
     
     + *Anteil berechnen:*
-    $ hat(p) = k/n = 473/1200 = 0.394 $
-    
+      $ hat(p) = k/n = 473/1200 = 0.394 $
     + *Faustregel prüfen:*
-    $ n hat(p)(1-hat(p)) = 1200 dot 0.394 dot 0.606 = 286.5 >= 9 $
-    
+      $ n hat(p)(1-hat(p)) = 1200 dot 0.394 dot 0.606 = 286.5 >= 9 $
     + *Quantil (Tabelle 2):* $z_(0.995) = 2.576$
-    
     + *Halbbreite:*
-    $ h = z sqrt((hat(p)(1-hat(p)))/n) = 2.576 sqrt((0.394 dot 0.606)/1200) approx 0.036 $
-    
+      $ h = z sqrt((hat(p)(1-hat(p)))/n) = 2.576 sqrt((0.394 dot 0.606)/1200) approx 0.036 $
     + *Intervallgrenzen:*
-    $ theta_u = 0.394 - 0.036 = 0.358 $
-    $ theta_o = 0.394 + 0.036 = 0.430 $
+      $ theta_u = 0.394 - 0.036 = 0.358 $
+      $ theta_o = 0.394 + 0.036 = 0.430 $
     
     *Vertrauensintervall:* $[0.358, 0.430]$
   ]
 
 ]
 
+#pagebreak()
 #columns(3, gutter: 1.2em)[
 
   // ============================================================
