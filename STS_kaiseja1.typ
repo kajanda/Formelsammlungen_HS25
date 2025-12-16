@@ -1459,3 +1459,5 @@
 ]
 
 #image("assets/image-2.png", height: 110%)
+
+#image("assets/image-3.png")
