@@ -21,6 +21,15 @@
   #body
 ]
 
+#let math(body) = block(
+  inset: 4pt,
+  radius: 3pt,
+  fill: rgb("#c8e6d0"),
+  stroke: (paint: rgb("#6ba885"), thickness: 0.5pt),  // darker border
+)[
+  #body
+]
+
 
 #let example(body) = block(
   inset: 4pt,
@@ -180,11 +189,11 @@
     
     *Falls* $p$ *ganzzahlig:*
     
-    $ Q_q = 1/2 (x_((p)) + x_((p+1))) $
+    #math[$ Q_q = 1/2 (x_((p)) + x_((p+1))) $]
     
     *Falls* $p$ *nicht ganzzahlig:*
     
-    $ Q_q = x_((ceil(p))) $
+    #math[$ Q_q = x_((ceil(p))) $]
     
     *Spezialfälle:*
     - Median: $q = 0.5$
@@ -233,7 +242,7 @@
     
     *Lineare Interpolation:*
     
-    $ Q_q = a_(k-1) + (a_k - a_(k-1))/(F(a_k) - F(a_(k-1))) dot (q - F(a_(k-1))) $
+    #math[$ Q_q = a_(k-1) + (a_k - a_(k-1))/(F(a_k) - F(a_(k-1))) dot (q - F(a_(k-1))) $]
   ]
 
 
@@ -272,7 +281,7 @@
   #formula[
     *Interquartilsabstand (IQR):*
     
-    $ "IQR" = Q_3 - Q_1 $
+    #math[$ "IQR" = Q_3 - Q_1 $]
     
     *Antennen (Whisker):*
     - Untere: Minimum in $[Q_1 - 1.5 dot "IQR", Q_1]$
@@ -313,23 +322,23 @@
   #formula[
     *Arithmetischer Mittelwert:*
     
-    $ overline(x) = 1/n sum_(i=1)^n x_i $
+    #math[$ overline(x) = 1/n sum_(i=1)^n x_i $]
     
     *Empirische Varianz:*
     
-    $ s^2 = 1/n sum_(i=1)^n (x_i - overline(x))^2 $
+    #math[$ s^2 = 1/n sum_(i=1)^n (x_i - overline(x))^2 $]
     
     *Verschiebungssatz:*
     
-    $ s^2 = 1/n sum_(i=1)^n x_i^2 - overline(x)^2 $
+    #math[$ s^2 = 1/n sum_(i=1)^n x_i^2 - overline(x)^2 $]
     
     *Standardabweichung:*
     
-    $ s = sqrt(s^2) $
+    #math[$ s = sqrt(s^2) $]
     
     *Korrigierte Varianz:*
     
-    $ s_"korr"^2 = n/(n-1) dot s^2 $
+    #math[$ s_"korr"^2 = n/(n-1) dot s^2 $]
   ]
 
 
@@ -381,19 +390,19 @@
     
     *Steigung:*
     
-    $ b = (s_(x y))/(s_x^2) = r dot s_y/s_x $
+    #math[$ b = (s_(x y))/(s_x^2) = r dot s_y/s_x $]
     
     *Achsenabschnitt:*
     
-    $ a = overline(y) - b dot overline(x) $
+    #math[$ a = overline(y) - b dot overline(x) $]
     
     *Residualvarianz:*
     
-    $ s_"Res"^2 = s_y^2 (1 - r^2) $
+    #math[$ s_"Res"^2 = s_y^2 (1 - r^2) $]
     
     *Bestimmtheitsmaß:*
     
-    $ R^2 = r^2 = (s_y^2 - s_"Res"^2)/(s_y^2) $
+    #math[$ R^2 = r^2 = (s_y^2 - s_"Res"^2)/(s_y^2) $]
   ]
 
   #steps[
@@ -443,19 +452,19 @@
   #formula[
     *Empirische Kovarianz:*
     
-    $ s_(x y) = 1/n sum_(i=1)^n (x_i - overline(x))(y_i - overline(y)) $
+    #math[$ s_(x y) = 1/n sum_(i=1)^n (x_i - overline(x))(y_i - overline(y)) $]
     
     *Verschiebungssatz:*
     
-    $ s_(x y) = overline(x y) - overline(x) dot overline(y) $
+    #math[$ s_(x y) = overline(x y) - overline(x) dot overline(y) $]
     
     wobei:
     
-    $ overline(x y) = 1/n sum_(i=1)^n x_i y_i $
+    #math[$ overline(x y) = 1/n sum_(i=1)^n x_i y_i $]
     
     *Korrigierte Kovarianz:*
     
-    $ s_(x y\,"korr") = n/(n-1) dot s_(x y) $
+    #math[$ s_(x y\,"korr") = n/(n-1) dot s_(x y) $]
     
     *Interpretation:*
     - $s_(x y) > 0$: positiver Zusammenhang
@@ -495,11 +504,11 @@
   #formula[
     *Definition (allgemein):*
     
-    $ r_"Sp" = (sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))("rg"(y_i) - overline("rg"(y))))/(sqrt(sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))^2) dot sqrt(sum_(i=1)^n ("rg"(y_i) - overline("rg"(y)))^2)) $
+    #math[$ r_"Sp" = (sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))("rg"(y_i) - overline("rg"(y))))/(sqrt(sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))^2) dot sqrt(sum_(i=1)^n ("rg"(y_i) - overline("rg"(y)))^2)) $]
     
     *Vereinfachte Formel* (keine gleichen Ränge):
     
-    $ r_"Sp" = 1 - (6 sum_(i=1)^n d_i^2)/(n(n^2 - 1)) $
+    #math[$ r_"Sp" = 1 - (6 sum_(i=1)^n d_i^2)/(n(n^2 - 1)) $]
     
     wobei $d_i = "rg"(x_i) - "rg"(y_i)$
     
@@ -565,11 +574,11 @@
     
     *Relative Häufigkeiten:*
     
-    $ f_(i j) = n_(i j)/n $
+    #math[$ f_(i j) = n_(i j)/n $]
     
     *Bedingte Häufigkeit* ($A_i$ gegeben $B_j$):
     
-    $ f(A_i | B_j) = n_(i j)/n_(dot j) $
+    #math[$ f(A_i | B_j) = n_(i j)/n_(dot j) $]
   ]
 
   #steps[
@@ -677,19 +686,19 @@
   #formula[
     *Definition:*
     
-    $ P(A | B) = (P(A sect B))/(P(B)), quad P(B) > 0 $
+    #math[$ P(A | B) = (P(A sect B))/(P(B)), quad P(B) > 0 $]
     
     *Multiplikationssatz:*
     
-    $ P(A sect B) = P(B) dot P(A | B) $
+    #math[$ P(A sect B) = P(B) dot P(A | B) $]
     
     *Satz von Bayes:*
     
-    $ P(A | B) = (P(A) dot P(B | A))/(P(B)) $
+    #math[$ P(A | B) = (P(A) dot P(B | A))/(P(B)) $]
     
     *Totale Wahrscheinlichkeit:*
     
-    $ P(B) = sum_i P(A_i) dot P(B | A_i) $
+    #math[$ P(B) = sum_i P(A_i) dot P(B | A_i) $]
   ]
 
 
@@ -775,19 +784,19 @@
     
     *Dichtefunktion (PMF):*
     
-    $ P(X = k) = binom(n, k) dot p^k dot (1-p)^(n-k) $
+    #math[$ P(X = k) = binom(n, k) dot p^k dot (1-p)^(n-k) $]
     
     *Erwartungswert:*
     
-    $ E(X) = n dot p $
+    #math[$ E(X) = n dot p $]
     
     *Varianz:*
     
-    $ "Var"(X) = n dot p dot (1-p) $
+    #math[$ "Var"(X) = n dot p dot (1-p) $]
     
     *Standardabweichung:*
     
-    $ sigma = sqrt(n dot p dot (1-p)) $
+    #math[$ sigma = sqrt(n dot p dot (1-p)) $]
   ]
 
 
@@ -832,11 +841,11 @@
     
     *Dichtefunktion:*
     
-    $ P(X = k) = (lambda^k dot e^(-lambda))/k! $
+    #math[$ P(X = k) = (lambda^k dot e^(-lambda))/k! $]
     
     *Erwartungswert & Varianz:*
     
-    $ E(X) = lambda, quad "Var"(X) = lambda $
+    #math[$ E(X) = lambda, quad "Var"(X) = lambda $]
     
     *Anwendung:* Seltene Ereignisse in festem Intervall
   ]
@@ -880,15 +889,15 @@
   #formula[
     *Ziehen ohne Zurücklegen:*
     
-    $ P(X = k) = (binom(M, k) dot binom(N-M, n-k))/binom(N, n) $
+    #math[$ P(X = k) = (binom(M, k) dot binom(N-M, n-k))/binom(N, n) $]
     
     *Erwartungswert:*
     
-    $ E(X) = n dot M/N $
+    #math[$ E(X) = n dot M/N $]
     
     *Varianz:*
     
-    $ "Var"(X) = n dot M/N dot (1 - M/N) dot (N-n)/(N-1) $
+    #math[$ "Var"(X) = n dot M/N dot (1 - M/N) dot (N-n)/(N-1) $]
   ]
 
 
@@ -939,15 +948,15 @@
     
     *Dichtefunktion (PDF):*
     
-    $ f(x) = 1/(sqrt(2 pi) sigma) dot e^(-(x - mu)^2 \/ (2 sigma^2)) $
+    #math[$ f(x) = 1/(sqrt(2 pi) sigma) dot e^(-(x - mu)^2 \/ (2 sigma^2)) $]
     
     *Standardisierung:*
     
-    $ Z = (X - mu)/sigma tilde N(0, 1) $
+    #math[$ Z = (X - mu)/sigma tilde N(0, 1) $]
     
     *Intervallwahrscheinlichkeit:*
     
-    $ P(a <= X <= b) = Phi((b - mu)/sigma) - Phi((a - mu)/sigma) $
+    #math[$ P(a <= X <= b) = Phi((b - mu)/sigma) - Phi((a - mu)/sigma) $]
     
     *68-95-99.7-Regel:*
     - ca. 68% in $[mu - sigma, mu + sigma]$
@@ -995,11 +1004,11 @@
     
     *Approximation:*
     
-    $ B(n, p) approx N(n p, n p(1-p)) $
+    #math[$ B(n, p) approx N(n p, n p(1-p)) $]
     
     *Stetigkeitskorrektur:*
     
-    $ P(a <= X <= b) approx P(a - 0.5 <= Y <= b + 0.5) $
+    #math[$ P(a <= X <= b) approx P(a - 0.5 <= Y <= b + 0.5) $]
     
     wobei $Y tilde N(n p, n p(1-p))$
   ]
@@ -1047,15 +1056,15 @@
     
     Gegeben: $X_1, X_2, dots, X_n$ i.i.d. mit $E(X_i) = mu$, $"Var"(X_i) = sigma^2$
     
-    $ overline(X) = 1/n sum_(i=1)^n X_i $
+    #math[$ overline(X) = 1/n sum_(i=1)^n X_i $]
     
     *Für großes* $n$*:*
     
-    $ overline(X) tilde.dot N(mu, sigma^2/n) $
+    #math[$ overline(X) tilde.dot N(mu, sigma^2/n) $]
     
     *Standardisiert:*
     
-    $ (overline(X) - mu)/(sigma/sqrt(n)) tilde.dot N(0, 1) $
+    #math[$ (overline(X) - mu)/(sigma/sqrt(n)) tilde.dot N(0, 1) $]
   ]
 
 
@@ -1097,11 +1106,11 @@
   #formula[
     *Erwartungswert:*
     
-    $ hat(mu) = overline(X) = 1/n sum_(i=1)^n X_i $
+    #math[$ hat(mu) = overline(X) = 1/n sum_(i=1)^n X_i $]
     
     *Varianz:*
     
-    $ hat(sigma)^2 = s^2 = 1/(n-1) sum_(i=1)^n (X_i - overline(X))^2 $
+    #math[$ hat(sigma)^2 = s^2 = 1/(n-1) sum_(i=1)^n (X_i - overline(X))^2 $]
     
     *Eigenschaften:*
     - *Erwartungstreu:* $E(hat(theta)) = theta$
@@ -1287,11 +1296,11 @@
   #formula[
     *Korrelationskoeffizient:*
     
-    $ r = (s_(x y))/(s_x dot s_y) $
+    #math[$ r = (s_(x y))/(s_x dot s_y) $]
     
     wobei:
     
-    $ s_(x y) = 1/n sum_(i=1)^n (x_i - overline(x))(y_i - overline(y)) $
+    #math[$ s_(x y) = 1/n sum_(i=1)^n (x_i - overline(x))(y_i - overline(y)) $]
     
     *Interpretation:*
     - $r approx 1$: starker positiver Zusammenhang
@@ -1325,19 +1334,19 @@
     
     *Steigung:*
     
-    $ b = (s_(x y))/(s_x^2) = r dot s_y/s_x $
+    #math[$ b = (s_(x y))/(s_x^2) = r dot s_y/s_x $]
     
     *Achsenabschnitt:*
     
-    $ a = overline(y) - b dot overline(x) $
+    #math[$ a = overline(y) - b dot overline(x) $]
     
     *Residualvarianz:*
     
-    $ s_"Res"^2 = s_y^2 (1 - r^2) $
+    #math[$ s_"Res"^2 = s_y^2 (1 - r^2) $]
     
     *Bestimmtheitsmaß:*
     
-    $ R^2 = r^2 = (s_y^2 - s_"Res"^2)/(s_y^2) $
+    #math[$ R^2 = r^2 = (s_y^2 - s_"Res"^2)/(s_y^2) $]
   ]
 
 
