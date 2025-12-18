@@ -547,6 +547,173 @@
     Starker positiver monotoner Zusammenhang
   ]
 
+    = Korrelation nach Bravais-Pearson
+
+  #variables[
+    *Neue Variablen:*
+    
+    $y$: zweite Variable \
+    $s_x, s_y$: Standardabweichungen von $x$, $y$ \
+    $s_(x y)$: Kovarianz von $x$, $y$ \
+    $r$: Korrelationskoeffizient
+  ]
+
+  #formula[
+    *Korrelationskoeffizient:*
+    
+    #math[$ r = (s_(x y))/(s_x dot s_y) $]
+    
+    wobei:
+    
+    #math[$ s_(x y) = 1/n sum_(i=1)^n (x_i - overline(x))(y_i - overline(y)) $]
+    
+    *Interpretation:*
+    - $r approx 1$: starker positiver Zusammenhang
+    - $r approx 0$: kein linearer Zusammenhang
+    - $r approx -1$: starker negativer Zusammenhang
+    
+    *Bestimmtheitsmaß:* $r^2$ = Anteil erklärter Varianz
+  ]
+
+
+  #steps[
+    + Mittelwerte $overline(x)$, $overline(y)$ berechnen
+    + Standardabweichungen $s_x$, $s_y$ berechnen
+    + Kovarianz $s_(x y)$ berechnen
+    + Korrelationskoeffizient: $r = s_(x y)\/(s_x s_y)$
+  ]
+
+  #example[
+    *Beispiel: Berechnung des Bravais-Pearson Korrelationskoeffizienten*
+    
+    Gegeben sind folgende Wertepaare $(x_i, y_i)$:
+    
+    #table(
+      columns: 9,
+      align: center,
+      [*i*], [1], [2], [3], [4], [5], [6], [7], [8],
+      [$x_i$], [5], [10], [20], [8], [4], [6], [12], [15],
+      [$y_i$], [27], [46], [73], [40], [30], [28], [47], [59]
+    )
+    
+    *(1) Mittelwerte berechnen:* $overline(x) = 10$, $overline(y) = 43.75$
+    
+    #table(
+      columns: 9,
+      align: center,
+      [$x^2$], [25], [100], [400], [64], [16], [36], [144], [225],
+      [$y^2$], [729], [2116], [5329], [1600], [900], [784], [2209], [3481],
+      [$x_i y_i$], [135], [460], [1460], [320], [120], [168], [564], [885]
+    )
+    
+    $sum x_i^2 = 1010$, $sum y_i^2 = 17148$, $sum x_i y_i = 4112$
+    
+    *(2) Standardabweichungen berechnen:*
+    
+    $s_x = sqrt(1/n sum x_i^2 - (overline(x))^2) = sqrt(126.25 - 100) = sqrt(26.25) = 5.12$
+    
+    $s_y = sqrt(1/n sum y_i^2 - (overline(y))^2) = sqrt(2143.5 - 1914.06) = 15.15$
+    
+    *(3) Kovarianz berechnen:*
+    
+    $s_(x y) = 1/8 sum x_i y_i - overline(x) dot overline(y) = 514 - 10 dot 43.75 = 76.5$
+    
+    *(4) Korrelationskoeffizient berechnen:*
+    
+    $r = s_(x y) / (s_x dot s_y) = 76.5 / (5.12 dot 15.15) approx 0.986$
+    
+    → *Starker positiver linearer Zusammenhang* zwischen $x$ und $y$
+  ]
+
+
+== Kombinatorik
+
+#variables[
+  *Neue Variablen:*
+  
+  $n$: Größe der Grundmenge \
+  $k$: Größe der Teilmenge
+]
+
+#steps[
+    + Art der Auswahl bestimmen (Variation/Kombination, mit/ohne Wiederholung)
+    + Passende Formel aus Übersichtstabelle auswählen
+    + Werte für $n$, $k$ einsetzen und berechnen
+  ]
+    
+  #table(
+    columns: 3,
+    [*Art*], [*Mit Wiederholung*], [*Ohne Wiederholung*],
+    [*Variation* (mit Reihenfolge)], [$n^k$], [$frac(n!, (n - k)!)$],
+    [*Kombination* (ohne Reihenfolge)], [$binom(n + k - 1, k)$], [$binom(n, k)$]
+  )
+
+  #formula[
+    *Permutation*:
+    (alle Elemente, keine Wiederholung)
+
+  #math[
+    $ N = n! $
+  ]
+
+  → Es werden *alle $n$ Elemente* in *verschiedener Reihenfolge* angeordnet.
+
+  *Permutation mit Wiederholungen*
+
+  #math[
+    $ N = frac(n!, n_1! n_2! dots n_r!) $
+  ]
+  $n_i$: Anzahl gleiche Elemente der i-ten Sorte (3 für T in TATTOO)
+
+  → Es gibt *mehrere gleiche Elemente*,  
+  z. B. bei Wörtern wie *„TATTOO"*
+  ]
+
+  #example[
+    *Beispiel: TATTOO*
+    
+    Das Wort „TATTOO" hat 6 Buchstaben:
+    - T kommt 3-mal vor
+    - A kommt 1-mal vor
+    - O kommt 2-mal vor
+    
+    $ N = frac(6!, 3! times 1! times 2!) = frac(720, 6 times 1 times 2) = frac(720, 12) = 60 $
+    
+    Es gibt also *60 verschiedene Anordnungen* des Wortes „TATTOO".
+  ]
+
+  === Wahrscheinlichkeit berechenen
+
+  #formula[
+    Obige Kombinatorikformeln können zur Berechnung von Wahrscheinlichkeiten verwendet werden.
+
+    #math[
+      $ P = frac(N_"günstig", N_"möglich") $
+    ]
+  ]
+
+  == hypergeometrische Verteilung Anwendung
+
+  Formel siehe unten bei Kontingenztabellen.
+
+#example[
+  = Aufgabe
+
+  Beim Rommé spielt man mit *110* Karten; *sechs* davon sind Joker.
+  Zu Beginn eines Spiels erhält jeder Spieler genau *12* Karten.
+  In wieviel Prozent aller möglichen Fälle sind darunter
+
+  a) genau zwei bzw. b) mindestens ein Joker?
+
+  == Lösung
+
+  a) $ (binom(6, 2) * binom(104, 10)) / binom(110, 12) approx 11.13% $
+
+  b) $ 1 - binom(104, 12) / binom(110, 12) approx 50.85% $
+
+]
+
+
   = Kontingenztabellen
 
   #variables[
@@ -607,16 +774,17 @@
 
   = Scatterplot & Streudiagramm
 
-  #formula[
-    *Verwendung:* Visualisierung zweier **metrischer** Merkmale
-    
-    *Interpretation:*
-    - **Form**: linear, gekrümmt, mehrere Cluster
-    - **Richtung**: positiv (steigend), negativ (fallend)
-    - **Stärke**: eng um Kurve → stark, weit gestreut → schwach
-    
-    *Warnung:* Korrelation ≠ Kausalität (Scheinkorrelation möglich)
-  ]
+  #variables[evaluieren ob irgendwo gebraucht ]
+
+
+  *Verwendung:* Visualisierung zweier **metrischer** Merkmale
+  
+  *Interpretation:*
+  - **Form**: linear, gekrümmt, mehrere Cluster
+  - **Richtung**: positiv (steigend), negativ (fallend)
+  - **Stärke**: eng um Kurve → stark, weit gestreut → schwach
+  
+  *Warnung:* Korrelation ≠ Kausalität (Scheinkorrelation möglich)
 
   #steps[
     + Wertepaare $(x_i, y_i)$ als Punkte in Koordinatensystem eintragen
@@ -625,6 +793,7 @@
     + Korrelationskoeffizient berechnen (Pearson oder Spearman)
     + Immer Scatterplot + Korrelationskoeffizient zusammen angeben!
   ]
+ 
 
   // ============================================================
   // 7. WICHTIGE KENNWERTE & ÜBERSICHT
@@ -1281,44 +1450,6 @@
   // 6. KORRELATION & REGRESSION
   // ============================================================
 
-
-  = Korrelation nach Bravais-Pearson
-
-  #variables[
-    *Neue Variablen:*
-    
-    $y$: zweite Variable \
-    $s_x, s_y$: Standardabweichungen von $x$, $y$ \
-    $s_(x y)$: Kovarianz von $x$, $y$ \
-    $r$: Korrelationskoeffizient
-  ]
-
-  #formula[
-    *Korrelationskoeffizient:*
-    
-    #math[$ r = (s_(x y))/(s_x dot s_y) $]
-    
-    wobei:
-    
-    #math[$ s_(x y) = 1/n sum_(i=1)^n (x_i - overline(x))(y_i - overline(y)) $]
-    
-    *Interpretation:*
-    - $r approx 1$: starker positiver Zusammenhang
-    - $r approx 0$: kein linearer Zusammenhang
-    - $r approx -1$: starker negativer Zusammenhang
-    
-    *Bestimmtheitsmaß:* $r^2$ = Anteil erklärter Varianz
-  ]
-
-
-  #steps[
-    + Mittelwerte $overline(x)$, $overline(y)$ berechnen
-    + Standardabweichungen $s_x$, $s_y$ berechnen
-    + Kovarianz $s_(x y)$ berechnen
-    + Korrelationskoeffizient: $r = s_(x y)\/(s_x s_y)$
-  ]
-
-
   = Lineare Regression (KQM)
 
   #variables[
@@ -1330,15 +1461,15 @@
   ]
 
   #formula[
-    *Regressionsgerade:* $y = a + b x$
+    *Regressionsgerade:* $y = a x + b$
     
     *Steigung:*
     
-    #math[$ b = (s_(x y))/(s_x^2) = r dot s_y/s_x $]
+    #math[$ a = (s_(x y))/(s_x^2) = r dot s_y/s_x $]
     
     *Achsenabschnitt:*
     
-    #math[$ a = overline(y) - b dot overline(x) $]
+    #math[$ b = overline(y) - a dot overline(x) $]
     
     *Residualvarianz:*
     
