@@ -45,22 +45,18 @@
 
   = Diagramtypen
   == PMF
-  $f(x)$ Relative Häufigkeit (Stabdiagramm)
   #image("assets/PMF.png", width: 100%)
 
 
   == CMF
-  $F(x)$ Kumulative relative Häufigkeit (Treppendiagramm)
   #image("assets/CMF.png", width: 100%)
 
 
   == PDF
-  $f(x)$ Höhe Balken Histogramm
   #image("assets/PDF.png", width: 100%)
 
 
   == CDF
-  $F(x)$ Kulutative Fläche Balken Histogramm
   #image("assets/CDF.png", width: 90%)
 
 
