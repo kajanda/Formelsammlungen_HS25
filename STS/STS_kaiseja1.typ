@@ -1,79 +1,12 @@
-#set document(title: "Stochastik_Zusammenfassung", author: "Jan Kaiser (kaiseja1)")
-#set page(
-  paper: "a4",
-  flipped: true,
-  margin: (top: 1.5cm, bottom: 1.5cm, left: 1.5cm, right: 1.5cm),
-  footer: [
-    #set align(right)
-    kaiseja1
-  ],
-)
-#set text(size: 8.5pt)
-#set heading(numbering: "1.1")
-
-
-#let formula(body) = block(
-  inset: 4pt,
-  radius: 3pt,
-  fill: rgb("#e9f5ee"),
-  stroke: (paint: rgb("#8bc5a3"), thickness: 0.5pt),
-)[
-  #body
-]
-
-#let math(body) = block(
-  inset: 4pt,
-  radius: 3pt,
-  fill: rgb("#c8e6d0"),
-  stroke: (paint: rgb("#6ba885"), thickness: 0.5pt),  // darker border
-)[
-  #body
-]
-
-
-#let example(body) = block(
-  inset: 4pt,
-  radius: 3pt,
-  fill: rgb("#f0f4ff"),
-  stroke: (paint: rgb("#a3b8e8"), thickness: 0.5pt),
-)[
-  #body
-]
-
-
-#let steps(body) = block(
-  inset: 4pt,
-  radius: 3pt,
-  fill: rgb("#fff8e1"),
-  stroke: (paint: rgb("#ffb74d"), thickness: 0.5pt),
-)[
-  #body
-]
-
-
-// NEU: Block für Variablen mit rotem Hintergrund
-#let variables(body) = block(
-  inset: 4pt,
-  radius: 3pt,
-  fill: rgb("#ffe6e6"),
-  stroke: (paint: rgb("#ff6b6b"), thickness: 0.5pt),
-)[
-  #body
-]
-
+#import "../style.typ": default_style, formula, example, steps, variables, math
+#show: default_style
 
 #align(center)[
-  #text(size: 14pt, weight: "bold")[
-    STS - Zusammenfassung
-  ]
-  #v(0.3em)
-  #text(size: 11pt)[
-    Stochastik & Statistik · Zusammenfassung
-  ]
+  #text(size: 14pt, weight: "bold")[HM1-Zusammenfassung]
+  #v(0.1em)
+  #text(size: 11pt)[kaiseja1]
+  #v(0.2em)
 ]
-
-
-#v(1em)
 
 
 #columns(
@@ -1311,12 +1244,12 @@
   stroke: 0.5pt,
   
   // Header row
-  [*(1) Verteilung Grundgesamtheit*],
-  [*(2) Param.*],
-  [*(3) Schätzfunktionen*],
-  [*(4) standardisierte Zufallsvariable*],
-  [*(5) Verteilung, benötigte Quantile*],
-  [*(6) Intervallgrenzen*],
+  [*Verteilung Grundgesamtheit*],
+  [*Parameter*],
+  [*Schätzfunktionen*],
+  [*standardisierte Zufallsvariable*],
+  [*Verteilung, benötigte Quantile*],
+  [*Intervallgrenzen*],
   
   // Row 1: Normalverteilung (Varianz bekannt) - GRÜN
   table.cell(fill: vi_farbe1)[Normalverteilung (Varianz $sigma^2$ bekannt)],
@@ -1353,7 +1286,7 @@
   // Row 5: beliebig mit n > 30 - VertrauensintervallOLETT
   table.cell(fill: vi_farbe5)[beliebig mit $n > 30$],
   table.cell(fill: vi_farbe5)[$mu, sigma^2$],
-  table.cell(fill: vi_farbe5)[wie im Fall 1 (gegebenenfalls mit $s$ als Schätzwert für $sigma$) bzw. im Fall 3],
+  table.cell(fill: vi_farbe5)[Fall 1 ($s$ Schätzwert für $sigma$) bzw. Fall 3],
   table.cell(fill: vi_farbe5)[],
   table.cell(fill: vi_farbe5)[],
   table.cell(fill: vi_farbe5)[]
@@ -1437,7 +1370,7 @@
     + *Intervallgrenzen:*
       $ theta_u = 0.394 - 0.036 = 0.358 $
       $ theta_o = 0.394 + 0.036 = 0.430 $
-    
+
     *Vertrauensintervall:* $[0.358, 0.430]$
   ]
 
