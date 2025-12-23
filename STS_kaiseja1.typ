@@ -106,7 +106,7 @@
     
     *PDF:* $f(x)$ Höhe Balken Histogramm
     
-    *CDF:* $F(x)$ Kulutative Fläche Balken Histogramm
+    *CDF:* $F(x)$ Kumultative Fläche Balken Histogramm
   ]
 
 
@@ -127,7 +127,7 @@
 
 
   == CDF
-  $F(x)$ Kulutative Fläche Balken Histogramm
+  $F(x)$ Kumultative Fläche Balken Histogramm
   #image("assets/CDF.png", width: 90%)
 
 
@@ -200,7 +200,7 @@
     - 1. Quartil (Q1): $q = 0.25$
     - 3. Quartil (Q3): $q = 0.75$
   ]
-  === Quartil aus CDF ablesen
+  == Quartil aus CDF ablesen
   #image("assets/CDF_quartil.png", width: 80%)
 
   #image("assets/image.png", width: 80%)
@@ -228,7 +228,23 @@
     *Q3:* $p = 7 dot 0.75 = 5.25$ → $k = 6$ → $Q_3 = 4$
   ]
 
-= Quantile bei klassierten Daten
+= Klassierte Daten
+== Grundbegriffe
+
+#image("assets/Grundbegriffe_Klassierte_Daten_Beispiel.jpeg", width: 100%)
+
+- *Mittelwert*:
+  #math[$ overline(x) = (1/n) sum_(i=1)^k m_i dot h_i $]
+  $m_i$: Klassenmitte der i-ten Klasse(Mittelwert der Klassengrenzen)\
+  $h_i$: absolute Häufigkeit der i-ten Klasse
+
+- *Varianz*:
+  #math[$ s^2 = (1/n) sum_(i=1)^k (h_i dot m_i^2) - overline(x)^2 $]
+
+#image("assets/Klassierte_Daten_Mittelwert_Beispiel.jpeg", width: 90%)
+
+#image("assets/Klassierte_Daten_Varianz_Beispiel.jpeg", width: 90%)
+== Quantile bei klassierten Daten
 
   #variables[
     *Neue Variablen:*
@@ -330,7 +346,7 @@
     
     *Verschiebungssatz:*
     
-    #math[$ s^2 = 1/n sum_(i=1)^n x_i^2 - overline(x)^2 $]
+    #math[$ s^2 = overline(x^2) - overline(x)^2 = (1/n sum_(i=1)^n x_i^2 ) - overline(x)^2 $] 
     
     *Standardabweichung:*
     
@@ -398,11 +414,14 @@
     
     *Residualvarianz:*
     
-    #math[$ s_"Res"^2 = s_y^2 (1 - r^2) $]
+    #math[$ s_"Res"^2 = s_y^2 - s_"xy"^2/s_"x"^2  $]
     
     *Bestimmtheitsmaß:*
     
-    #math[$ R^2 = r^2 = (s_y^2 - s_"Res"^2)/(s_y^2) $]
+    #math[$ R^2 = r^2 = ((s_(x y))/(s_x dot s_y))^2 $]
+
+    *Korrelationskoeffizient:*
+    #math[$ r = (s_(x y))/(s_x dot s_y) $]
   ]
 
   #steps[
