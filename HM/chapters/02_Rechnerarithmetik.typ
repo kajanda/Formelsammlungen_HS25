@@ -10,6 +10,16 @@
   *Wert:* $x = sum_(i=1)^n m_i dot B^(-i) dot B^e$
 ]
 
+*Anzahl möglicher Zahlen*
+
+|M| : Mantissenstellen
+|e| : Stellen Exponent
+
+#formula[
+
+  $ B^(|M| dot |e|) $
+] 
+
 === Vorgehen: Zahlensystem-Umwandlung
 
 #steps[
@@ -20,22 +30,8 @@
   *Schritt 3:* Wert berechnen: $sum m_i dot B^(-i) dot B^e$
 ]
 
-=== Beispiel 2.1a: Dezimalzahl
 
-#example[
-  *Gegeben:* $x_1 = 0.2345 times 10^3$
-  
-  *Schritt 1:* Mantisse bereits normalisiert: $0.2345$
-  
-  *Schritt 2:* Exponent: $e = 3$
-  
-  *Schritt 3:* Wert berechnen:
-  $ x_1 &= (2 dot 10^(-1) + 3 dot 10^(-2) + 4 dot 10^(-3) + 5 dot 10^(-4)) dot 10^3 \
-       &= 2 dot 10^2 + 3 dot 10^1 + 4 dot 10^0 + 5 dot 10^(-1) \
-       &= 200 + 30 + 4 + 0.5 = 234.5 $
-]
-
-=== Beispiel 2.1b: Binärzahl
+=== Beispiel : Binärzahl
 
 #example[
   *Gegeben:* $x_2 = 0.111 times 2^3$
@@ -50,7 +46,7 @@
        &= 4 + 2 + 1 = 7 $
 ]
 
-=== Beispiel 2.1c: Hexadezimalzahl
+=== Beispiel : Hexadezimalzahl
 
 #example[
   *Gegeben:* $x_5 = 0."AB3C9F" times 16^4$, mit $A=10, B=11$
@@ -102,11 +98,11 @@
                    &= 0.433 times 10^(-4) $
   
   *Schritt 3:* Relativer Fehler:
-  $ (|"rd"(x) - x|) / |x| = (0.433 times 10^(-4)) / (180.1234567) approx 2.4 times 10^(-7) $
+  $ (|"rd"(x) - x|) / (|x|) = (0.433 times 10^(-4)) / (180.1234567) approx 2.4 times 10^(-7) $
   
   *Schritt 4:* Prüfung ($B=10, e=3, n=7$):
   $ B/(2) dot B^(e-(n+1)) = 5 times 10^(3-8) = 0.5 times 10^(-4) $
-  $ 0.433 times 10^(-4) < 0.5 times 10^(-4) checkmark $
+  $ 0.433 times 10^(-4) < 0.5 times 10^(-4)$
 ]
 
 == Definition 2.3: Maschinengenauigkeit
@@ -116,6 +112,18 @@
   
   Maximaler relativer Rundungsfehler.
 ]
+
+#table(
+  columns: (1fr, 1fr, 1fr),
+  [*Merkmal*], [*Single Precision*], [*Double Precision*],
+  [Gesamtlänge], [32 Bit], [64 Bit],
+  [Mantisse], [23 Bit (+1)], [52 Bit (+1)],
+  [Exponent], [8 Bit (Bias 127)], [11 Bit (Bias 1023)],
+  [Genauigkeit (ca.)], [7 Dezimalstellen], [16 Dezimalstellen],
+  [Speicherbedarf], [klein], [doppelt so groß],
+)
+
+*Hidden Bit:* Das "+1" bei der Mantisse bezeichnet das sogenannte Hidden Bit da durch IEEE-754 Normierung die erste Stelle der Mantisse immer 1 ist und somit nicht gespeichert werden muss.
 
 === Vorgehen: Maschinengenauigkeit
 
@@ -152,8 +160,69 @@
 
 == Definition 2.4: Konditionszahl
 
+Die Konditionszahl gibt an , wie stark sich der relative Fehler des Ergebnisses ändert, wenn sich der relative Fehler der Eingabe ändert.
+
 #formula[
   *Absolute:* $kappa = |f'(x)|$
   
   *Relative:* $kappa_"rel" = (|x dot f'(x)|) / (|f(x)|)$
 ]
+
+=== Vorgehen: Konditionszahl berechnen
+
+#steps[
+  *Schritt 1:* Funktion $f(x)$ und Ableitung $f'(x)$ bestimmen
+  
+  *Schritt 2:* Konditionszahl berechnen:
+  - Absolut: $kappa = |f'(x)|$
+  - Relativ: $kappa_"rel" = (|x dot f'(x)|) / (|f(x)|)$
+  
+  *Schritt 3:* Interpretation:
+  - $kappa_"rel" approx 1$: gut konditioniert
+  - $kappa_"rel" >> 1$: schlecht konditioniert
+]
+
+ #example[
+   *Gegeben:* $f(x) = sqrt(x)$ bei $x = 4$
+   
+   *Schritt 1:* Ableitung:
+   $ f'(x) = 1/(2 sqrt(x)) $
+   
+   *Schritt 2:* Konditionszahl:
+   $ kappa_"rel" &= (|x dot f'(x)|) / (|f(x)|) \
+                 &= (|4 dot (1/(2 sqrt(4)))|) / (|sqrt(4)|) \
+                 &= (|4 dot (1/4)|) / (2) \
+                 &= 1/2 = 0.5 $
+   
+   *Schritt 3:* Interpretation:
+   $kappa_"rel" = 0.5 approx 1$ → gut konditioniert
+
+   -> *Konditionszahl*: 1/n
+ ]
+
+ 
+
+ #example[
+   $f(x) = x^n$ 
+    bei $x = 0.1$, $n = 10$
+
+    *Schritt 1*: Ableitung:
+    $ f'(x) = n x^(n-1) $ 
+
+    *Schritt 2*: Konditionszahl:
+    $ kappa_"rel" &= (|x dot f'(x)|) / (|f(x)|) \
+                  &= (|0.1 dot (10 dot 0.1^(10-1))|) / (|0.1^(10)|) \
+                  &= (|1 dot 0.1^9|) / (0.1^10) \
+                  &= 10 $
+
+    *Schritt 3*: Interpretation:
+    $kappa_"rel" = 10 >> 1$ → schlecht konditioniert
+
+    -> *Konditionszahl*: n
+  
+   ]
+
+
+== Auslöschung
+Auslöschung: Verlust signifikanter Stellen durch Subtraktion fast gleicher Zahlen.
+Tritt in Funktionen an Stellen auf an denen sie schlecht konditioniert sind.
