@@ -18,6 +18,20 @@ $ #int e^x d x = e^x + C $
 
 $ #int sin x d x = -cos x + C, quad #int cos x d x = sin x + C $
 
+== Logarithmus Gesetze
+
+$ ln(a dot b) = ln(a) + ln(b), quad a, b > 0 $
+
+$ ln(a / b) = ln(a) - ln(b), quad a, b > 0 $
+
+$ ln(a^n) = n dot ln(a), quad a > 0, n in RR $
+
+$ ln(1) = 0, quad ln(e) = 1 $
+
+$ e^(ln(x)) = x, quad ln(e^x) = x, quad x > 0 $
+
+$ log_b(x) = ln(x) / ln(b) quad "Basiswechsel" $
+
 == Polynome
 
 $ p(x) = a_n x^n + dots + a_1 x + a_0 $

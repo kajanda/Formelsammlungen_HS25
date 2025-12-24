@@ -1,13 +1,13 @@
 #import "../../style.typ": formula, example, steps, remark
 
-== Definition 3.1: Fixpunkt
+== Definition: Fixpunkt
 
 #formula[
   $overline(x)$ heißt *Fixpunkt* von $F$, falls:
   $ F(overline(x)) = overline(x) $
 ]
 
-=== Satz 3.2: Banachscher Fixpunktsatz
+=== Banachscher Fixpunktsatz
 
 #formula[
   Sei $F: [a, b] arrow.r [a, b]$ (d.h. $F$ bildet $[a, b]$ auf sich selbst ab) und existiere eine Konstante $alpha$ mit $0 < alpha < 1$ und:
@@ -27,16 +27,72 @@
   
   *Globale Konvergenz:* Jeder Startwert führt zur Konvergenz.
 ]
+
+=== Interpretationen der Abschätzungen
+
+=== Abschätzungen der Fixpunktiteration
   #formula[
   *A-priori Abschätzung* (vor Iteration bekannt):
   $ |x_n - overline(x)| <= (alpha^n) / (1 - alpha) |x_1 - x_0| $
+
+  $ n >= frac(ln(epsilon(1 - alpha) \/ |x_1 - x_0|), ln(alpha)) $
   
   *A-posteriori Abschätzung* (während Iteration berechenbar):
   $ |x_n - overline(x)| <= 1 / (1 - alpha) |x_n - x_(n-1)| $
 ]
 
+#steps[
+  *Schritt 1:* Banachscher Fixpunktsatz: Bedingungen prüfen
+  
+  - Abbildung $F: [a, b] arrow.r [a, b]$ verifizieren
 
+  
+  *Schritt 2:* Lipschitz-Konstante finden
+  - Lipschitz-Konstante $alpha < 1$ finden: $alpha = max_(x in [a,b]) |F'(x)|$
 
+  - *Schritt 2.1:* Ableitung $F'(x)$ berechnen
+
+  - *Schritt 2.2:* Maximumvon $|F'(x)|$ im Intervall bestimmen
+
+  *Schritt 3:* Konklusion
+  
+  - Eindeutiger Fixpunkt $overline(x)$ existiert (erfüllt $F(overline(x)) = overline(x)$)
+  - Jeder Startwert in $[a, b]$ konvergiert gegen $overline(x)$
+  
+  *Fixpunkt genau:*
+  #formula[
+    $ overline(x) = lim_(n arrow.r infinity) x_n quad "wobei" quad x_(n+1) = F(x_n) $
+  ]
+]
+
+=== Beispiel: Banachscher Fixpunktsatz für $x^3 + 0.3 = 0$
+
+#example[
+  *Gesucht:* Intervall $[a, b]$ und Konstante $alpha < 1$, so dass der Banachsche Fixpunktsatz auf die Fixpunktiteration $x_(n+1) = F(x_n) = x_n^3 + 0.3$ anwendbar ist.
+  
+  *Lösungsansatz:* Die Fixpunktiteration konvergiert in der Nähe von $overline(x) = 0.3389$. Wir suchen ein geeignetes Intervall und versuchen es mit $[a, b] = [0, 0.5]$.
+  
+  *Schritt 1:* Überprüfen, ob $F: [0, 0.5] arrow.r [0, 0.5]$:
+  
+  - Für alle $x in [0, 0.5]$: $F(x) = x^3 + 0.3 >= 0.3$ 
+  - $F(0) = 0.3 in [0, 0.5]$ 
+  - $F(0.5) = 0.125 + 0.3 = 0.425 in [0, 0.5]$ 
+  
+  *Schritt 2:* Finden einer Konstanten $alpha < 1$:
+  
+  Aus dem Satz wissen wir: $alpha = max_(x in [a,b]) |F'(x)|$
+  
+  *Schritt 2.1:* Ableitung berechnen:
+  $ F'(x) = 3x^2 $
+  
+  *Schritt 2.2:*
+  Die Ableitung ist monoton steigend, daher Maximum bei $x = 0.5$:
+  $ |F'(0.5)| = 3 dot 0.5^2 = 0.75 < 1 $ 
+  
+  *Schritt 3:* Konklusion:
+  
+  Mit $alpha = 0.75 < 1$ sind alle Bedingungen des Banachschen Fixpunktsatzes erfüllt. Die Fixpunktiteration $x_(n+1) = x_n^3 + 0.3$ konvergiert gegen den eindeutigen Fixpunkt $overline(x) approx 0.3389$ für jeden Startwert in $[0, 0.5]$.
+]
 
 
 === Vorgehen: Fixpunktform
@@ -51,7 +107,7 @@
   *Schritt 4:* Konvergenz prüfen: $|F'(overline(x))| < 1$
 ]
 
-=== Beispiel 3.1: Fixpunktform
+=== Beispiel 3.3: Fixpunktform
 
 #example[
   *Gegeben:* $p(x) = x^3 - x + 0.3 = 0$
@@ -89,7 +145,7 @@
   *Schritt 5:* Abbruch bei $|x_(n+1) - x_n| < epsilon$
 ]
 
-=== Beispiel 3.2: Fixpunktiteration
+=== Beispiel 3.4: Fixpunktiteration
 
 #example[
   *Gegeben:* $F(x) = x^3 + 0.3$, Startwert $x_0 = 0$
@@ -105,7 +161,7 @@
   $ x_4 &= F(x_3) = 0.335^3 + 0.3 approx 0.338 $
   $ x_5 &= F(x_4) approx 0.339 $
   
-  *Schritt 4:* Konvergenz (siehe Beispiel 3.1): 
+  *Schritt 4:* Konvergenz (siehe Beispiel 3.3): 
   
   *Schritt 5:* $|x_5 - x_4| approx 0.001$ → Abbruch bei $epsilon = 0.01$
   
@@ -141,7 +197,7 @@
   *Schritt 6:* Quadratische Konvergenz bei einfachen Nullstellen
 ]
 
-=== Beispiel 3.4: Newton für $x^2 = 2$
+=== Beispiel 3.5: Newton für $x^2 = 2$
 
 #example[
   *Gegeben:* $f(x) = x^2 - 2$, Startwert $x_0 = 1$, $epsilon = 10^(-4)$
@@ -186,7 +242,7 @@
   *Schritt 5:* Abbruch bei $|f(x_n)| < epsilon$ oder $|x_(n+1) - x_n| < epsilon$
 ]
 
-=== Beispiel 3.5: Sekantenverfahren für $x^2 = 2$
+=== Beispiel 3.6: Sekantenverfahren für $x^2 = 2$
 
 #example[
   *Gegeben:* $f(x) = x^2 - 2$, Startwerte $x_0 = 1$, $x_1 = 1.5$, $epsilon = 10^(-4)$
