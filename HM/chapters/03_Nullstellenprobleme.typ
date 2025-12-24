@@ -225,7 +225,7 @@
 == Sekantenverfahren
 
 #formula[
-  $ x_(n+1) = x_n - (f(x_n) - (x_n - x_(n-1))) / (f(x_n) - f(x_(n-1))) $
+  $ x_(n+1) = x_n -f(x_n) dot (f(x_n) - (x_n - x_(n-1))) / (f(x_n) - f(x_(n-1))) $
 ]
 
 === Vorgehen: Sekantenverfahren
