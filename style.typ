@@ -13,6 +13,7 @@
 #let example(body) = info_box(body, rgb("#f0f4ff"), rgb("#a3b8e8"))
 #let steps(body)   = info_box(body, rgb("#fff8e1"), rgb("#ffb74d"))
 #let variables(body) = info_box(body, rgb("#ffe6e6"), rgb("#ff6b6b"))
+#let remark(body) = info_box(body, rgb("#ffffff"), rgb("#dd5de4"))
 
 #let default_style(body) = {
   set document(title: "Zusammenfassung", author: "Jan Kaiser (kaiseja1)")
