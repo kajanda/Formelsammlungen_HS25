@@ -55,19 +55,7 @@
 )[
 
 = Lernziele
-== Lecture_Arithmetic_Operations
-#example[
-#emph[At the end of this lesson you will be able]
-- to enumerate and apply the Cortex-M0 arithmetic instructions
-- to interpret Cortex-M0 assembly programs with arithmetic instructions
-- to enumerate and explain the meaning of the Cortex-M0 Flags (N, Z, C, V)
-- to carry out additions and subtractions of signed and unsigned integers and to explain the operations with the circle of numbers
-- to calculate and interpret carry/borrow and overflow/underflow
-- to determine (with the help of documents) the state of Cortex-M0 Flags (N, Z, C, V) after an arithmetic instruction
-- to describe how addition and subtraction are done in hardware (in the ALU)
-- to program integer calculations with operands that exceed the number of bits available in the ALU
-- to explain how numbers in two's complements representation are multiplied
-]
+
 
 == Lecture_Casting
 #example[
@@ -357,6 +345,47 @@
 #image("assets_CT/F3_PointerDir.png", width: 90%)
 
 = Lecture_Arithmetic_Operations
+- *HW - Addition/Subtraction*
+  - Addition: Bitweise Addition mit Carry (Volladdierer-Kette)
+  - Subtraction: A - B = A + (~B + 1) (Zweierkomplement)
+
+- *SW - Multiword Operation*
+  - Zerlege grosse Zahlen in mehrere Wörter (z.B. 64-Bit in 2×32-Bit)
+  - Addiere/Subtrahiere Wort für Wort, übertrage Carry/Borrow 
+#example[
+ *Registerbelegung für 64-bit Addition:*
+  - `A` in `R1:R0`  (R1 = high32, R0 = low32)
+  - `B` in `R3:R2`  (R3 = high32, R2 = low32)
+ *64-bit Addition: `A = A + B`*
+  ```asm
+  ADDS  R0, R0, R2     ; low32  (setzt C)
+  ADCS  R1, R1, R3     ; high32 + Carry
+
+  R0 = low32(Resultat)
+
+  R1 = high32(Resultat)
+
+  Gesamt: A = R1:R0
+
+  Warum zuerst low?
+  Nur so wird das Carry aus der low-Addition korrekt in die high-Addition übernommen.
+
+  Hinweis: Carry aus der high-Addition wäre ein “65stes Bit” und wird hier nicht weiter gespeichert.
+  ```
+]
+ 
+- *Einerkomplement*
+  - Positive Zahlen: normale Binärdarstellung
+  - Negative Zahlen: invertieren
+  - Bereich bei n Bit: -(2^n-1 -1) … 2^n-1 -1
+
+- *Zweierkomplement*
+  - Positive Zahlen: normale Binärdarstellung
+  - Negative Zahlen: invertieren + 1
+  - Bereich bei n Bit: -2^(n-1) … 2^(n-1)-1
+  - Subtraktion: A - B = A + (~B + 1) oder (A + (-B)) + 1
+#image("assets_CT/F4_Zweierkomplement.png", width: 90%)
+
 - *Flags (APSR)*
   - N: MSB des Resultats = 1
   - Z: Resultat = 0
@@ -364,26 +393,76 @@
   - V: Overflow (*signed*)
   - CPU unterscheidet *nicht* signed/unsigned → berechnet C und V immer
 
-- *Wichtige Instruktionen*
-  - `ADDS, ADCS` (mit Carry)
-  - `SUBS, SBCS` (Borrow über NOT(C))
-  - `RSBS` (negieren / reverse subtract)
-  - `MULS` (32×32 → low 32 Bit; high 32 gehen verloren)
-
-#formula[
-  *Carry vs. Overflow (Merke)*  
-  - unsigned: ADD → C=1 heißt “zu gross”, SUB → C=0 heißt “Borrow”  
-  - signed: Overflow wenn Ergebnis ausserhalb Bereich (gleiches Vorzeichen bei ADD, unterschiedliches bei SUB)
-]
-
 #steps[
-  *Multi-Word Addition (z.B. 64-bit mit 32-bit ALU)*  
-  1) low:  ADDS  R0, R0, R2  
-  2) high: ADCS  R1, R1, R3   // nimmt Carry mit
+== Vorbereitungs-Fragen (immer gleich)
+1) *Welche Sicht ist gefragt?*  
+   - *unsigned* → wichtig ist *C* (carry/borrow)  
+   - *signed (2’s complement)* → wichtig ist *V* (overflow)
+
+2) *Welche Grenze ist kritisch?*  
+   - unsigned 8-bit: *0..255*  
+   - signed 8-bit: *-128..+127*  (Hex: 0x80..0x7F)
+
+3) *Resultat schnell?*  
+   - Rechne in Hex *byteweise* und merke: *über 0xFF = Carry*, *unter 0x00 = Borrow*
+
+== Addition: `op1 + op2`
+*Q1: Ist die Summe ≥ 0x100?*  
+→ Ja: `C=1` (Carry raus)  
+→ Nein: `C=0`
+*Achtung Carry (8-bit):*  
+Wenn Summe über `0xFF` geht, bleibt nur die *letzte Byte* übrig (die letzten 2 Hex-Stellen).  
+Merke: dann ist `C=1` und es ist wie *“Summe − 0x100”.*
+
+*Resultat (hex) schnell:*  
+- Addiere in Hex. Wenn du “über FF” kommst: *schreib nur die letzten 2 Hex-Stellen* als Resultat, und merke dir `C=1`.  
+  (Beispiel: 0x82+0x12 = 0x94, kein Carry)
+
+*Q2: Overflow (signed) passiert nur wenn beide gleiches Vorzeichen haben:*  
+- Sind *beide* op1 und op2 im selben Vorzeichenbereich?
+  - Positiv: 0x00..0x7F
+  - Negativ: 0x80..0xFF
+→ Nein: `V=0` 
+
+→ Ja: Schau das Resultat an: hat es plötzlich das *andere* Vorzeichen?
+  - Ja → `V=1`
+  - Nein → `V=0`
+
+*Q3: N und Z (vom Resultat)*
+- `Z=1` wenn Resultat = 0x00, sonst 0
+- `N=1` wenn Resultat im Bereich 0x80..0xFF liegt (MSB=1), sonst 0
+
+== Subtraktion: `op1 - op2`
+*Q1: Brauchst du ein Borrow? (unsigned Vergleich)*  
+- Ist `op1 >= op2` (unsigned)?
+  - Ja → *kein Borrow* → `C=1`
+  - Nein → Borrow nötig → `C=0`   
+
+*Resultat (hex) schnell:*  
+- Subtrahiere in Hex. Wenn du “unter 00” gehst, *leihe 0x100* (also +256) und merke dir: Borrow war nötig (`C=0`).  
+  (Praktisch: du bekommst automatisch wieder eine 2-Hex-Stellen Zahl.)
+
+*Q2: Overflow (signed) bei SUB passiert nur wenn Vorzeichen verschieden sind:*  
+- Haben op1 und op2 *unterschiedliches* Vorzeichen?
+→ Nein: `V=0`
+
+→ Ja: Schau das Resultat an: hat es das *andere* Vorzeichen als op1?
+  - Ja → `V=1`
+  - Nein → `V=0`
+
+*Q3: N und Z (vom Resultat)*
+- `Z=1` wenn Resultat = 0x00, sonst 0
+- `N=1` wenn Resultat 0x80..0xFF (MSB=1), sonst 0
+
+== Mini-Merker (sehr schnell)
+- *C bei ADD:* “über FF hinaus?”  
+- *C bei SUB:* “musste ich borgen?” → ja ⇒ C=0, nein ⇒ C=1  
+- *V bei ADD:* “gleiches Vorzeichen rein, anderes raus?”  
+- *V bei SUB:* “verschiedene Vorzeichen rein, Resultat kippt gegenüber op1?”
 ]
+
 
 = Lecture_Casting
-
 - *Signed ↔ Unsigned (Interpretation)*
   - Gleiche Bitfolge → anderer Zahlenwert (z.B. 0xFF: unsigned=255, signed=-1)
 
