@@ -55,17 +55,6 @@
 )[
 
 = Lernziele
-
-
-== Lecture_Casting
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain the casting of integer types in C
-- to apply the assembly instructions associated with casting
-- to say how a given memory content is interpreted for different integer types in C
-- to give the memory content after storing different C integer types
-]
-
 == Lecture_Logic_and_Shift-Rotate_Instructions
 #example[
 #emph[At the end of this lesson you will be able]
@@ -269,6 +258,7 @@
 
 #image("assets_CT/F2_Object_File_Section.png", width: 70%)
 #image("assets_CT/F2_Object_Memory_Map_exp.png", width: 80%)
+
 - * Memory Map *
  - Tiefste Adresse oben gezeichnet
  - Berechnung Speichergrösse: Endadresse - Startadresse + 1 (in Bytes)
@@ -461,16 +451,33 @@ Merke: dann ist `C=1` und es ist wie *“Summe − 0x100”.*
 - *V bei SUB:* “verschiedene Vorzeichen rein, Resultat kippt gegenüber op1?”
 ]
 
-
 = Lecture_Casting
-- *Signed ↔ Unsigned (Interpretation)*
-  - Gleiche Bitfolge → anderer Zahlenwert (z.B. 0xFF: unsigned=255, signed=-1)
+- *Casting erklärt*
+ - `(type) value`  → Wert wird in anderen Typ umgewandelt
+ - implizit (automatisch) oder explizit (durch `(type)`)
+ - *Actung!* wenn a = 5 und b = 10 -> (cast)a > (cast)b -> Cast ist nur für Vergleich relevant, a und b bleiben unverändert.
+  - Dauerhafter Cast ist nur durch Zuweisung: `b = (uint8_t)a;`
 
-- *Extension (kleiner → grösser)*
-  - unsigned: *zero extension*
-  - signed: *sign extension*
+  
+- *Integer casting in C*
+#image("assets_CT/F5_Interger_Casting_C.png", width: 90%)
+#formula[
+  *Casting Regeln:*
+  - signed to unsigned: Wert bleibt gleich (Bitmuster bleibt gleich)
+  - unsigned to signed: 
+   - Wert bleibt gleich : wenn im positiven Bereich; 
+   - Wert Negativ (1 vorne): *Berechne Wert - 2^n*
+  - Zu Beachten sind nächsten Punkte:
+   - *Extensions* (kleiner → grösser) (kleiner = weniger Bits)
+   - *Truncation* (grösser → kleiner)
+] 
+ 
 
-- *Truncation (grösser → kleiner)*
+- *Extensions*
+ - usigned -> zero-extend (mit Nullen auffüllen)
+ - signed -> sign-extend (Vorzeichenbit auffüllen) (Negativzahlen bleiben negativ)
+
+- *Truncation*
   - “Links abschneiden”
   - signed: Vorzeichen kann kippen
   - unsigned: entspricht modulo (Wrap-around)
@@ -482,6 +489,11 @@ Merke: dann ist `C=1` und es ist wie *“Summe − 0x100”.*
   - `UXTB`  8→32 unsigned (zero extend)  
   - `UXTH` 16→32 unsigned
 ]
+
+- *Stoplersteine bei if-Statements*
+  - Vergleiche immer im gleichen Typ (signed/unsigned)
+  - Sonst falsche Ergebnisse möglich (z.B. -1 > 0 bei unsigned)
+  #image("assets_CT/F5_If_Statement_Casting.png", width: 90%)
 
 = Lecture_Logic_and_Shift-Rotate_Instructions
 
