@@ -55,29 +55,7 @@
 )[
 
 = Lernziele
-== Lecture_Logic_and_Shift-Rotate_Instructions
-#example[
-#emph[At the end of this lesson you will be able]
-- to enumerate and apply the Cortex-M0 instructions for logical operations and shifting/rotating
-- to interpret Cortex-M0 assembly programs which contain logical operations and shifting/rotating
-- to use logical operations for bit manipulation
-- to explain the effect of the shift and rotate operations on the flags (N, Z, C, V)
-- to program bit manipulation operations (set, clear, toggle, test a bit) in assembly language
-- to determine (with the help of documents) the state of the ARM Flags (N, Z, C, V) after logical operations and shift/rotate operations
-]
 
-== Lecture_Branches
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain what branch instructions are and how they work
-- to classify a given branch instruction with regard to
-  - conditional / unconditional
-  - relative / absolute
-  - direct / indirect
-- to apply and discuss the different branch instructions
-- to determine based on the settings of the flags whether a conditional branch is taken or not
-- to distinguish, apply and explain the instructions CMP,CMN and TEST
-]
 
 == Lecture_Control_Structures
 #example[
@@ -472,7 +450,6 @@ Merke: dann ist `C=1` und es ist wie *“Summe − 0x100”.*
    - *Truncation* (grösser → kleiner)
 ] 
  
-
 - *Extensions*
  - usigned -> zero-extend (mit Nullen auffüllen)
  - signed -> sign-extend (Vorzeichenbit auffüllen) (Negativzahlen bleiben negativ)
@@ -496,22 +473,70 @@ Merke: dann ist `C=1` und es ist wie *“Summe − 0x100”.*
   #image("assets_CT/F5_If_Statement_Casting.png", width: 90%)
 
 = Lecture_Logic_and_Shift-Rotate_Instructions
-
-- *Logik (typisch, oft mit Flags-Update durch “S”)*
-  - `ANDS, EORS, ORRS, BICS, MVNS, TST`
-
-- *Shifts & Rotate*
-  - `LSLS` logical left (0 rein, C bekommt “rausfallendes” Bit)
-  - `LSRS` logical right (0 rein)
+#image("assets_CT/F6_Overview_Operands.png", width: 90%)
   - `ASRS` arithmetic right (MSB/Vorzeichen bleibt)
   - `RORS` rotate right (zyklisch)
 
+- *Flag determine*
+ - immer bei Instruktionen mit S
+  - N: wenn MSB des Resultats = 1
+  - Z: wenn Resultat = 0
+  - V: immer unchanged (bleibt wie vorher)
+ - (ANDS, ORRS, EORS, BICS, MVNS)
+  - C: (bleibt wie vorher)
+ - (LSLS, LSRS, ASRS, RORS)
+  - C:Last bit shifted out (gilt rechts und links)(RORS rechts rausgefallen)
+
+#steps[
+== Multiplikation mit Konstante (Synthese)
+=== Schritt 1: Konstante in Binär zerlegen
+- Schreibe `K` als Binärzahl.
+- Markiere alle Bits `i`, die `1` sind.
+
 #example[
-  - `TST R0,R1` macht AND nur für Flags (kein Ergebnis speichern) → perfekt vor `BEQ/BNE`.
+`K = 23 = 0b00010111` ⇒ Einsen bei `i = 0,1,2,4`  
+⇒ `23·x = (x<<0) + (x<<1) + (x<<2) + (x<<4)`
+]
+
+=== Schritt 2: Addier-Plan erstellen (minimal denken)
+- Start: `acc = 0`
+- Für jedes gesetzte Bit `i`: addiere `(x<<i)` zum Accumulator.
+- *Merke:* Du musst nicht jedes `i` einzeln bauen — du kannst schrittweise shiften. (immer um `#1`)
+
+=== Schritt 3: In “Shift + optional Add” übersetzen (wie im Übungs-Template)
+Viele Aufgaben geben so ein Muster vor:
+
+- `R0` enthält `x` (der variable Multiplikand)
+- `R7` ist Akkumulator (Start `0`)
+- Danach kommt eine Sequenz aus:
+  - `LSLS R0, R0, #1`  (x wird jeweils verdoppelt)
+  - danach *optional* `ADDS R7, R7, R0` (wenn das entsprechende Bit in `K` = 1 ist)
+
+=== Tipp für den ersten Shift `LSLS R0, R0, #x`
+Manchmal beginnt die Vorlage mit einem grösseren Startshift `#x`, um direkt zum ersten gesetzten Bit zu springen:
+- Finde die *kleinste* gesetzte Bitposition `i_min` von `K`.
+- Setze `x = i_min`.
+- Danach geht es meist mit `#1` Schritten weiter.
+
+#example[
+Wenn `K` ungerade → Bit0=1 → `i_min=0` ⇒ `x=0` (kein Vorschub nötig)  
+Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
+]
 ]
 
 = Lecture_Branches
-
+== Lecture_Branches
+#example[
+#emph[At the end of this lesson you will be able]
+- to explain what branch instructions are and how they work
+- to classify a given branch instruction with regard to
+  - conditional / unconditional
+  - relative / absolute
+  - direct / indirect
+- to apply and discuss the different branch instructions
+- to determine based on the settings of the flags whether a conditional branch is taken or not
+- to distinguish, apply and explain the instructions CMP,CMN and TEST
+]
 - *Unconditional*
   - `B label`  (kurzer Sprung)
   - `BL label` (Subroutine Call: LR ← return addr)
@@ -528,6 +553,12 @@ Merke: dann ist `C=1` und es ist wie *“Summe − 0x100”.*
   - CS/HS: C=1, CC/LO: C=0  
   - MI: N=1, PL: N=0  
   - VS: V=1, VC: V=0
+]
+
+== Ist noch von Kapitel Arithmetic Operations relevant: CMP, CMN, TST
+- to program bit manipulation operations (set, clear, toggle, test a bit) in assembly language
+#example[
+  - `TST R0,R1` macht AND nur für Flags (kein Ergebnis speichern) → perfekt vor `BEQ/BNE`.
 ]
 
 = Lecture_Control_Structures

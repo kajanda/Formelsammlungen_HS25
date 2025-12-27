@@ -294,11 +294,76 @@
   *Fixpunkt:* $x^* approx 0.339$
 ]
 
+== Fehlerabschätzungen (Fixpunktiteration)
+
+Sei $x_(k+1)=phi.alt(x_k)$ eine Kontraktion mit Konstante $0<alpha<1$ und Fixpunkt $x^*$.
+
+$a$-priori (vorab, nur mit Startwerten):
+$ |x_n - x^*| <= (alpha^n)/(1-alpha) |x_1 - x_0| $
+
+$a$-posteriori (nachträglich, mit letztem Schritt):
+$ |x_n - x^*| <= alpha/(1-alpha) |x_n - x_(n-1)| $
+
+=== Wie berechne ich $alpha$ (Kontraktionskonstante)?
+
+Gegeben Fixpunktiteration
+$ x_(k+1) = phi.alt(x_k) $
+auf einem Intervall $I=[a,b]$.
+
+1) Ableitung berechnen:
+$ phi.alt'(x) = d/(d x) phi.alt(x). $
+
+2) Kontraktionskonstante als Maximum der Ableitung:
+$ alpha = sup_(x in I) |phi.alt'(x)|. $
+
+Falls $|phi.alt'(x)|$ auf $[a,b]$ monoton fallend ist, gilt sofort:
+$ alpha = |phi.alt'(a)| $  (Maximum am linken Rand).
+
+*Beispiel:* $phi.alt(x)=ln(sqrt(x)+2)$
+$ phi.alt'(x) = 1 / (2 sqrt(x) (sqrt(x)+2)) $
+und da der Ausdruck für $x>0$ fällt:
+$ alpha = 1 / (2 sqrt(a) (sqrt(a)+2)). $
+
+=== n für gewünschte Genauigkeit
+Gegeben $epsilon > 0$, wie viele Iterationen $n$ sind nötig, um
+$ |x_n - x^*| < epsilon $ zu garantieren?
+$a$-priori:
+$ n >= log((epsilon *(1-alpha)) / (|x_1 - x_0|)) / log(alpha). $
+$a$-posteriori:
+$ n >= log((epsilon * (1-alpha)) / (alpha |x_n - x_(n-1)|)) / log(alpha). $
+
+epsilon: gewünschte Genauigkeit (tol)
+
+#colbreak()
+
 == Newton-Verfahren
 
 #formula[
   $ x_(n+1) = x_n - (f(x_n)) / (f'(x_n)) $
 ]
+
+Bei zwei Funktionen $f, g$: zuerst $F(x) = f(x) - g(x)$ bilden.
+Python code: 
+
+```python
+f = lambda x : g(x) - h(x)
+df = lambda x : np.exp(x) - 0.5 / np.sqrt(x)
+
+x0 = 0.5
+tol = 1e-7
+
+def newton(f, df, x0, tol):
+
+    err = 1 + tol
+    while err > tol:
+        x1 = x0 - (f(x0) / df(x0))
+        err = np.abs(x1 - x0)
+        x0 = x1
+    return x0
+
+print(newton(f,df,x0,tol))
+
+```
 
 === Vorgehen: Newton-Verfahren
 
@@ -340,6 +405,8 @@
   
   *Schritt 6:* $sqrt(2) approx 1.4142$ (quadratische Konvergenz!)
 ]
+
+== Aufwand Abschätzung a-priori 
 
 #colbreak()
 
