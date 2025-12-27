@@ -30,7 +30,6 @@
   #body
 ]
 
-
 #let example(body) = block(
   inset: 4pt,
   radius: 3pt,
@@ -887,6 +886,10 @@
     *Totale Wahrscheinlichkeit:*
     
     #math[$ P(B) = sum_i P(A_i) dot P(B | A_i) $]
+
+    * Beweis stochastische Unabhängigkeit:*
+    #math[$ P(A sect B) = P(A) dot P(B)$]
+
   ]
 
 
