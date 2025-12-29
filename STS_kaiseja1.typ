@@ -79,6 +79,11 @@
   3,
   gutter: 1.2em,
 )[
+
+  // ============================================================
+  // 1.1 - 1.3 DESKRIPTIVE STATISTIK (UNIVARIAT)
+  // ============================================================
+
   = Grundbegriffe
 
   #variables[
@@ -114,6 +119,7 @@
   $f(x)$ Relative Häufigkeit (Stabdiagramm)
   #image("assets/PMF.png", width: 100%)
 
+ #colbreak()
 
   == CMF
   $F(x)$ Kumulative relative Häufigkeit (Treppendiagramm)
@@ -129,12 +135,8 @@
   $F(x)$ Kumultative Fläche Balken Histogramm
   #image("assets/CDF.png", width: 90%)
 
-
-  // ============================================================
-  // 1. DESKRIPTIVE STATISTIK (UNIVARIAT)
-  // ============================================================
-
-
+ #colbreak()
+ 
   = Häufigkeiten und Verteilungen
 
   #variables[
@@ -170,6 +172,9 @@
     PMF: $h_i / 20$ , PDF: $h_i / (20)$ , CDF: $F_i$, CMF: $H_i$
   ]
 
+// ============================================================
+// 1.4 DESKRIPTIVE STATISTIK (UNIVARIAT) - FORTGESCHRITTEN
+// ============================================================
 
   = Median und Quantile
 
@@ -211,7 +216,6 @@
     + Falls nicht → $k = ceil(p)$, dann $Q_q = x_((k))$
   ]
 
-
   #example[
     *Stichprobe:* 4, 4, 0, 3, 5, 3, 1
     
@@ -227,24 +231,24 @@
     *Q3:* $p = 7 dot 0.75 = 5.25$ → $k = 6$ → $Q_3 = 4$
   ]
 
-= Klassierte Daten
-== Grundbegriffe
+ = Klassierte Daten
+ == Grundbegriffe
 
-#image("assets/Grundbegriffe_Klassierte_Daten_Beispiel.jpeg", width: 100%)
+ #image("assets/Grundbegriffe_Klassierte_Daten_Beispiel.jpeg", width: 100%)
 
-- *Mittelwert*:
+ - *Mittelwert*:
   #math[$ overline(x) = (1/n) sum_(i=1)^k m_i dot h_i $]
   $m_i$: Klassenmitte der i-ten Klasse(Mittelwert der Klassengrenzen)\
   $h_i$: absolute Häufigkeit der i-ten Klasse
 
-- *Varianz*:
+ - *Varianz*:
   #math[$ s^2 = (1/n) sum_(i=1)^k (h_i dot m_i^2) - overline(x)^2 $]
 
-#image("assets/Klassierte_Daten_Mittelwert_Beispiel.jpeg", width: 90%)
+ #image("assets/Klassierte_Daten_Mittelwert_Beispiel.jpeg", width: 90%)
 
-#image("assets/Klassierte_Daten_Varianz_Beispiel.jpeg", width: 90%)
-== Quantile bei klassierten Daten
+ #image("assets/Klassierte_Daten_Varianz_Beispiel.jpeg", width: 90%)
 
+ == Quantile bei klassierten Daten
   #variables[
     *Neue Variablen:*
     
@@ -279,8 +283,6 @@
                   &approx 1434.78 $
   ]
 
-
-
   = Boxplot-Kennwerte
 
   #variables[
@@ -309,12 +311,9 @@
   #example[
     *Daten:* 5, 7, 8, 9, 10, 12, 15, 20, 22
 
-
     $ Q_1 = 8, quad "Median" = 10, quad Q_3 = 15 $
 
-
     $ "IQR" = 15 - 8 = 7 $
-
 
     *Whisker:*
     - Untere: $Q_1 - 1.5 dot "IQR" = 8 - 10.5 = -2.5$ → Min(Daten) = 5
@@ -324,7 +323,11 @@
     *Ergebnis:* Alle Werte in $[5, 22]$ → **keine Ausreißer**
   ]
 
+ #colbreak()
 
+// ============================================================
+// 1.4 DESKRIPTIVE STATISTIK (UNIVARIAT) - FORTGESCHRITTEN
+// ============================================================
   = Mittelwert und Varianz
 
   #variables[
@@ -354,11 +357,15 @@
     *Korrigierte Varianz:*
     
     #math[$ s_"korr"^2 = n/(n-1) dot s^2 $]
+
+    *Korrigierte Standardabweichung:*
+    #math[$ s_"korr" = sqrt(s_"korr"^2) $]
+
   ]
 
 
   #steps[
-    + Mittelwert $overline(x)$ berechnen
+    + Mittelwert $overline(x)$ berechnen -> Achtung Multiplizieren
     + Varianz entweder direkt oder mit Verschiebungssatz
     + Standardabweichung: $s = sqrt(s^2)$
     + Für Schätzungen: korrigierte Varianz verwenden
@@ -386,79 +393,12 @@
     $ s = sqrt(12.28) approx 3.5 "CHF" $
   ]
 
-
-
-// ... (bisheriger Code bleibt gleich bis "Lineare Regression")
-
-  = Lineare Regression (KQM)
-
-  #variables[
-    *Neue Variablen:*
-    
-    $a$: Achsenabschnitt \
-    $b$: Steigung der Regressionsgeraden \
-    $R^2$: Bestimmtheitsmaß
-  ]
-
-  #formula[
-    *Regressionsgerade:* $y = a + b x$
-    
-    *Steigung:*
-    
-    #math[$ b = (s_(x y))/(s_x^2) = r dot s_y/s_x $]
-    
-    *Achsenabschnitt:*
-    
-    #math[$ a = overline(y) - b dot overline(x) $]
-    
-    *Residualvarianz:*
-    
-    #math[$ s_"Res"^2 = s_y^2 - s_"xy"^2/s_"x"^2  $]
-    
-    *Bestimmtheitsmaß:*
-    
-    #math[$ R^2 = r^2 = ((s_(x y))/(s_x dot s_y))^2 $]
-
-    *Korrelationskoeffizient:*
-    #math[$ r = (s_(x y))/(s_x dot s_y) $]
-  ]
-
-  #steps[
-    + Korrelationskoeffizient $r$ berechnen
-    + Steigung: $b = s_(x y)\/s_x^2$
-    + Achsenabschnitt: $a = overline(y) - b overline(x)$
-    + Prüfung: Residuenplot (sollte unsystematisch streuen)
-    + Güte: $R^2$ berechnen (Anteil erklärter Varianz)
-  ]
-
-  #example[
-    *Größe-Gewicht (15 Personen):*
-
-    $overline(x) = 173$ cm, $s_x = 6.047$ cm
-    
-    $overline(y) = 72.267$ kg, $s_y = 7.474$ kg
-    
-    $s_(x y) = 41.071$, $r = 0.898$
-
-    $ b = 41.071/6.047^2 approx 1.123 $
-
-    $ a = 72.267 - 1.123 dot 173 approx -122.02 $
-
-    *Regressionsgerade:*
-    
-    $ y = -122.02 + 1.123 x $
-
-    $ R^2 = 0.898^2 approx 0.806 $
-    
-    → 80.6% der Varianz erklärt
-  ]
-
   // ============================================================
-  // NEU: BIVARIATE STATISTIK
-  // ============================================================
+ // 2.1.2 Pearson-Korrelationskoeffizient
+ // ============================================================
 
-  = Bivariate Daten & Kovarianz
-
+  = Bivariate Daten & Kovarianz 
+  Das ist die Grundlage für den Pearson-Korrelationskoeffizienten.
   #variables[
     *Neue Variablen:*
     
@@ -509,63 +449,7 @@
     Negativer Wert → negativer Zusammenhang
   ]
 
-  = Spearman-Rangkorrelation
-
-  #variables[
-    *Neue Variablen:*
-    
-    $"rg"(x_i)$: Rang von $x_i$ in sortierter Liste \
-    $r_"Sp"$: Spearman-Korrelationskoeffizient \
-    $d_i$: Differenz der Ränge
-  ]
-
-  #formula[
-    *Definition (allgemein):*
-    
-    #math[$ r_"Sp" = (sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))("rg"(y_i) - overline("rg"(y))))/(sqrt(sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))^2) dot sqrt(sum_(i=1)^n ("rg"(y_i) - overline("rg"(y)))^2)) $]
-    
-    *Vereinfachte Formel* (keine gleichen Ränge):
-    
-    #math[$ r_"Sp" = 1 - (6 sum_(i=1)^n d_i^2)/(n(n^2 - 1)) $]
-    
-    wobei $d_i = "rg"(x_i) - "rg"(y_i)$
-    
-    *Interpretation:*
-    - Misst **monotonen** (nicht nur linearen) Zusammenhang
-    - Robust gegen Ausreißer
-    - Werte: $-1 <= r_"Sp" <= 1$
-  ]
-
-  #steps[
-    + Ränge für $x$ und $y$ separat vergeben (1 = kleinster Wert)
-    + Bei gleichen Werten: Durchschnittsrang vergeben
-    + Rangdifferenzen $d_i$ berechnen
-    + Formel anwenden (vereinfacht falls keine Bindungen)
-    + Interpretation wie bei Pearson
-  ]
-
-  #example[
-    *Alter vs. Laufzeit (6 Personen):*
-
-    #table(
-      columns: 5,
-      [$i$], [$x_i$], [$y_i$], [$"rg"(x_i)$], [$"rg"(y_i)$],
-      [1], [59], [14.6], [6], [6],
-      [2], [35], [11.8], [3], [2],
-      [3], [43], [14.3], [5], [5],
-      [4], [23], [13.0], [1], [3],
-      [5], [42], [14.2], [4], [4],
-      [6], [27], [11.0], [2], [1]
-    )
-
-    $ sum d_i^2 = 0 + 1 + 0 + 4 + 0 + 1 = 6 $
-
-    $ r_"Sp" = 1 - (6 dot 6)/(6(36 - 1)) = 1 - 36/210 approx 0.83 $
-
-    Starker positiver monotoner Zusammenhang
-  ]
-
-    = Korrelation nach Bravais-Pearson
+  = Korrelation nach Bravais-Pearson
 
   #variables[
     *Neue Variablen:*
@@ -643,17 +527,149 @@
     → *Starker positiver linearer Zusammenhang* zwischen $x$ und $y$
   ]
 
+ // ============================================================
+  // Kaptiel 6 Lineare Regression & Korrelation
+  // ===========================================================
+  
 
-== Kombinatorik
+  = Lineare Regression (KQM)
 
-#variables[
+  #variables[
+    *Neue Variablen:*
+    
+    $a$: Achsenabschnitt \
+    $b$: Steigung der Regressionsgeraden \
+    $R^2$: Bestimmtheitsmaß
+  ]
+
+  #formula[
+    *Regressionsgerade:* $y = a + b x$
+    
+    *Steigung:*
+    
+    #math[$ b = (s_(x y))/(s_x^2) = r dot s_y/s_x $]
+    
+    *Achsenabschnitt:*
+    
+    #math[$ a = overline(y) - b dot overline(x) $]
+    
+    *Residualvarianz:*
+    
+    #math[$ s_"Res"^2 = s_y^2 - s_"xy"^2/s_"x"^2  $]
+    
+    *Bestimmtheitsmaß:*
+    
+    #math[$ R^2 = r^2 = ((s_(x y))/(s_x dot s_y))^2 $]
+
+    *Korrelationskoeffizient nach Pearson:*
+    #math[$ r = (s_(x y))/(s_x dot s_y) $]
+  ]
+
+  #steps[
+    + Korrelationskoeffizient $r$ berechnen
+    + Steigung: $b = s_(x y)\/s_x^2$
+    + Achsenabschnitt: $a = overline(y) - b overline(x)$
+    + Prüfung: Residuenplot (sollte unsystematisch streuen)
+    + Güte: $R^2$ berechnen (Anteil erklärter Varianz)
+  ]
+
+  #example[
+    *Größe-Gewicht (15 Personen):*
+
+    $overline(x) = 173$ cm, $s_x = 6.047$ cm
+    
+    $overline(y) = 72.267$ kg, $s_y = 7.474$ kg
+    
+    $s_(x y) = 41.071$, $r = 0.898$
+
+    $ b = 41.071/6.047^2 approx 1.123 $
+
+    $ a = 72.267 - 1.123 dot 173 approx -122.02 $
+
+    *Regressionsgerade:*
+    
+    $ y = -122.02 + 1.123 x $
+
+    $ R^2 = 0.898^2 approx 0.806 $
+    
+    → 80.6% der Varianz erklärt
+  ]
+
+  #colbreak()
+
+ // ============================================================
+ // 2.1.3 Spearman-Rangkorrelation
+ // ==========================================================
+
+  = Spearman-Rangkorrelation
+
+  #variables[
+    *Neue Variablen:*
+    
+    $"rg"(x_i)$: Rang von $x_i$ in sortierter Liste \
+    $r_"Sp"$: Spearman-Korrelationskoeffizient \
+    $d_i$: Differenz der Ränge
+  ]
+
+  #formula[
+    *Definition (allgemein):*
+    
+    #math[$ r_"Sp" = (sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))("rg"(y_i) - overline("rg"(y))))/(sqrt(sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))^2) dot sqrt(sum_(i=1)^n ("rg"(y_i) - overline("rg"(y)))^2)) $]
+    
+    *Vereinfachte Formel* (keine gleichen Ränge):
+    
+    #math[$ r_"Sp" = 1 - (6 sum_(i=1)^n d_i^2)/(n(n^2 - 1)) $]
+    
+    wobei $d_i = "rg"(x_i) - "rg"(y_i)$
+    
+    *Interpretation:*
+    - Misst **monotonen** (nicht nur linearen) Zusammenhang
+    - Robust gegen Ausreißer
+    - Werte: $-1 <= r_"Sp" <= 1$
+  ]
+
+  #steps[
+    + Ränge für $x$ und $y$ separat vergeben (1 = kleinster Wert)
+    + Bei gleichen Werten: Durchschnittsrang vergeben
+    + Rangdifferenzen $d_i$ berechnen
+    + Formel anwenden (vereinfacht falls keine Bindungen)
+    + Interpretation wie bei Pearson
+  ]
+
+  #example[
+    *Alter vs. Laufzeit (6 Personen):*
+
+    #table(
+      columns: 5,
+      [$i$], [$x_i$], [$y_i$], [$"rg"(x_i)$], [$"rg"(y_i)$],
+      [1], [59], [14.6], [6], [6],
+      [2], [35], [11.8], [3], [2],
+      [3], [43], [14.3], [5], [5],
+      [4], [23], [13.0], [1], [3],
+      [5], [42], [14.2], [4], [4],
+      [6], [27], [11.0], [2], [1]
+    )
+
+    $ sum d_i^2 = 0 + 1 + 0 + 4 + 0 + 1 = 6 $
+
+    $ r_"Sp" = 1 - (6 dot 6)/(6(36 - 1)) = 1 - 36/210 approx 0.83 $
+
+    Starker positiver monotoner Zusammenhang
+  ]
+
+ // ============================================================
+ // Kapitel 3 - Kombinatorik & Kontingenztabellen
+ // ==========================================================
+
+ = Kombinatorik
+ #variables[
   *Neue Variablen:*
   
   $n$: Größe der Grundmenge \
   $k$: Größe der Teilmenge
-]
+ ]
 
-#steps[
+ #steps[
     + Art der Auswahl bestimmen (Variation/Kombination, mit/ohne Wiederholung)
     + Passende Formel aus Übersichtstabelle auswählen
     + Werte für $n$, $k$ einsetzen und berechnen
@@ -714,8 +730,8 @@
 
   Formel siehe unten bei Kontingenztabellen.
 
-#example[
-  = Aufgabe
+ #example[
+  == Aufgabe
 
   Beim Rommé spielt man mit *110* Karten; *sechs* davon sind Joker.
   Zu Beginn eines Spiels erhält jeder Spieler genau *12* Karten.
@@ -729,8 +745,58 @@
 
   b) $ 1 - binom(104, 12) / binom(110, 12) approx 50.85% $
 
-]
+ ]
 
+ #colbreak()
+
+  // ============================================================
+  // Kapitel 4.1-4.2 - Elementare Wahrscheinlichkeitsrechnung
+  // + Zufallsvariablen
+  // ============================================================
+  = Elementare Wahrscheinlichkeitsrechnung
+
+  FEHLT NOCH
+
+  ==  Laplace-Experiment
+
+  FEHLT NOCH
+
+  == Mengen 
+
+  FEHLT NOCH
+
+  == Diskreter Wahrscheinlichkeitsraum
+
+  FEHLT NOCH
+
+  == Zufallsvariable
+
+  FEHLT NOCH
+
+  == Rechnen mit Zufallsvariablen
+
+  FEHLT NOCH
+
+  === Grösser als - Kleiner als
+
+  FEHLT NOCH
+
+  // ============================================================
+  // Kapitel 4.3 - Kenngrössen
+  // ============================================================
+  == Kenngrössen
+
+  FEHLT NOCH
+
+  == PMF der diskreten Zufallsvariable
+
+  FEHLT NOCH -> ergibt Erwartungswert
+
+  == Satz der Kenngrössen
+
+  FEHLT NOCH
+
+  #colbreak()
 
   = Kontingenztabellen
 
@@ -789,77 +855,6 @@
 
     $ f("Frau" | "Verheiratet") = 25/55 approx 0.45 $
   ]
-
-  = Scatterplot & Streudiagramm
-
-  #variables[evaluieren ob irgendwo gebraucht ]
-
-
-  *Verwendung:* Visualisierung zweier **metrischer** Merkmale
-  
-  *Interpretation:*
-  - **Form**: linear, gekrümmt, mehrere Cluster
-  - **Richtung**: positiv (steigend), negativ (fallend)
-  - **Stärke**: eng um Kurve → stark, weit gestreut → schwach
-  
-  *Warnung:* Korrelation ≠ Kausalität (Scheinkorrelation möglich)
-
-  #steps[
-    + Wertepaare $(x_i, y_i)$ als Punkte in Koordinatensystem eintragen
-    + Visuelle Inspektion: Form, Richtung, Stärke erkennen
-    + Ausreißer identifizieren
-    + Korrelationskoeffizient berechnen (Pearson oder Spearman)
-    + Immer Scatterplot + Korrelationskoeffizient zusammen angeben!
-  ]
- 
-
-  // ============================================================
-  // 7. WICHTIGE KENNWERTE & ÜBERSICHT
-  // ============================================================
-
-  = Übersichtstabelle Verteilungen
-
-  #table(
-    columns: 4,
-    [*Verteilung*], [*PMF/PDF*], [*E(X)*], [*Var(X)*],
-    
-    [Bernoulli], [$p^x (1-p)^(1-x)$], [$p$], [$p(1-p)$],
-    
-    [Binomial], [$binom(n,k) p^k (1-p)^(n-k)$], [$n p$], [$n p(1-p)$],
-    
-    [Poisson], [$(lambda^k e^(-lambda))/k!$], [$lambda$], [$lambda$],
-    
-    [Hypergeom.], [$(binom(M,k) binom(N-M,n-k))/binom(N,n)$], [$n M/N$], [$dots$],
-    
-    [Normal], [$1/(sqrt(2pi)sigma) e^(-(x-mu)^2\/(2sigma^2))$], [$mu$], [$sigma^2$]
-  )
-
-  = Wichtige Quantile
-
-  #variables[
-    *Neue Begriffe:*
-    
-    $z_p$: p-Quantil der Standardnormalverteilung \
-    $t_("df"\; p)$: p-Quantil der t-Verteilung mit df Freiheitsgraden
-  ]
-
-  #table(
-    columns: 3,
-    [*Niveau*], [*z-Wert*], [*Verwendung*],
-    [90%], [1.645], [Normalvert.],
-    [95%], [1.960], [Normalvert.],
-    [99%], [2.576], [Normalvert.],
-    [95% (n=7)], [2.365], [t-Vert. (df=7)],
-    [95% (n=10)], [2.262], [t-Vert. (df=9)]
-  )
-
-
-
-  // ============================================================
-  // 2. WAHRSCHEINLICHKEITSRECHNUNG
-  // ============================================================
-
-
   = Bedingte Wahrscheinlichkeit
 
   #variables[
@@ -953,6 +948,75 @@
     
     $ P(F_1 | D) = (0.8 dot 0.05)/0.06 = 2/3 $
   ]
+
+  = Scatterplot & Streudiagramm
+
+  #variables[evaluieren ob irgendwo gebraucht ]
+
+
+  *Verwendung:* Visualisierung zweier **metrischer** Merkmale
+  
+  *Interpretation:*
+  - **Form**: linear, gekrümmt, mehrere Cluster
+  - **Richtung**: positiv (steigend), negativ (fallend)
+  - **Stärke**: eng um Kurve → stark, weit gestreut → schwach
+  
+  *Warnung:* Korrelation ≠ Kausalität (Scheinkorrelation möglich)
+
+  #steps[
+    + Wertepaare $(x_i, y_i)$ als Punkte in Koordinatensystem eintragen
+    + Visuelle Inspektion: Form, Richtung, Stärke erkennen
+    + Ausreißer identifizieren
+    + Korrelationskoeffizient berechnen (Pearson oder Spearman)
+    + Immer Scatterplot + Korrelationskoeffizient zusammen angeben!
+  ]
+ 
+
+  // ============================================================
+  // 7. WICHTIGE KENNWERTE & ÜBERSICHT
+  // ============================================================
+
+  = Übersichtstabelle Verteilungen
+
+  #table(
+    columns: 4,
+    [*Verteilung*], [*PMF/PDF*], [*E(X)*], [*Var(X)*],
+    
+    [Bernoulli], [$p^x (1-p)^(1-x)$], [$p$], [$p(1-p)$],
+    
+    [Binomial], [$binom(n,k) p^k (1-p)^(n-k)$], [$n p$], [$n p(1-p)$],
+    
+    [Poisson], [$(lambda^k e^(-lambda))/k!$], [$lambda$], [$lambda$],
+    
+    [Hypergeom.], [$(binom(M,k) binom(N-M,n-k))/binom(N,n)$], [$n M/N$], [$dots$],
+    
+    [Normal], [$1/(sqrt(2pi)sigma) e^(-(x-mu)^2\/(2sigma^2))$], [$mu$], [$sigma^2$]
+  )
+
+  = Wichtige Quantile
+
+  #variables[
+    *Neue Begriffe:*
+    
+    $z_p$: p-Quantil der Standardnormalverteilung \
+    $t_("df"\; p)$: p-Quantil der t-Verteilung mit df Freiheitsgraden
+  ]
+
+  #table(
+    columns: 3,
+    [*Niveau*], [*z-Wert*], [*Verwendung*],
+    [90%], [1.645], [Normalvert.],
+    [95%], [1.960], [Normalvert.],
+    [99%], [2.576], [Normalvert.],
+    [95% (n=7)], [2.365], [t-Vert. (df=7)],
+    [95% (n=10)], [2.262], [t-Vert. (df=9)]
+  )
+
+
+
+
+
+  
 
 
   // ============================================================
