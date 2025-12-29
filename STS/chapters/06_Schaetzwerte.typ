@@ -1,12 +1,5 @@
 #import "../../style.typ": default_style, formula, example, steps, variables, math
-#show: default_style
 
-#align(center)[
-  #text(size: 14pt, weight: "bold")[Schätzwerte und Vertrauensintervalle]
-
-]
-
-#columns(3, gutter: 1.2em)[
 
   = Punktschätzungen
 
@@ -41,4 +34,3 @@
     + Eigenschaften prüfen (erwartungstreu, konsistent)
   ]
 
-]

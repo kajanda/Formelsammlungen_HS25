@@ -1,5 +1,4 @@
 #import "../../style.typ": default_style, formula, example, steps, variables, math
-#show: default_style
 
 // Farben für die Vertrauensintervall-Tabelle
 #let vi_farbe1 = rgb("#e8f5e9") // Grün - Normalverteilung σ bekannt
