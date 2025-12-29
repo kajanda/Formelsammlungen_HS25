@@ -6,12 +6,12 @@
   #variables[evaluieren ob irgendwo gebraucht ]
 
 
-  *Verwendung:* Visualisierung zweier **metrischer** Merkmale
+  *Verwendung:* Visualisierung zweier *metrischer* Merkmale
   
   *Interpretation:*
-  - **Form**: linear, gekrümmt, mehrere Cluster
-  - **Richtung**: positiv (steigend), negativ (fallend)
-  - **Stärke**: eng um Kurve → stark, weit gestreut → schwach
+  - *Form*: linear, gekrümmt, mehrere Cluster
+  - *Richtung*: positiv (steigend), negativ (fallend)
+  - *Stärke*: eng um Kurve → stark, weit gestreut → schwach
   
   *Warnung:* Korrelation ≠ Kausalität (Scheinkorrelation möglich)
 

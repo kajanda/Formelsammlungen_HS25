@@ -41,6 +41,6 @@
     - Obere: $Q_3 + 1.5 dot "IQR" = 15 + 10.5 = 25.5$ → Max(Daten) = 22
 
 
-    *Ergebnis:* Alle Werte in $[5, 22]$ → **keine Ausreißer**
+    *Ergebnis:* Alle Werte in $[5, 22]$ → *keine Ausreißer*
   ]
 

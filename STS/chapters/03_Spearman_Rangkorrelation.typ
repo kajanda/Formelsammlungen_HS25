@@ -23,7 +23,7 @@
     wobei $d_i = "rg"(x_i) - "rg"(y_i)$
     
     *Interpretation:*
-    - Misst **monotonen** (nicht nur linearen) Zusammenhang
+    - Misst *monotonen* (nicht nur linearen) Zusammenhang
     - Robust gegen Ausreißer
     - Werte: $-1 <= r_"Sp" <= 1$
   ]
