@@ -55,22 +55,6 @@
 )[
 
 = Lernziele
-
-
-== Lecture_Control_Structures
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain the basic concepts of structured programming
-- to enumerate and explain the basic elements of a structogram
-- to comprehend how a C-compiler implements control structures in assembly language
-  - if-then-else
-  - do-while loops
-  - while loops
-  - for loops
-  - switch statements
-- to program basic structograms in assembly language
-]
-
 == Lecture_Subroutines_and_Stack
 #example[
 #emph[At the end of this lesson you will be able]
@@ -526,62 +510,66 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
 
 = Lecture_Branches
 == Lecture_Branches
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain what branch instructions are and how they work
-- to classify a given branch instruction with regard to
-  - conditional / unconditional
-  - relative / absolute
-  - direct / indirect
-- to apply and discuss the different branch instructions
-- to determine based on the settings of the flags whether a conditional branch is taken or not
-- to distinguish, apply and explain the instructions CMP,CMN and TEST
-]
-- *Unconditional*
-  - `B label`  (kurzer Sprung)
-  - `BL label` (Subroutine Call: LR ← return addr)
-  - `BX Rm`    (Springe zu Adresse in Register; Thumb-Bit beachten)
+#image("assets_CT/F7_Overview_Branches.png", width: 100%)
 
-- *Conditional*
-  - `B{cond} label` (EQ, NE, CS/HS, CC/LO, MI, PL, VS, VC, HI, LS, GE, LT, GT, LE)
-  - `CBZ/CBNZ Rn,label` (compare and branch if (non)zero)
-  - `IT{pattern} cond` macht bis zu 4 folgende Instruktionen bedingt (Then/Else)
+- * Unconditional Branches *
+  - Springt immer zu Zieladresse
+  - direct: Zieladresse wird in label angegeben
+   - *Achtung:* wenn der angegebene imm-Offset (nach `<<1`) > 0x400 (negativ) ist, muss man noch einen *sign-extend* machen. Wert - 0x1000. Negative Zahl dann mit PC + 4 + (neg) imm-Offset rechnen.
+  - indirect: Zieladresse steht in Register
+   - *BX* Rm kann also an beliebige viele Adressen springen
+   - Da absolute bedeutet, dass man genau an diese Adresse springen wird, kann man *beliebig* im Speicher springen.
 
-#formula[
-  *Merke (Bedingungen via Flags)*  
-  - EQ: Z=1, NE: Z=0  
-  - CS/HS: C=1, CC/LO: C=0  
-  - MI: N=1, PL: N=0  
-  - VS: V=1, VC: V=0
-]
+- * Conditional Branches *
+ - Sind immer realative (PC-relative)
+- *Flag dependent*
+  - abhängig von einem Flag (N,Z,C,V)
+  #image("assets_CT/F7_Flags_Dependent.png", width: 90%)
+- *Arithmetic*
+ - abhängig von einem oder mehreren Flags (N,Z,C,V)
+ - unsigned:
+    #image("assets_CT/F7_Arithmetisch_unsigned.png", width: 90%)
+ - signed:
+    #image("assets_CT/F7_Arithmetisch_signed.png", width: 90%)
 
-== Ist noch von Kapitel Arithmetic Operations relevant: CMP, CMN, TST
-- to program bit manipulation operations (set, clear, toggle, test a bit) in assembly language
-#example[
-  - `TST R0,R1` macht AND nur für Flags (kein Ergebnis speichern) → perfekt vor `BEQ/BNE`.
-]
+- *Vergleichsinstruktionen (Compare and Test)*
+ - `CMP Rn, Rm` → führt `Rn - Rm` aus (setzt Flags, Resultat wird verworfen)
+  - Ist gleichbedeutend mit Rn >= Rm ? -> res positiv: true, res negativ: false
+ - `CMN Rn, Rm` → führt `Rn + Rm` aus (setzt Flags, Resultat wird verworfen)
+  - Ist gleichbedeutend mit Rn + Rm >= 0 ? -> res positiv: true, res negativ: false
+ - Ändern keine Register, nur Flags
+  - `TST Rn, Rm` → führt `Rn AND Rm` aus (setzt N und Z, Resultat wird verworfen)
+    - Prüft ob gemeinsame gesetzte Bits in Rn und Rm vorhanden sind (Z=0 wenn ja, Z=1 wenn nein)
+
 
 = Lecture_Control_Structures
-
 - *Strukturierte Programme*
   - *Sequence* (einfach nacheinander)
   - *Selection* (`if/else`, `switch`)
   - *Iteration* (`while`, `do-while`, `for`)
 
-- *Assembly-Muster*
-  - if/else: `CMP` → `B{cond}` zu else/endif
-  - while: test am Anfang (loop_head)
-  - do-while: test am Ende
-  - switch: Kette von Vergleichen oder Sprungtabelle (je nach Compiler/Range)
+#image("assets_CT/F8_If.png", width: 90%)
+#image("assets_CT/F8_DoWhile.png", width: 90%)
+#image("assets_CT/F8_While.png", width: 90%)
+#image("assets_CT/F8_ForInWhile.png", width: 70%)
 
-#steps[
-  *while-Loop Skeleton (Assembler-Denke)*  
-  1) loop_head:  CMP ...  
-  2)            B{cond_false} loop_end  
-  3)            body ...  
-  4)            B loop_head  
-  5) loop_end:
-]
+- *Limitations of Conditional Branches*
+  - Nur bedingte Sprünge (keine Schleifen direkt)
+  - Nur relativ (PC-relative)
+  - Nur begrenzte Reichweite (± 256 Bytes). 
+   - Lösuing siehe Bild (Wenn if block zu gross dann else mit B ansteuern)
+#image("assets_CT/F8_LimitationsOfConBranch.png", width: 90%)
+
+
+- *Switch Statement*
+#image("assets_CT/F8_Switch.png", width: 90%)
+  - jumtable: Ist in Var section (muss bekannt sein)
+  - Kurzablauf: 
+   - Prüfen ob Wert (R1) im Bereich -> außerhalb: default
+   - Index berechnen (R1 `*` 4) 
+   - Startadresse der jumptable holen (R7)
+    - Zieladresse holen (LDR R7,[R7,R1])
+    - Springen (BX R7)
 
 = Lecture_Subroutines_and_Stack
 
