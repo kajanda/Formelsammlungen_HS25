@@ -2,7 +2,7 @@
 #show: default_style
 
 #columns(3)[
-// PMF PDf  CMF CDF Grundbegriffe 
+// PMF PDF CMF CDF Grundbegriffe 
 #include "./chapters/01_Grundbegriffe.typ"
 #include "./chapters/01_Diagramtypen.typ"
 #include "./chapters/01_Haeufigkeiten_Verteilungen.typ"
@@ -20,6 +20,10 @@
 #include "./chapters/03_Spearman_Rangkorrelation.typ"
 
 // Wahrscheinlichkeitsrechnung
+#include "./chapters/04_Laplace_Experiment.typ"
+#include "./chapters/04_Diskreter_Wahrscheinlichkeitsraum.typ" // Ai generiert
+#include "./chapters/04_Rechnen_Zufallsvariablen.typ" // Ai generiert
+#include "./chapters/04_Satz_Kenngroessen.typ" // Ai generiert
 #include "./chapters/04_Kombinatorik.typ"
 #include "./chapters/04_Kontingenztabellen.typ"
 #include "./chapters/04_Scatterplot_Streudiagramm.typ"
@@ -39,4 +43,5 @@
 // Schätzwerte
 #include "./chapters/06_Schaetzwerte.typ"
 ]
+#pagebreak()
 #include "./chapters/07_Vertrauensintervalle.typ"
