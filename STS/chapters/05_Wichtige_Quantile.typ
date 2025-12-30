@@ -10,8 +10,11 @@
     $t_("df"\; p)$: p-Quantil der t-Verteilung mit df Freiheitsgraden
   ]
 
+  #set text(size: 12pt)
   #table(
     columns: 3,
+    stroke: 0.5pt,
+    inset: 8pt,
     [*Niveau*], [*z-Wert*], [*Verwendung*],
     [90%], [1.645], [Normalvert.],
     [95%], [1.960], [Normalvert.],

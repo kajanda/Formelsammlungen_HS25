@@ -12,7 +12,7 @@
   ]
 
   #formula[
-    *Definition (allgemein):*
+    *Definition :* (auch bei gleichen Rängen)
     
     #math[$ r_"Sp" = (sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))("rg"(y_i) - overline("rg"(y))))/(sqrt(sum_(i=1)^n ("rg"(x_i) - overline("rg"(x)))^2) dot sqrt(sum_(i=1)^n ("rg"(y_i) - overline("rg"(y)))^2)) $]
     
@@ -57,3 +57,17 @@
     Starker positiver monotoner Zusammenhang
   ]
 
+  #example[
+    *Gleiche Ränge:*
+
+    #table(
+      columns: 7,
+      align: center + horizon,
+      [$i$], [1], [2], [3], [4], [5], [6],
+      [$x_i$], [23], [27], [35], [35], [42], [59],
+      [$"rg"(x_i)$], [1], [2], [#text(fill: red)[(3+4)/2 \ =3.5]], [#text(fill: red)[(3+4)/2 \ =3.5]], [5], [6]
+    )
+    
+    Bei gleichen Werten wird der Durchschnittsrang vergeben. \
+    *Achtung*: vereinfachte Formel kann *nicht* verwendet werden!
+  ]

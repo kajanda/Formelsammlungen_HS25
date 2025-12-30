@@ -1,7 +1,7 @@
 #import "../style.typ": default_style, formula, example, steps, variables, math
 #show: default_style
 
-#columns(3)[
+#columns(3, gutter: 10pt)[
 // PMF PDF CMF CDF Grundbegriffe 
 #include "./chapters/01_Grundbegriffe.typ"
 #include "./chapters/01_Diagramtypen.typ"
@@ -20,12 +20,10 @@
 #include "./chapters/03_Spearman_Rangkorrelation.typ"
 
 // Wahrscheinlichkeitsrechnung
+#include "./chapters/04_Diskreter_Wahrscheinlichkeitsraum.typ"
 #include "./chapters/04_Laplace_Experiment.typ"
-#include "./chapters/04_Diskreter_Wahrscheinlichkeitsraum.typ" // Ai generiert
-#include "./chapters/04_Rechnen_Zufallsvariablen.typ" // Ai generiert
-#include "./chapters/04_Satz_Kenngroessen.typ" // Ai generiert
+#include "./chapters/04_Rechnen_Zufallsvariablen.typ"
 #include "./chapters/04_Kombinatorik.typ"
-#include "./chapters/04_Kontingenztabellen.typ"
 #include "./chapters/04_Scatterplot_Streudiagramm.typ"
 #include "./chapters/04_Bedingte_Wahrscheinlichkeit.typ"
 #include "./chapters/04_Ereignisbaeum_Satz_Bayes.typ"

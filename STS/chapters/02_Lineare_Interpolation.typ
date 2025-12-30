@@ -1,7 +1,7 @@
 #import "../../style.typ": default_style, formula, example, steps, variables, math
 
 
-  = Quantile bei klassierten Daten
+  = lineare Interpolation Klassierte Daten
 
   #variables[
     *Neue Variablen:*

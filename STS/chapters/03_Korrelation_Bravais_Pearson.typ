@@ -64,6 +64,8 @@
     
     *(2) Standardabweichungen berechnen:*
     
+    $n=8$
+
     $s_x = sqrt(1/n sum x_i^2 - (overline(x))^2) = sqrt(126.25 - 100) = sqrt(26.25) = 5.12$
     
     $s_y = sqrt(1/n sum y_i^2 - (overline(y))^2) = sqrt(2143.5 - 1914.06) = 15.15$

@@ -20,13 +20,3 @@
     $f(x)$: PMF/PDF, $F(x)$: CMF/CDF
   ]
 
-  #formula[
-    *PMF:* $f(x)$ Relative Häufigkeit (Stabdiagramm)
-    
-    *CMF:* $F(x)$ Kumulative relative Häufigkeit (Treppendiagramm)
-    
-    *PDF:* $f(x)$ Höhe Balken Histogramm
-    
-    *CDF:* $F(x)$ Kulutative Fläche Balken Histogramm
-  ]
-

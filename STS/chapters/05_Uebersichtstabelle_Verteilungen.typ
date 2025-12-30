@@ -3,9 +3,12 @@
 
   = Übersichtstabelle Verteilungen
 
+  #set text(size: 10pt)
   #table(
     columns: 4,
-    [*Verteilung*], [*PMF/PDF*], [*E(X)*], [*Var(X)*],
+    stroke: 0.5pt,
+    inset: 6pt,
+    [*Art*], [*PMF/PDF*], [*E(X)*], [*Var(X)*],
     
     [Bernoulli], [$p^x (1-p)^(1-x)$], [$p$], [$p(1-p)$],
     
@@ -13,8 +16,8 @@
     
     [Poisson], [$(lambda^k e^(-lambda))/k!$], [$lambda$], [$lambda$],
     
-    [Hypergeom.], [$(binom(M,k) binom(N-M,n-k))/binom(N,n)$], [$n M/N$], [$dots$],
+    [Hyperg.], [$(binom(M,k) binom(N-M,n-k))/binom(N,n)$], [$n M/N$], [$dots$],
     
-    [Normal], [$1/(sqrt(2pi)sigma) e^(-(x-mu)^2\/(2sigma^2))$], [$mu$], [$sigma^2$]
+    [Normal], [$1/(sqrt(2pi)sigma) exp(-(x-mu)^2/(2sigma^2))$], [$mu$], [$sigma^2$]
   )
 

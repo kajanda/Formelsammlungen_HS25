@@ -20,11 +20,11 @@
     
     *Für großes* $n$*:*
     
-    #math[$ overline(X) tilde.dot N(mu, sigma^2/n) $]
+    #math[$ overline(X) tilde N(mu, sigma^2/n) $]
     
     *Standardisiert:*
     
-    #math[$ (overline(X) - mu)/(sigma/sqrt(n)) tilde.dot N(0, 1) $]
+    #math[$ (overline(X) - mu)/(sigma/sqrt(n)) tilde N(0, 1) $]
   ]
 
 

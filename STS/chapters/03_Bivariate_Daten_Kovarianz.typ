@@ -37,7 +37,7 @@
   #steps[
     + Mittelwerte $overline(x)$, $overline(y)$ berechnen
     + Produkte $x_i y_i$ bilden
-    + Verschiebungssatz anwenden: $s_(x y) = overline(x y) - overline(x) overline(y)$
+    + Verschiebungssatz anwenden: $s_(x y) = overline(x y) - overline(x) dot overline(y)$
     + Interpretation: Vorzeichen gibt Richtung des Zusammenhangs
   ]
 

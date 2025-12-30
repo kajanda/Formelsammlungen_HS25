@@ -2,10 +2,6 @@
 
 
   = Scatterplot & Streudiagramm
-
-  #variables[evaluieren ob irgendwo gebraucht ]
-
-
   *Verwendung:* Visualisierung zweier *metrischer* Merkmale
   
   *Interpretation:*

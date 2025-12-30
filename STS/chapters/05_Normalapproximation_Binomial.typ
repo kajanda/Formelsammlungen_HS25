@@ -37,7 +37,7 @@
     *200 Geräte, $p = 0.06$, $P(10 <= X <= 15)$*
 
 
-    Prüfung: $200 dot 0.06 dot 0.94 = 11.28 >= 9$ ✓
+    Prüfung: $200 dot 0.06 dot 0.94 = 11.28 >= 9$
 
 
     $ mu = 12, quad sigma = sqrt(11.28) approx 3.36 $

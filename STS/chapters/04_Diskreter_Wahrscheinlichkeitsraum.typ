@@ -19,6 +19,7 @@
   
   #math[$ Omega = {omega_1, omega_2, ...} quad "endlich oder abzählbar" $]
   
+  /**
   *Kolmogorov-Axiome:*
   
   1. Nichtnegativität: #math[$ P(A) >= 0 quad forall A subset.eq Omega $]
@@ -27,12 +28,26 @@
   
   3. Additivität: #math[$ P(A union B) = P(A) + P(B) quad "falls" A sect B = emptyset $]
   
-  *Wichtige Folgerungen:*
+  **/
+
+  *Eigenschaften eines diskreten Wahrscheinlichkeitsraums $(Omega, P)$:*
   
-  #math[$ P(emptyset) = 0 $]
-  #math[$ P(overline(A)) = 1 - P(A) $]
-  #math[$ P(A union B) = P(A) + P(B) - P(A sect B) $]
-  #math[$ sum_(omega in Omega) P({omega}) = 1 $]
+  (A1) Unmögliches Ereignis: #math[$ P(emptyset) = 0 $]
+  
+  (A2) Sicheres Ereignis: #math[$ P(Omega) = 1 $]
+  
+  (A3) Komplementäres Ereignis: #math[$ P(Omega \\ A) = 1 - P(A) $]
+  
+  (A4) Vereinigung: #math[$ P(A union B) = P(A) + P(B) - P(A sect B) $]
+  
+  (A5) Sigma-Additivität: #math[$ P(A_1 union A_2 union A_3 union ...) = P(A_1) + P(A_2) + P(A_3) + ... $]
+  
+  falls die Ereignisse $A_1, A_2, A_3, ...$ paarweise disjunkt sind.
+  
+  *Laplace-Raum:*
+  
+  Ist $(Omega, P)$ ein Laplace-Raum, so gilt: #math[$ P(M) = (|M|)/(|Omega|) $]
+  
 ]
 
 #steps[
@@ -49,7 +64,7 @@
   $P({1}) = 1/12$, $P({2}) = 1/12$, $P({3}) = 1/6$ \
   $P({4}) = 1/6$, $P({5}) = 1/4$, $P({6}) = 1/4$ \
   
-  Prüfung: $1/12 + 1/12 + 1/6 + 1/6 + 1/4 + 1/4 = 1$ ✓
+  Prüfung: $1/12 + 1/12 + 1/6 + 1/6 + 1/4 + 1/4 = 1$
   
   $P("gerade") = P({2,4,6}) = 1/12 + 1/6 + 1/4 = 11/24$
 ]

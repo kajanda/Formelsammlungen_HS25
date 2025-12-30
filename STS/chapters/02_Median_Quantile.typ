@@ -37,8 +37,10 @@
   #steps[
     + Daten sortieren: $x_((1)) <= x_((2)) <= dots <= x_((n))$
     + Position berechnen: $p = n dot q$
-    + Falls $p$ ganzzahlig → $Q_q = 1/2(x_((p)) + x_((p+1)))$
-    + Falls nicht → $k = ceil(p)$, dann $Q_q = x_((k))$
+    + Falls $p$ ganzzahlig → $Q_q = 1/2(x_((p)) + x_((p+1)))$\
+      -> auf Stufe
+    + Falls nicht → $k = ceil(p)$, dann $Q_q = x_((k))$ \
+      -> an Stufe
   ]
 
 
