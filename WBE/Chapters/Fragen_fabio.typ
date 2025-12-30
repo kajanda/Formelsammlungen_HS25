@@ -288,3 +288,167 @@ Es stellt die Seite so dar, dass Programme die Struktur, den Stil und den Inhalt
 Der DOM repräsentiert das Dokument als eine Baumstruktur, in der jedes Knotenpunkt ein Teil des Dokuments darstellt, wie z.B. ein Element, ein Attribut oder ein Textabschnitt.
 
 = numbers
+
+== Bitweise
+Was passiert wenn man auf eine number bitweise operationen anwendet?
+- die number wird in eine 32-bit Ganzzahl umgewandelt
+- die bitweise operation wird durchgeführt
+- das Ergebnis wird wieder in eine number umgewandelt
+
+== Shift Operators
+Was passiert bei einem left shift?
+- die bits werden nach links verschoben, es wird mit 0en aufgefüllt
+Was passiert bei einem right shift?
+- die bits werden nach rechts verschoben, das Vorzeichenbit wird aufgefüllt (für negative Zahlen)
+
+= Functions
+== ... and arguments
+
+```javascript
+function sumAll() {
+  let sum = 0;
+  for (let i = 0; i < arguments.length; i++) {
+    sum += arguments[i];
+  }
+  return sum;
+}
+```
+ist das gleiche wie
+```javascript
+function sumAll(...args) {
+  let sum = 0;
+  for (arg of args) {
+    sum += arg;
+  }
+  return sum;
+}
+```
+== Function Expressions
+```js
+const square = function(x) {
+  return x * x;
+};
+
+console.log(square(5)); // Output: 25
+```
+
+oder
+```js
+const square = (x) => {
+  return x `*` x;
+};
+console.log(square(5)); // Output: 25
+```
+
+oder
+
+```js
+const square = x => x `*` x;
+console.log(square(5)); // Output: 25
+```
+
+== Key Differenzces Between Function Declarations and Function Expressions
+Syntax: Function declarations require a name. Function expressions can be anonymous.
+Hoisting: Function declarations are hoisted. Function expressions are not.
+Flexibility: Function declarations offer more flexibility in how and where they are used.
+
+= Objekte
+== Prototype Inheritance
+Jedes JavaScript-Objekt hat eine Eigenschaft namens Prototype.
+Diese Eigenschaft verweist auf ein anderes Objekt, von dem es Eigenschaften und Methoden erben kann.
+Wenn auf eine Eigenschaft oder Methode eines Objekts zugegriffen wird, sucht JavaScript zuerst im Objekt selbst danach.
+Wenn es dort nicht gefunden wird, sucht es im Prototype-Objekt.
+
+```javascript
+const proto2 = {
+  c() { return "C"; }
+};
+
+const proto1 = Object.create(proto2);
+proto1.b = function () { return "B"; };
+
+const obj = Object.create(proto1);
+obj.a = function () { return "A"; };
+
+console.log(obj.a()); // A (vom obj)
+console.log(obj.b()); // B (von proto1)
+console.log(obj.c()); // C (von proto2)
+```
+
+== Creating Objects mit Prototypes
+```javascript
+const personPrototype = {
+  greet: function() {
+    console.log(`Hello, my name is ${this.name}`);
+  }
+};
+function createPerson(name, age) {
+  const person = Object.create(personPrototype);
+  person.name = name;
+  person.age = age;
+  return person;
+}
+const alice = createPerson('Alice', 30);
+alice.greet(); // Output: Hello, my name is Alice
+const bob = createPerson('Bob', 25);
+bob.greet(); // Output: Hello, my name is Bob
+```
+
+=== was wenn Attribute fehlen?
+```javascript
+const charlie = createPerson('Charlie');
+console.log(charlie.age); // Output: undefined
+charlie.greet(); // Output: Hello, my name is Charlie
+```
+
+=== delete property
+```javascript
+const person = {
+  name: 'David',
+  age: 40
+};
+delete person.age;
+console.log(person.age); // Output: undefined
+console.log(person); // Output: { name: 'David' }
+```
+
+=== Display objects
+```javascript
+const car = {
+  make: 'Toyota',
+  model: 'Camry',
+  year: 2020
+};
+console.log(car); // Output: { make: 'Toyota', model: 'Camry', year: 2020 }
+```
+
+=== Display all properties
+```javascript
+const book = {
+  title: '1984',
+  author: 'George Orwell',
+  year: 1949
+};
+for (let key in book) {
+  console.log(`${key}: ${book[key]}`);
+}
+// Output:
+// title: 1984
+// author: George Orwell
+// year: 1949
+```
+
+oder 
+```javascript
+// Create an Array
+const myArray = Object.values(book);
+
+// Stringify the Array
+let text = myArray.toString();
+```
+
+oder JSON.stringify
+```javascript
+const myJSON = JSON.stringify(book);
+console.log(myJSON); // Output: {"title":"1984","author":"George Orwell","year":1949}
+```
