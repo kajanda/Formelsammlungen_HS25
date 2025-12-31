@@ -15,10 +15,10 @@
     + Totale Wahrscheinlichkeit = Summe aller Pfade zum Ereignis
     + Bayes: $P(A|B) = ("Pfad zu A und B")/("Alle Pfade zu B")$
   ]
-#image("/assets/image.png", width: 100%)
+#image("../assets/image.png", width: 100%)
 
   #example[
-    #image("/assets/image-1.png")
+    #image("../assets/image-1.png")
     *Steckdosen (defekt):*
     
     Fabrik 1: $P(F_1) = 0.8$, $P(D|F_1) = 0.05$

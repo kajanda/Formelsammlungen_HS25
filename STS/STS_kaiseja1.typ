@@ -9,7 +9,6 @@
 
 // Median Quantile Boxplot Kennwerte
 #include "./chapters/02_Median_Quantile.typ"
-#include "./chapters/02_Quantile_klassierte_Daten.typ"
 #include "./chapters/02_Boxplot_Kennwerte.typ"
 
 // Mittelwert Varianz Korrelation Regression
