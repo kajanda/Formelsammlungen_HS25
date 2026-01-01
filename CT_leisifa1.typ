@@ -55,29 +55,7 @@
 )[
 
 = Lernziele
-== Lecture_Subroutines_and_Stack
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain why subroutines are important in program development
-- to explain how a processor stack works
-- to interpret and explain the code for subroutine calls in assembly
-- to implement leaf and non-leaf functions in Cortex-M assembly
-- to explain the difference between leaf and non-leaf functions
-]
 
-== Lecture_Parameter_Passing
-#example[
-#emph[At the end of this lesson you will be able]
-- to outline the basic ideas of the ARM Procedure Call Standard
-- to enumerate the different registers in the ARM Procedure Call Standard
-- to explain how registers are saved (caller-saved and callee-saved registers)
-- to outline what stack frames are and how they are implemented
-- to interpret assembly programs and relate register values to function parameters and return values
-- to interpret and explain assembly programs which use stack frames
-- to implement basic stack frames in Cortex-M0 assembly
-- to outline what an Application Binary Interface (ABI) is
-- to explain why the ABI is important for modular programming
-]
 
 == Lecture_Modular_Coding_Linking
 #example[
@@ -572,18 +550,44 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
     - Springen (BX R7)
 
 = Lecture_Subroutines_and_Stack
-
-- *Call/Return*
+- *Subroutine Definition*
+  - called by NAME
+  - Internal design not visible to caller -> information hiding
+  - can be reused (DRY principle)
+  - Function -> returns value; Procedure -> no return value
+ - *Call/Return*
   - Call: `BL func` → LR bekommt Rücksprungadresse
   - Return: `BX LR` (oder `POP {...,PC}`)
+  #image("assets_CT/F9_Call_Return.png", width: 90%)
+
+- *Unterschiede*
+ - *B label vs BL label*
+  - B: setzt nur den PC auf das Ziel (Programm läuft dort weiter). Kein Rücksprung wird gespeichert
+  - BL: setzt PC auf Ziel und speichert Rücksprungadresse in LR (Link Register) -> Rücksprung mit BX LR möglich oder POP {...,PC}
+ - *BX Rm vs BLX Rm*
+  - BX Rm: springt zu Adresse in Rm (kein Rücksprung gespeichert). Ändert nur PC
+  - BLX Rm: springt zu Adresse in Rm und speichert Rücksprungadresse in LR. Ändert PC und LR
+
+- *Subroutine Sichern*
+ #image("assets_CT/F9_Subroutine_Sichern.png", width: 90%)
+
+- * Nested Subroutines *
+  - Subroutine kann andere Subroutinen aufrufen
+  - LR wird bei jedem `BL` überschrieben → vorher sichern (Stack/Register)
+  - Rücksprungadresse immer im LR
+  #image("assets_CT/F9_Nested_Subroutines.png", width: 90%)
 
 - *Stack Basics*
-  - Stack wächst typischerweise zu kleineren Adressen (downwards)
-  - `PUSH {..}` / `POP {..}` sichern/holen Register
+ - Stack wächst zu kleineren Adressen (downwards)
+ - `PUSH {..}` / `POP {..}` sichern/holen Register
+
+- *Stack Pointer (SP)*
+  - Zeigt auf zuletzt genutzten Stack-Eintrag
+  - Nach `PUSH`: SP = SP - 4 × Anzahl Register -> neue Position nach ein
+  - Nach `POP`: SP = SP + 4 × Anzahl Register -> neue Position nach aus
 
 - *Register-Sichern*
   - Caller-saved vs. Callee-saved (wichtig für saubere Subroutines)
-
 #example[
   *Typisches ISR/Subroutine Muster*  
   - Prolog: `PUSH {R4-R7,LR}`  
@@ -591,15 +595,47 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
 ]
 
 = Lecture_Parameter_Passing
+- *Application Binary Interfac*
+ - Sind Spielreglen für Subroutine Calls
+ - Definieren wie Parameter übergeben werden
+  - Definieren wie Rückgabewerte übergeben werden
+  - Definieren welche Register von Caller/Callee gesichert werden müssen
 
-- *Grundidee Calling Convention (AAPCS-Style)*
-  - Argumente: zuerst in R0–R3
-  - Return: meist in R0 (ggf. R1 für “zweites Wort”)
-  - Weitere Argumente / grosse Daten: über Stack
+- *How to pass parameters?*
+  - via Registers (schnell, limitiert)
+  - via Stack (flexibel, langsamer)
+  - via globalen Variablen (unsauber, langsam)
+  - ARM nutzt Register-basiertes Parameter Passing (schnell)
+  - *Pass by Value*
+   - So übergibt ARM Parameter (Kopien in R0–R3)
+  - *Pass by Reference*
+   - So übergibt ARM Adressen (Pointer in R0–R3) und vorallem grosse Datenstrukturen über Stack
+   z.B. Arrays
 
-- *Wer muss was retten?*
-  - Caller-saved: R0–R3, R12 (und oft LR wenn weiter-call)
-  - Callee-saved: typ. R4–R11
+  - to enumerate and describe the operations of the caller of a subroutine
+  - to summarize the structure of a subroutine and describe what happens in the prolog and epilog respectively
+- *ARM Procedure Call Standard (AAPCS)*
+  - R0–R3: Argumente / Return-Werte
+  - R4–R11: callee-saved (müssen von Subroutine gesichert werden)
+  - R12: scratch (caller-saved)
+  - SP: Stack Pointer
+  - LR: Link Register (Rücksprungadresse)
+  - PC: Program Counter
+  #image("assets_CT/F10_Register_Useages.png", width: 90%)
+  #image("assets_CT/F10_Exapmle_ParameterPassing.png", width: 90%)
+
+ - *Register explained*
+  - Scratch Register:
+   - limited lifetime (only within one subroutine)
+   - not named, hold temporary values during calculations
+  - Varibale Register:
+   - hold values across subroutine calls
+   - must be saved/restored by callee if used
+   - R8–R12
+   - named 
+  - Argument, Parameter:
+    - used to pass arguments to subroutines and return values
+    - Caller copies R0–R3 and additional parameters on stack
 
 #steps[
   *Wenn du eine Funktion schreibst, die andere Funktionen aufruft:*  
@@ -608,6 +644,25 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
   3) arbeite  
   4) restore → return
 ]
+
+#image("assets_CT/F10_Caller_Calle.png", width: 90%)
+
+- to explain, interpret and discuss stack frames
+- to access elements of a stack frame in assembly
+- to understand the build-up and tear-down of stack-frames
+- *Stack Frame*
+  - Es gibt dann zwei SP (physikalisch nur eine, logisch zwei)
+   - SP_main (für main und alle aufgerufenen Subroutinen)
+   - SP_sub (für die aktuelle Subroutine)
+  - Bereich im Stack für eine Subroutine
+  - Enthält: gesicherte Register, lokale Variablen, evtl. Parameter
+  - Ermöglicht verschachtelte Subroutinen (nested calls)
+  - Berechnung 
+#image("assets_CT/F10_StackFrame.png", width: 90%)
+#image("assets_CT/F10_StackFrame_Example.png", width: 90%)
+
+- *C to Assembly call*
+#image("assets_CT/F10_C_to_Assambly.png", width: 90%)
 
 = Lecture_Modular_Coding_Linking
 

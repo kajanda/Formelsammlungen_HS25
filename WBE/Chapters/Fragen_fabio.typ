@@ -452,3 +452,207 @@ oder JSON.stringify
 const myJSON = JSON.stringify(book);
 console.log(myJSON); // Output: {"title":"1984","author":"George Orwell","year":1949}
 ```
+
+= Scope
+==block Scope with let and const
+```javascript
+{
+  let x = 10;
+  const y = 20;
+  console.log(x); // Output: 10
+  console.log(y); // Output: 20
+}
+console.log(x); // Error: x is not defined
+console.log(y); // Error: y is not defined
+```
+var ist nicht block-scoped:
+
+== Automaticly Global
+```javascript
+function myFunction() {
+  z = 10; // z is automatically global
+} 
+myFunction();
+console.log(z); // Output: 10
+```
+ausser im strict mode:
+```javascript
+"use strict";
+function myFunction() {
+  z = 10; // Error: z is not defined
+}
+myFunction();
+console.log(z); // Error: z is not defined
+```
+
+Do not use global variables unless you intend to!
+
+== standalone blocks
+```javascript
+{
+  let a = 5;
+  const b = 10;
+  console.log(a); // Output: 5
+  console.log(b); // Output: 10
+}
+console.log(a); // Error: a is not defined
+console.log(b); // Error: b is not defined
+```
+use for limiting variable scope
+
+== Hoisting
+```javascript
+console.log(myVar); // Output: undefined
+var myVar = 10;
+console.log(myVar); // Output: 10
+```
+
+was wird gehoisted?
+- Deklarationen mit var
+- Function Declarations
+was wird nicht gehoisted?
+- Deklarationen mit let und const
+```javascript
+console.log(myLet); // Error: myLet is not defined
+let myLet = 20;
+console.log(myLet); // Output: 20
+console.log(myConst); // Error: myConst is not defined
+const myConst = 30;
+console.log(myConst); // Output: 30
+```
+
+Am besten immer oben deklarieren!
+
+== Strict Mode
+was ändert sich im strict mode?
+- keine automatischen globalen Variablen
+- keine Duplikate von Parametern in Funktionen
+- Schreibschutz für bestimmte Eigenschaften
+- reservierte Wörter können nicht als Variablennamen verwendet werden
+- eval und arguments haben spezielle Einschränkungen
+- Variablen müssen deklariert werden, bevor sie verwendet werden
+
+= Date
+== Create a Date Object
+```javascript
+const date1 = new Date(); // Current date and time
+const date2 = new Date(2024, 5, 15); // June 15, 2024
+const date3 = new Date("2024-06-15T10:30:00Z"); // ISO format
+console.log(date1);   
+console.log(date2);
+console.log(date3);
+```
+
+= Array
+JavaScript does not support associative arrays.
+You should use objects when you want the element names to be strings (text).
+You should use arrays when you want the element names to be numbers.
+
+== How to Recognize an Array
+```javascript
+const fruits = ["Apple", "Banana", "Cherry"];
+console.log(Array.isArray(fruits)); // Output: true
+console.log(fruits instanceof Array); // Output: true
+```
+
+== findIndex()
+```javascript
+const numbers = [10, 20, 30, 40, 50];
+const index = numbers.findIndex(function(number) {
+  return number > 25;
+});
+
+console.log(index); // Output: 2
+```
+Returns the index of the first element that satisfies the provided testing function. Otherwise, it returns -1, indicating that no element passed the test.
+
+== Array Filter 
+```javascript
+const numbers = [10, 20, 30, 40, 50];
+const filteredNumbers = numbers.filter(function(number) {
+  return number > 25;
+});
+console.log(filteredNumbers); // Output: [30, 40, 50]
+```
+
+== Array from()
+```javascript
+const str = "Hello";
+const charsArray = Array.from(str);
+console.log(charsArray); // Output: ['H', 'e', 'l', 'l', 'o']
+const set = new Set([1, 2, 3]);
+const setArray = Array.from(set);
+console.log(setArray); // Output: [1, 2, 3]
+```
+
+== Array Map
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+const squaredNumbers = numbers.map(function(number) {
+  return number * number;
+});
+console.log(squaredNumbers); // Output: [1, 4, 9, 16, 25]
+```
+
+== Entries 
+```javascript
+const fruits = ["Apple", "Banana", "Cherry"];
+const iterator = fruits.entries();
+for (let entry of iterator) {
+  console.log(entry);
+}
+// Output:
+// [0, 'Apple']
+// [1, 'Banana']
+// [2, 'Cherry']
+```
+
+== Spread
+```javascript
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+const combined = [...arr1, ...arr2];
+console.log(combined); // Output: [1, 2, 3, 4, 5, 6]
+const str = "Hello";
+const chars = [...str];
+console.log(chars); // Output: ['H', 'e', 'l', 'l', 'o']
+```
+
+== const vs let in Arrays
+```javascript
+const numbers = [1, 2, 3];
+numbers.push(4); // Allowed
+console.log(numbers); // Output: [1, 2, 3, 4]
+let moreNumbers = [5, 6, 7];
+moreNumbers = [8, 9, 10]; // Allowed
+console.log(moreNumbers); // Output: [8, 9, 10]
+```
+aber 
+```javascript
+const numbers = [1, 2, 3];
+numbers = [4, 5, 6]; // Error: Assignment to constant variable.
+console.log(numbers);
+let moreNumbers = [5, 6, 7];
+moreNumbers = numbers; // Allowed
+console.log(moreNumbers); // Output: [1, 2, 3]
+```
+
+Array with var hat keinen block scope
+
+= Set
+Ist wie Mengen in der Mathematik
+
+== Weak Set
+- Only objects can be stored in a WeakSet.
+- WeakSets are not enumerable.
+```javascript
+const weakSet = new WeakSet();
+let obj1 = { name: 'Object 1' };
+let obj2 = { name: 'Object 2' };
+weakSet.add(obj1);
+weakSet.add(obj2);
+console.log(weakSet.has(obj1)); // Output: true
+obj1 = null; // obj1 can be garbage collected
+console.log(weakSet.has(obj1)); // Output: false
+console.log(weakSet.has(obj2)); // Output: true
+```
