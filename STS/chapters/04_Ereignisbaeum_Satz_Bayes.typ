@@ -15,7 +15,7 @@
     + Totale Wahrscheinlichkeit = Summe aller Pfade zum Ereignis
     + Bayes: $P(A|B) = ("Pfad zu A und B")/("Alle Pfade zu B")$
   ]
-#image("../assets/image.png", width: 100%)
+#image("../assets/image-4.png", width: 100%)
 
   #example[
     #image("../assets/image-5.png")
