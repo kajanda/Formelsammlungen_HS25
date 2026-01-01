@@ -18,10 +18,11 @@ To preview Typst documents in VS Code, you need the Tinymist Typst extension:
    - Or use the keyboard shortcut `Ctrl+K V` (on macOS: `Cmd+K V`)
    - The preview will open in a split pane and update automatically as you edit
 
-3. **Export to PDF**:
-   - Use "Typst: Export PDF" from the command palette
-   - Or click the export icon in the editor toolbar
-   - The extension compiles automatically on save
+3. **Automatic PDF Export**:
+   - PDFs are automatically generated when you save `.typ` files
+   - The workspace is configured to export PDFs on save (see `.vscode/settings.json`)
+   - PDFs are created in the same directory as the source files
+   - Manual export is also available via "Typst: Export PDF" from the command palette or the export icon in the editor toolbar
 
 ## Structure
 
