@@ -18,7 +18,7 @@
 #image("../assets/image.png", width: 100%)
 
   #example[
-    #image("../assets/image-1.png")
+    #image("../assets/image-5.png")
     *Steckdosen (defekt):*
     
     Fabrik 1: $P(F_1) = 0.8$, $P(D|F_1) = 0.05$
