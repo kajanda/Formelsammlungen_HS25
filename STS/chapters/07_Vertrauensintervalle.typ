@@ -24,7 +24,7 @@
   table.cell(fill: vi_farbe1)[$mu$],
   table.cell(fill: vi_farbe1)[$overline(X) = 1/n sum_(i=1)^n X_i$],
   table.cell(fill: vi_farbe1)[$U = (overline(X) - mu)/(sigma\/sqrt(n))$],
-  table.cell(fill: vi_farbe1)[*Standardnormalverteilung* (Tabelle 2) \ $c = u_p$ mit $p = (1+gamma)/2$],
+  table.cell(fill: vi_farbe1)[*Standardnormalverteilung*(Table 2) \ $c = u_p$ mit $p = (1+gamma)/2$],
   table.cell(fill: vi_farbe1)[$theta_u = overline(X) - c dot sigma/sqrt(n)$ \ $theta_o = overline(X) + c dot sigma/sqrt(n)$],
   
   // Row 2: Normalverteilung (Varianz unbekannt) - BLAU
@@ -32,7 +32,7 @@
   table.cell(fill: vi_farbe2)[$mu$],
   table.cell(fill: vi_farbe2)[$overline(X) = 1/n sum_(i=1)^n X_i$ \ $S^2 = 1/(n-1) dot sum_(i=1)^n (X_i - overline(X))^2$],
   table.cell(fill: vi_farbe2)[$T = (overline(X) - mu)/(S\/sqrt(n))$],
-  table.cell(fill: vi_farbe2)[*$t$-Verteilung* (Tabelle 4) mit $f = n - 1$ \ $c = t_((p;f))$ mit $p = (1+gamma)/2$],
+  table.cell(fill: vi_farbe2)[*$t$-Verteilung* (Table 4) mit $f = n - 1$ \ $c = t_((p;f))$ mit $p = (1+gamma)/2$],
   table.cell(fill: vi_farbe2)[$theta_u = overline(X) - c dot S/sqrt(n)$ \ $theta_o = overline(X) + c dot S/sqrt(n)$],
   
   // Row 3: Normalverteilung (Chi-Quadrat) - ORANGE
