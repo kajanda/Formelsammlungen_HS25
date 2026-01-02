@@ -1,16 +1,53 @@
-#import "../../style.typ": formula, example, steps
+#import "../../style.typ": formula, example, steps, remark
+
+/**
+ * 
+ * Gauss algorithmus (mit und ohne pivotisierung)
+ * LR Zerlegung
+ * QR Zerlegung (Gram-Schmidt)
+ * Fehler für gestörte lieneare Gleichungssysteme
+ * Jacobi Verfahren
+ * Gauß-Seidel Verfahren
+ * Fehlerabschätzung für iterative Verfahren
+ * Eigenwerte und Eigenvektoren
+ * komplexe Zahlen
+ * 
+ */
+
+
+
+
+
 
 == Definition 4.1: Dreiecksmatrizen
 
-#formula[
-  *Untere:* $l_(i j) = 0$ für $j > i$
-  
-  *Obere:* $r_(i j) = 0$ für $i > j$
-  
-  *Normiert:* Diagonale = 1
-]
+*Untere Dreiecksmatrix:* Alle Einträge oberhalb der Diagonale sind $0$.
+$ bold(L) = mat(
+  1, 0, 0, dots.c, 0;
+  l_(21), 1, 0, dots.c, 0;
+  l_(31), l_(32), 1, dots.down, 0;
+  dots.v, dots.v, dots.down, dots.down, 0;
+  l_(n 1), l_(n 2), dots.c, l_(n\,n-1), 1
+) $
 
-=== Vorgehen: Gauss-Elimination
+*Obere Dreiecksmatrix*: Alle Einträge unterhalb der Diagonale sind $0$.
+
+$ bold(R) = mat(
+  r_(11), r_(12), r_(13), dots.c, r_(1 n);
+  0, r_(22), r_(23), dots.c, r_(2 n);
+  0, 0, r_(33), dots.c, r_(3 n);
+  dots.v, dots.v, dots.down, dots.down, dots.v;
+  0, 0, dots.c, 0, r_(n n)
+) $
+
+#remark[*Normiert:* Diagonale = 1]
+
+
+== Gauss Algorithmus
+
+#formula[
+  $ x_i = frac(b_i - sum_(j=i+1)^n a_(i j) x_j, a_(i i)), quad i = n, n-1, ..., 1 $
+]
 
 #steps[
   *Schritt 1 - Vorwärtselimination:*
@@ -26,36 +63,55 @@
   - Weiter bis $x_1$
 ]
 
-=== Beispiel 4.1: Gauss 3×3 System
+
+=== Beispiel 3x3 Gauss Elimination
 
 #example[
   *Gegeben:*
-  $ x_1 + 2x_2 + 3x_3 &= 6 \
-    2x_1 + 5x_2 + 2x_3 &= 4 \
-    6x_1 - 3x_2 + x_3 &= 2 $
+  $ bold(A) = mat(-1, 1, 1; 1, -3, -2; 5, 1, 4) , bold(b) = vec(0, 5, 3) $
   
-  *Schritt 1a:* Eliminiere $x_1$ aus Zeile 2:
-  Zeile 2 $-$ $2 dot$ Zeile 1:
-  $ (2-2 dot 1)x_1 + (5-2 dot 2)x_2 + (2-2 dot 3)x_3 &= 4 - 2 dot 6 \
-    0x_1 + x_2 - 4x_3 &= -8 $
+  *Erweiterte Matrix:* $(bold(A) | bold(b)) = mat(-1, 1, 1, |, 0; 1, -3, -2, |, 5; 5, 1, 4, |, 3)$
   
-  *Schritt 1b:* Eliminiere $x_1$ aus Zeile 3:
-  Zeile 3 $-$ $6 dot$ Zeile 1:
-  $ 0x_1 - 15x_2 - 17x_3 &= -34 $
+  *Schritt 1 a: Eliminiere $a_(21)$*
+  $ i = 1, j = 2 => z_2 = z_2 - frac(1, -1) z_1 = (bold(A)_1 | bold(b)_1) $
+  $ (bold(A)_1 | bold(b)_1) = mat(-1, 1, 1, |, 0; 0, -2, -1, |, 5; 5, 1, 4, |, 3) $
   
-  *Schritt 1c:* Eliminiere $x_2$ aus Zeile 3:
-  Zeile 3 $-$ $(-15) dot$ neue Zeile 2:
-  $ 0x_1 + 0x_2 - 77x_3 &= -154 $
+  *Schritt 1b: Eliminiere $a_(31)$*
+  $ i = 1, j = 3 => z_3 = z_3 - frac(5, -1) z_1 = (bold(A)_2 | bold(b)_2) $
+  $ (bold(A)_2 | bold(b)_2) = mat(-1, 1, 1, |, 0; 0, -2, -1, |, 5; 0, 6, 9, |, 3) $
   
-  *Schritt 2:* Obere Dreiecksform erreicht:
-  $ mat(1, 2, 3; 0, 1, -4; 0, 0, -77) vec(x_1, x_2, x_3) = vec(6, -8, -154) $
+  *Schritt 1c: Eliminiere $a_(32)$*
+  $ i = 2, j = 3 => z_3 = z_3 - frac(6, -2) z_2 = (bold(A)_3 | bold(b)_3) $
+  $ (bold(A)_3 | bold(b)_3) = mat(-1, 1, 1, |, 0; 0, -2, -1, |, 5; 0, 0, 6, |, 18) $
   
-  *Schritt 3 - Rückwärts:*
-  $ x_3 &= (-154) / (-77) = 2 $
-  $ x_2 &= (-8 + 4 dot 2) / 1 = 0 $
-  $ x_1 &= (6 - 2 dot 0 - 3 dot 2) / 1 = 0 $
+  *Schritt 2: Obere Dreiecksform erreicht:*
+  $ mat(-1, 1, 1; 0, -2, -1; 0, 0, 6) vec(x_1, x_2, x_3) = vec(0, 5, 18) $
   
-  *Lösung:* $(x_1, x_2, x_3) = (0, 0, 2)$
+  *Schritt 3: Rückwärtseinsetzen:*
+  $ x_3 &= 18 / 6 = 3 $
+  $ x_2 &= (5 - (-1) dot 3) / (-2) = 8 / (-2) = -4 $
+  $ x_1 &= (0 - 1 dot (-4) - 1 dot 3) / (-1) = 1 / (-1) = -1 $
+  
+  *Lösung:* $(x_1, x_2, x_3) = (-1, -4, 3)$
+]
+
+
+== LR Zerlegung
+
+Folgende Aussagen sind äquivalent:
+
+#formula[
+  $ A = L R $
+
+  $ L y = b <=> y = (L|b) $
+  $R x = y <=> (R|y) = x$
+
+
+  mit Permutationsmatrix $P$:
+  $ P A = L R $
+  $  L y = P b $
+
+
 ]
 
 === Vorgehen: LR-Zerlegung
@@ -63,7 +119,7 @@
 #steps[
   *Schritt 1:* Gauss-Elimination durchführen
   
-  *Schritt 2:* Multiplikatoren in $bold(L)$ speichern
+  *Schritt 2:* Faktoren in $bold(L)$ eintragen
   
   *Schritt 3:* Resultat ist $bold(R)$
   
@@ -72,30 +128,74 @@
   - $bold(R) bold(x) = bold(y)$ (Rückwärts)
 ]
 
-=== Beispiel 4.2: LR-Zerlegung
+=== Beispiel 4.3: LR-Zerlegung
 
 #example[
-  *Gegeben:* System aus Beispiel 4.1
+  *Gegeben:* System aus Beispiel 4.2
+  $ bold(A) = mat(-1, 1, 1; 1, -3, -2; 5, 1, 4) , bold(b) = vec(0, 5, 3) $
   
-  *Schritt 1:* Gauss durchgeführt (siehe 4.1)
+  *Schritt 1:* Gauss-Elimination durchgeführt (siehe 4.2)
   
   *Schritt 2:* Multiplikatoren sammeln:
-  - Zeile 2: Faktor war $2$
-  - Zeile 3: Faktor war $6$, dann $-15$
+  - Zeile 2: Faktor war $frac(1, -1) = -1$
+  - Zeile 3: Faktor war $frac(5, -1) = -5$, dann $frac(6, -2) = -3$
   
-  $ bold(L) = mat(1, 0, 0; 2, 1, 0; 6, -15, 1) $
+  $ bold(L) = mat(1, 0, 0; -1, 1, 0; -5, -3, 1) $
   
-  *Schritt 3:* Resultat nach Gauss:
-  $ bold(R) = mat(1, 2, 3; 0, 1, -4; 0, 0, -77) $
+  *Schritt 3:* Resultat nach Gauss (obere Dreiecksmatrix):
+  $ bold(R) = mat(-1, 1, 1; 0, -2, -1; 0, 0, 6) $
   
-  *Schritt 4:* Lösen (für $bold(b) = vec(6, 4, 2)$):
+  *Schritt 4:* Lösen (für $bold(b) = vec(0, 5, 3)$):
   
   *Vorwärts* ($bold(L) bold(y) = bold(b)$):
-  $ y_1 &= 6 $
-  $ 2y_1 + y_2 &= 4 arrow.r y_2 = -8 $
-  $ 6y_1 - 15y_2 + y_3 &= 2 arrow.r y_3 = -154 $
   
-  *Rückwärts* ($bold(R) bold(x) = bold(y)$): wie in 4.1
+  Erweiterte Matrix: $(bold(L) | bold(b)) = mat(1, 0, 0, |, 0; -1, 1, 0, |, 5; -5, -3, 1, |, 3)$
+  
+  *Schritt 1:* Eliminiere $L_(21)$:
+  $ z_2 = z_2 - (-1) dot z_1 arrow.r mat(1, 0, 0, |, 0; 0, 1, 0, |, 5; -5, -3, 1, |, 3) $
+  
+  *Schritt 2:* Eliminiere $L_(31)$:
+  $ z_3 = z_3 - (-5) dot z_1 arrow.r mat(1, 0, 0, |, 0; 0, 1, 0, |, 5; 0, -3, 1, |, 3) $
+  
+  *Schritt 3:* Eliminiere $L_(32)$:
+  $ z_3 = z_3 - (-3) dot z_2 arrow.r mat(1, 0, 0, |, 0; 0, 1, 0, |, 5; 0, 0, 1, |, 18) $
+  
+*Vereinfacht*
+
+  $ y_1 &= 0 $
+  $ -1 dot y_1 + y_2 &= 5 arrow.r y_2 = 5 $
+  $ -5 dot y_1 - 3 dot y_2 + y_3 &= 3 arrow.r y_3 = 3 - 0 + 15 = 18 $
+
+
+  *Resultat:* $ y = vec(0, 5, 18) $
+  
+
+
+  *Rückwärts* ($bold(R) bold(x) = bold(y)$): wie in 4.2
+  $ x_3 &= 18 / 6 = 3 $
+  $ x_2 &= (5 - (-1) dot 3) / (-2) = -4 $
+  $ x_1 &= (0 - 1 dot (-4) - 1 dot 3) / (-1) = -1 $
+  
+  *Lösung:* $(x_1, x_2, x_3) = (-1, -4, 3)$ 
+]
+
+== QR Zerlegung
+#formula[
+  Eine Matrix $bold(Q) in RR^(n times n)$ heisst *orthogonal*, wenn ihre Spaltenvektoren paarweise orthogonal sind:
+  $ bold(Q)^T bold(Q) = bold(I_n) <=> bold(Q)^T = bold(Q)^(-1) $
+
+  Die QR-Zerlegung einer Matrix $bold(A) in RR^(m times n)$ ist die Darstellung:
+  $ bold(A) = bold(Q) bold(R) $
+
+  *Gram-Schmidt-Verfahren:*
+  
+  
+  $ bold(v)_i = bold(a)_i - sum_(j=1)^(i-1) (bold(a)_i^T bold(u)_j) bold(u)_j quad text("(orthogonal)") $
+  $ bold(u)_i = frac(bold(v)_i, ||bold(v)_i||) quad text("(normalisiert)") $
+  
+  
+  Finden von $bold(R)$:
+  $ bold(R) = bold(Q)^T bold(A) $
 ]
 
 === Vorgehen: QR (Gram-Schmidt)
@@ -106,8 +206,8 @@
   *Schritt 2:* $bold(u)_1 = bold(a)_1 / (||bold(a)_1||)$
   
   *Schritt 3:* Für $i = 2, ..., n$:
-  - $bold(v)_i = bold(a)_i - sum_(j=1)^(i-1) (bold(a)_i^T bold(u)_j) bold(u)_j$
-  - $bold(u)_i = bold(v)_i / (||bold(v)_i||)$
+  - $bold(v)_i$ berechnen (orthogonalisieren)
+  - $bold(u)_i = bold(v)_i / (||bold(v)_i||)$ berechnen
   
   *Schritt 4:* $bold(Q) = [bold(u)_1 | ... | bold(u)_n]$
   
@@ -117,7 +217,7 @@
 === Beispiel 4.3: QR für 2×2
 
 #example[
-  *Gegeben:* $bold(A) = mat(3, 1; 4, 2)$
+  *Gegeben:* $ bold(A) = mat(3, 1; 4, 2) $
   
   *Schritt 1:* Spalten:
   $ bold(a)_1 = vec(3, 4), quad bold(a)_2 = vec(1, 2) $
