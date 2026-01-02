@@ -656,3 +656,213 @@ obj1 = null; // obj1 can be garbage collected
 console.log(weakSet.has(obj1)); // Output: false
 console.log(weakSet.has(obj2)); // Output: true
 ```
+
+= Iteration
+== Difference between for...in and for...of
+- for...in iterates over the enumerable properties of an object (keys).
+- for...of iterates over the values of an iterable object (like arrays, strings, etc.).
+```javascript
+const arr = ['a', 'b', 'c'];
+for (let index in arr) {
+  console.log(index); // Output: 0, 1, 2 (indices)
+}
+for (let value of arr) {
+  console.log(value); // Output: 'a', 'b', 'c' (values)
+}
+== for...in with Objects
+```
+
+```javascript
+const obj = { name: 'Alice', age: 30, city: 'New York' };
+for (let key in obj) {
+  console.log(`${key}: ${obj[key]}`);
+}
+```
+
+// Output:
+// name: Alice
+// age: 30
+// city: New York
+
+== Iterable 
+
+its an object that can be iterated over (like arrays, strings, maps, sets, etc.)
+with for...of loop
+
+```javascript
+const myString = "Hello";
+for (let char of myString) {
+  console.log(char);
+} 
+// Output:
+// H
+// e
+// l
+// l
+// o
+const myArray = [10, 20, 30];
+for (let num of myArray) {
+  console.log(num);
+}
+// Output:
+// 10
+// 20
+// 30
+```
+
+== iterator
+its an object that defines a sequence and potentially a return value upon its termination.
+An iterator is created by calling the Symbol.iterator method on an iterable object.
+```javascript
+const myArray = [10, 20, 30];
+const iterator = myArray[Symbol.iterator]();
+console.log(iterator.next()); // Output: { value: 10, done: false }
+console.log(iterator.next()); // Output: { value: 20, done: false }
+console.log(iterator.next()); // Output: { value: 30, done: false }
+console.log(iterator.next()); // Output: { value: undefined, done: true }
+```
+
+done indicates whether the iterator has completed its sequence.
+When done is true, the value property will typically be undefined, indicating that there are no more values to iterate over.
+
+== Generators
+Generators are functions that can be exited and later re-entered.
+Their context (variable bindings) will be saved across re-entrances.
+Müssen wir das können? Eher nicht.
+
+= Regex
+
+= Data types
+Alle Number in JS sind floating point (64 bit double precision)
+
+== how to empty a variable
+```javascript
+let myVar = 42;
+myVar = undefined; // Now myVar is empty 
+console.log(myVar); // Output: null
+```
+or
+```javascript
+let myVar = 42;
+myVar = null; // Now myVar is empty
+console.log(myVar); // Output: null
+```
+
+== difference between null and undefined
+```javascript
+typeof undefined      // undefined
+typeof null           // object
+
+null === undefined    // false
+null == undefined     // true
+```
+
+== Constructor Property
+```javascript
+const str = new String("Hello");
+console.log(str.constructor === String); // Output: true
+const num = new Number(42);
+console.log(num.constructor === Number); // Output: true
+const bool = new Boolean(true);
+console.log(bool.constructor === Boolean); // Output: true
+const arr = new Array(1, 2, 3);
+console.log(arr.constructor === Array); // Output: true
+const obj = new Object();
+console.log(obj.constructor === Object); // Output: true
+const func = new Function("x", "y", "return x + y;");
+console.log(func.constructor === Function); // Output: true
+```
+
+= Events
+Examples of events:
+
+- An HTML button is clicked
+- A web page has finished loading
+- The mouse moves over an element
+- A keyboard key is pressed
+- An HTML input field is changed
+
+== Event Listener
+```javascript
+document.getElementById("myButton").addEventListener("click", function() {
+  alert("Button was clicked!");
+});
+```
+== Event Object
+```javascript
+document.getElementById("myButton").addEventListener("click", function(event) {
+  console.log("Mouse X: " + event.clientX);
+  console.log("Mouse Y: " + event.clientY);
+});
+```
+== Event: Website loaded
+```javascript
+window.addEventListener("load", function() {
+  console.log("Website is fully loaded");
+});
+```
+
+== Overview of common events
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Event], [Description],
+  ),
+
+  `click`,          [An element is clicked],
+  `dblclick`,       [An element is double-clicked],
+  `mouseover`,      [The mouse pointer moves over an element],
+  `mouseout`,       [The mouse pointer moves out of an element],
+  `keydown`,        [A keyboard key is pressed down],
+  `keyup`,          [A keyboard key is released],
+  `load`,           [The whole page has loaded],
+  `unload`,         [The page is unloaded],
+  `submit`,         [A form is submitted],
+  `change`,         [An input field value is changed],
+)
+
+== common html events
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Event], [Description],
+  ),
+
+  `onclick`,        [An element is clicked],
+  `ondblclick`,     [An element is double-clicked],
+  `onmouseover`,    [The mouse pointer moves over an element],
+  `onmouseout`,     [The mouse pointer moves out of an element],
+  `onkeydown`,      [A keyboard key is pressed down],
+  `onkeyup`,        [A keyboard key is released],
+  `onload`,         [The whole page has loaded],
+  `onunload`,       [The page is unloaded],
+  `onsubmit`,       [A form is submitted],
+  `onchange`,       [An input field value is changed],
+)
+
+== DOMContentLoaded event
+```javascript
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("DOM fully loaded and parsed");
+}); 
+```
+Was ist der Unterschied zu load?
+- DOMContentLoaded wird ausgelöst, wenn das HTML-Dokument vollständig geladen und geparst wurde, ohne auf Stylesheets, Bilder und Unterrahmen zu warten.
+- load wird ausgelöst, wenn die gesamte Seite, einschließlich aller abhängigen Ressourcen wie Stylesheets und Bilder, vollständig geladen ist.
+
+== was ist der DOM
+Der Document Object Model (DOM) ist eine Programmierschnittstelle für HTML- und XML-Dokumente.
+Es stellt die Seite so dar, dass Programme die Struktur, den Stil und den Inhalt des Dokuments ändern können.
+Der DOM repräsentiert das Dokument als eine Baumstruktur, in der jedes Knotenpunkt ein Teil des Dokuments darstellt, wie z.B. ein Element, ein Attribut oder ein Textabschnitt.
+
+== load event an andere objekte binden
+```javascript
+const img = document.getElementById("myImage");
+img.addEventListener("load", function() {
+  console.log("Image has been loaded");
+});
+```

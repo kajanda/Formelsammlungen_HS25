@@ -55,21 +55,6 @@
 )[
 
 = Lernziele
-
-
-== Lecture_Modular_Coding_Linking
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain the concepts behind modular programming
-- to appropriately partition C and assembly programs into modules
-- to explain the steps involved from source to the executable program
-- to interpret map files of object files and executable programs
-- to explain the main tasks of a linker: merging, resolution, relocation
-- to explain the rules the linker applies for resolution and relocation
-- to explain the difference between static and dynamic linking
-- to explain the concept of source level debugging
-]
-
 == Lecture_Exceptional_Control_Flow-Interrupts
 #example[
 #emph[At the end of this lesson you will be able]
@@ -665,27 +650,92 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
 #image("assets_CT/F10_C_to_Assambly.png", width: 90%)
 
 = Lecture_Modular_Coding_Linking
-
-- *Warum modular?* Komplexität managen, Wiederverwendung, weniger Copy/Paste
+- *Warum modular?* 
+ - Komplexität managen, Wiederverwendung, weniger Copy/Paste. 
+ - Es gelten die gleichen Prinzipien wie bei prog1 (high cohesion, low coupling).
+ - Translationsschritte:
+  - Preprocessing (Makros, Includes, bedingte Compilierung)
+  - Compilation (C/ASM → Objektdateien .o)
+  - Assembly (ASM → Objektdateien .o)
+  - Linking (Objektdateien + Libraries → ausführbare Datei .elf/.bin), erst beim Linking werden alle Module zusammengefügt
 
 - *C: Declaration vs. Definition*
+  - Declared before use (z.B. in Header-Datei)
+  - Defined once (z.B. in Quellcode-Datei)
   - Declaration: “Name existiert so” (z.B. `uint32_t f(uint32_t);`)
   - Definition: “hier ist der Code / Speicher wird reserviert”
 
+- *Scurce Code Anatomy*
+ - External linkage: global (über Module hinweg sichtbar)
+ - Internal linkage: static (nur innerhalb eines Moduls sichtbar)
+ - No linkage: lokale Variablen (nur innerhalb einer Funktion sichtbar)
+
+#image("assets_CT/F11_Internal_External_Linkage_Example.png", width: 90%)
+
+- *EXPORT and IMPORT*
+ - `EXPORT name` in Assembly: macht Symbol global sichtbar (external linkage)
+ - `IMPORT name` in Assembly: deklariert externes Symbol (muss in anderem Modul definiert sein)
+
+- *Assembly to object file linkage*
+  - References: *Imported symbols* translate *global reference symbols* in object file
+  - global: *Exported symbols* translate to *global symbols*
+  - local: *Internal symbols*  translate to *local symbols* 
+
+#image("assets_CT/F11_Internal_External_Linkage_Assembly_Example.png", width: 90%)
+
 - *Linker Tasks*
   - Merging (Code/Data Sections zusammenfügen)
-  - Symbol Resolution (Referenzen auflösen)
-  - Relocation (Adressen nach dem Zusammenfügen anpassen)
+   - data Section
+   - code Section
+  - Resolve used external symbols
+  - Relocate addresses
+  #image("assets_CT/F11_Linker_merge_Section.png", width: 90%)
 
-- *Toolchain / Libraries*
-  - Native vs. Cross Toolchain
-  - Static Libraries (link-time “reinkopiert”) vs Dynamic/Shared (load-time)
+- *Merging Code Section*
+#image("assets_CT/F11_merge.png", width: 90%)
+ - Erster Offset ist immer startadresse der Section (0x0000_0000)
+ - Alle folgenden Sections werden nacheinander angefügt
+ - Neue Adresse = vorherige Endadresse + 4 (Im Bild 0x0000_0018 + 4 = 0x0000_001C)
 
-#formula[
-  *One-Definition-Rule (Merke)*  
-  - Deklarieren: mehrfach ok  
-  - Definieren: in einem Scope nur einmal
-]
+- *Merging Date Section*
+ - Funktioniert gleich wie Code Section
+ - Erster Offset ist immer startadresse der Section
+ - zb Section1: 0x00 DCD 5, Section2: 0x04 DCD 7 etc... 
+
+- *Resolve*
+ - Ist merge für symbol Tables. 
+#image("assets_CT/F11_Resolve.png", width: 90%)
+
+- *Relocate*
+ - Ist ausrechnen der relativen finalen Adressen im main.o 
+ - Formel: *new address = base address + offset + module relative address*
+  - base address: startadresse der Section im finalen Executable
+  - offset: wo ist das Modul in der Section (nach merge)
+  - module relative address: Adresse im Modul (vor Relocate)
+  #image("assets_CT/F11_Relocate.png", width: 90%)
+  #image("assets_CT/F11_Relocated.png", width: 90%)
+
+- *Static Linking*
+  - Alle Objektdateien und Libraries werden zur Build-Zeit zusammengefügt
+  - Ergebnis: eine ausführbare Datei (.elf/.bin)
+  - Vorteile: Einfach, schnell, keine Abhängigkeiten zur Laufzeit
+  - Nachteile: Grössere Datei, keine Updates einzelner Module möglich
+- *Dynamic Linking*
+  - Module werden zur Laufzeit geladen (shared libraries)
+  - Vorteile: Kleinere ausführbare Datei, Updates einzelner Module möglich
+  - Nachteile: Komplexer, Abhängigkeiten zur Laufzeit, Performance-Overhead
+
+- *Map File*
+  - Textdatei mit Speicherlayout der ausführbaren Datei
+  - Enthält Adressen und Grössen von Sektionen, Symboltabellen
+  - Nützlich für Debugging, Optimierung, Speicheranalyse
+  
+- *Source level Debugging*
+ - needs mapping Machine address to Source code line
+ - needs mapping Memory location and source code types
+ - often Provided in in obj file eg .elf format
+
+
 
 = Lecture_Exceptional_Control_Flow-Interrupts
 
@@ -749,5 +799,10 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
   - Branch prediction, Prefetch, Out-of-order (bei grossen CPUs; kann Security-Risiken bringen)
   - Parallel Computing: SIMD, Multithreading, Multicore, Multiprocessor
 
+= Stolpersteine
+- HIER SCREENS VON Aufgaben die ich nicht geschaft habe
+
+= Häufige Code Snippets
+- Hier einige nützliche Code-Snippets
 
 ]
