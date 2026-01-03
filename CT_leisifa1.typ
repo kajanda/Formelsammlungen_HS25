@@ -54,35 +54,6 @@
 
 )[
 
-= Lernziele
-== Lecture_Exceptional_Control_Flow-Interrupts
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain advantages and disadvantages of polling and interrupt-driven I/O
-- to distinguish the different types of exceptions on a Cortex-M3/M4
-- to explain how the Cortex-M3/M4 recognizes and processes exceptions
-- to explain the vector table of the Cortex-M3/M4
-- to understand the basic functionality of the Nested Vectored Interrupt Controller (NVIC)
-  - to enable and disable interrupts
-  - to set and clear interrupts by software
-  - to prioritize exceptions
-  - to know how programmed priorities influence preemption of service routines
-  - to explain how simultaneously pending interrupts are processed
-- to implement a simple interrupt service routine in Cortex-M assembly
-- to explain potential data consistency issues due to interrupts and to give potential examples
-]
-
-== Lecture_Increasing_system_Performance
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain different types of bus architectures
-- to understand the difference between von Neumann and Harvard architecture
-- to understand RISC and CISC paradigms
-- to describe the idea of pipelining
-- to calculate processing performance improvement through pipelining
-- to describe the basics of parallel computing
-]
-
 = Lecture_Computer_Architecture
 #image("assets_CT/F1_Hardwarearchitektur.png", width: 90%)
 
@@ -735,44 +706,118 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
  - needs mapping Memory location and source code types
  - often Provided in in obj file eg .elf format
 
-
-
 = Lecture_Exceptional_Control_Flow-Interrupts
-
 - *Polling vs Interrupt-driven I/O*
-  - Polling: einfach, deterministisch, aber Busy-Wait (CPU-Zeit verschwendet)
-  - Interrupt: schnelle Reaktion, aber Synchronisation/Debugging schwieriger
+  - Polling: Ist einfach periodisch prüfen ob ein Ereignis eingetreten ist
+   - einfach, deterministisch, aber Busy-Wait (CPU-Zeit verschwendet)
+  - Interrupt: Ist ereignisgesteuert (Peripherie signalisiert CPU)
+   - effizienter, multitasking-fähig
+   - schnelle Reaktion, aber keine Synchronisation zwischen main und ISR + Debugging schwieriger
 
+#image("assets_CT/F12_Polling.png", width: 90%)
+#image("assets_CT/F12_ISR.png", width: 90%)
+
+- to explain how the Cortex-M3/M4 recognizes and processes exceptions
+- to explain the vector table of the Cortex-M3/M4
+- to distinguish the different types of exceptions on a Cortex-M3/M4
 - *Exceptions (Cortex-M3/M4 Sicht)*
   - System Exceptions (Reset, NMI, Faults, SVC, …)
   - Interrupts IRQ0…IRQ239 (Peripherals, auch software-triggerbar)
+  - Sind eigentlich das gleiche, aber unterschiedliche Prioritäten und Vektoren
+ 
+
+#image("assets_CT/F12_InterruptsVSSystemException.png", width: 90%)
+#image("assets_CT/F12_System_Exceptions_Overview.png", width: 90%)
+
+- *Interrupts: change of programm Flow*
+Buch vegleich: finish -> Satz fertig lesen, save -> Buchzeichen, load address -> springen zum Interrupt Handler
+#image("assets_CT/F12_Change_of_programm_flow.png", width: 90%)
+ - *Context Save/Restore bei ISR Entry/Return*
+  - *Hardware* stackt automatisch: xPSR, PC, LR, R12, R0–R3 , EX stored
+  - Am schluss von myISR `BX LR` (LR = EXC_RETURN Wert) → Hardware entstackt automatisch
+
+- to understand the basic functionality of the Nested Vectored Interrupt Controller (NVIC)
+- *NVIC Grundfunktionen*
+ - 240 Interrupts (IRQ0–IRQ239) -> trigger von Peripherie (high level signal)
+ - NVIC ist Hardware-Modul im Cortex-M, leitet Interrupts an CPU weiter (physikalisch)
+ - CPU rechnet vector addresse aus, basierend auf IRQ-Nummer
+ - Vektor-Tabelle: Liste von Adressen für jeden Exception/Interrupt (im Flash bei 0x0000_0000)
+ - Alle Register werden automatisch gespeichert -> Entwickler muss nur ISR schreiben
 
 - *Vector Table*
-  - Liegt bei Reset an Adresse 0x0000_0000 (Mapping)
-  - enthält Start-SP und Handler-Adressen
+#image("assets_CT/F12_Vector_table.png", width: 90%)
 
-- *Context Save/Restore bei ISR Entry/Return*
-  - Hardware stackt automatisch: xPSR, PC, LR, R12, R0–R3
-  - EXC_RETURN wird in LR gesetzt; Return via `BX LR`
+- *Interrupts Control*
+ - Inactive: Interrupt nicht aktiv (Standard)
+ - Pending: Interrupt ist angefordert (warten auf Service) (IRQn = 1) (Interrupt disabled)
+  - Pending Register: Setzen/Löschen von Pending Bits
+ - Active: Interrupt wird gerade serviced (Interrupt enabled)
+  - Active Status Register: Lesen ob Interrupt aktiv ist (bit setzt wenn aktiv, cleared wenn fertig)
+ - Active and Pending: Interrupt wird gerade serviced, aber erneut angefordert
 
-#formula[
-  *Kontext bei ISR Entry (automatisch)*  
-  push: xPSR, PC, LR, R12, R0–R3  
-  EXC_RETURN typisch: 0xFFFF_FFF9
-]
+- *Prioritize exceptions*
+  - Jede Exception/Interrupt hat Priorität (0 = höchste, 255 = niedrigste)
+  - Priorität wird in NVIC konfiguriert (4 Bits genutzt -> 16 Stufen)
+   - Prio setzten von IRQn: via LDR R0,=PL_REG_IRQn, dann prio in R1 schreiben und speichern
+   - *Achtung* je tiefer die Zahl, desto höher die Priorität (0 = höchste Prio)
 
-- *NVIC Grundfunktionen*
-  - Enable/Disable (global z.B. PRIMASK / CPSID i, CPSIE i + individuell)
-  - Pending/Active Bits
-  - Prioritäten → Preemption
+- *Preemption:* Höher priorisierte Interrupts können tiefer priorisierte unterbrechen
+  - z.B. IRQ1 (Prio 2) kann IRQ2 (Prio 5) unterbrechen
+- *Tail-Chaining:* Wenn ISR endet und ein anderer Interrupt pending ist, wird dieser sofort gestartet (ohne Rückkehr zu main)
 
-#example[
-  *Data Consistency Problem:*  
-  - Main liest Struktur, ISR schreibt gleichzeitig → “gemischte” Anzeige  
-  - Lösung: kritische Sektion mit `__disable_irq(); ... __enable_irq();`
-]
+- *Simultaneously pending*
+  - Wenn mehrere Interrupts gleichzeitig pending sind, wird der mit der höchsten Priorität zuerst bedient
+  - NVIC wählt automatisch den nächsten Interrupt basierend auf Priorität und Pending-Status aus
+
+#image("assets_CT/F12_Nested_Exceptions.png", width: 90%)
+
+*Wichig:* IRQ set by HW - cleared by SW 
+
+- *Enable/Disable Interputs*
+```yasm
+LDR R1, =0x10000040 ;enable Interup mask
+LDR R0, =REG_SETENA0
+STR R1, [R0]
+```
+Man kann die Vits auch ein- und ausschalten, weil aktive bits einen Effekt auf das Register haben
+#image("assets_CT/F12_Enalbe_Disable_Interrupts.png", width: 50%)
+#image("assets_CT/F12_Setana.png", width: 100%)
+
+- *Data Consistency Issues*
+ - Interrupts können Variablen ändern, während main darauf zugreift
+ - Lösung:
+  - Disable Interrupts während kritischer Abschnitte (`__disable_irq()`, `__enable_irq()`)
+#image("assets_CT/F12_Critical_Section.png", width: 90%)
+
+- *Code Example ISR*
+```asm
+    AREA ISR_Example, CODE, READONLY
+    EXPORT MyISR
+MyISR
+    ; ISR Code hier
+    BX LR
+    END
+```
+
+- *CMSIS*
+  - Cortex Microcontroller Software Interface Standard
+  - Standardisierte Header-Dateien und Funktionen für Cortex-M
+  - Erleichtert Entwicklung und Portabilität
+  - Enthält NVIC-Funktionen, System-Initialisierung, etc.
+  - Methoden: `NVIC_EnableIRQ(IRQn_Type IRQn)`, `NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)`
 
 = Lecture_Increasing_System_Performance
+
+== Lecture_Increasing_system_Performance
+#example[
+#emph[At the end of this lesson you will be able]
+- to explain different types of bus architectures
+- to understand the difference between von Neumann and Harvard architecture
+- to understand RISC and CISC paradigms
+- to describe the idea of pipelining
+- to calculate processing performance improvement through pipelining
+- to describe the basics of parallel computing
+]
 
 - *Bus-/Speicherarchitektur*
   - von Neumann: Code+Data über eine Schnittstelle → Bottleneck

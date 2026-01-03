@@ -352,7 +352,81 @@ Syntax: Function declarations require a name. Function expressions can be anonym
 Hoisting: Function declarations are hoisted. Function expressions are not.
 Flexibility: Function declarations offer more flexibility in how and where they are used.
 
+== Closures
+== Was ist eine Closure?
+Eine Closure ist eine Funktion, die Zugriff auf Variablen aus ihrem äußeren (enclosing) Funktionsbereich hat, auch nachdem die äußere Funktion beendet wurde.
+
+```javascript
+function outerFunction(outerVariable) {
+  return function innerFunction(innerVariable) {
+    console.log('Outer Variable: ' + outerVariable);
+    console.log('Inner Variable: ' + innerVariable);
+  };
+}
+const newFunction = outerFunction('outside');
+newFunction('inside');
+// Output:
+// Outer Variable: outside
+// Inner Variable: inside
+```
+
+== call and apply
+```javascript
+function greet(greeting, punctuation) {
+  console.log(greeting + ', ' + this.name + punctuation);
+}
+const person = { name: 'Alice' };
+greet.call(person, 'Hello', '!'); // Output: Hello, Alice!
+greet.apply(person, ['Hi', '...']); // Output: Hi, Alice...
+```
+
+== bind 
+Was macht bind?
+- bind erstellt eine neue Funktion, die an ein bestimmtes this gebunden ist.
+
+```javascript
+const person = {
+  name: 'Bob',
+  greet: function() {
+    console.log('Hello, ' + this.name);
+  }
+};
+const greetBob = person.greet.bind(person);
+greetBob(); // Output: Hello, Bob
+```
+Was wenn person mehrere functionen als attribute hat?
+- jede Funktion kann mit bind an das person Objekt gebunden werden.
+ Beispiel
+```javascript
+const person = {
+  name: 'Bob',
+  greet: function() {
+    console.log('Hello, ' + this.name);
+  },
+  farewell: function() {
+    console.log('Goodbye, ' + this.name);
+  }
+};
+const greetBob = person.greet.bind(person);
+const farewellBob = person.farewell.bind(person);
+greetBob(); // Output: Hello, Bob
+farewellBob(); // Output: Goodbye, Bob
+```
+
 = Objekte
+== this Keyword
+In JavaScript, the this keyword refers to the object that is executing the current function.
+```javascript
+const person = {
+  firstName: "John",
+  lastName: "Doe",
+  fullName: function() {
+    return this.firstName + " " + this.lastName;
+  }
+};
+console.log(person.fullName()); // Output: John Doe
+```
+
 == Prototype Inheritance
 Jedes JavaScript-Objekt hat eine Eigenschaft namens Prototype.
 Diese Eigenschaft verweist auf ein anderes Objekt, von dem es Eigenschaften und Methoden erben kann.
@@ -392,6 +466,31 @@ const alice = createPerson('Alice', 30);
 alice.greet(); // Output: Hello, my name is Alice
 const bob = createPerson('Bob', 25);
 bob.greet(); // Output: Hello, my name is Bob
+```
+
+== Prtotypen setzen
+```javascript
+const animal = {
+  speak: function() {
+    console.log(`${this.name} makes a noise.`);
+  }
+};
+function Dog(name) {
+  this.name = name;
+}
+Dog.prototype = animal;
+const dog = new Dog('Rex');
+dog.speak(); // Output: Rex makes a noise.
+```
+
+== in Operator
+```javascript
+const person = {
+  name: 'Alice',
+  age: 30
+};
+console.log('name' in person); // Output: true
+console.log('gender' in person); // Output: false
 ```
 
 === was wenn Attribute fehlen?
@@ -452,6 +551,20 @@ oder JSON.stringify
 const myJSON = JSON.stringify(book);
 console.log(myJSON); // Output: {"title":"1984","author":"George Orwell","year":1949}
 ```
+
+== concatinate objects
+```javascript
+const obj1 = { a: 1, b: 2 };
+const obj2 = { b: 3, c: 4 };
+const mergedObj = { ...obj1, ...obj2 };
+console.log(mergedObj); // Output: { a: 1, b: 3, c: 4 }
+```
+warum ist b:3?
+- weil die Eigenschaften von obj2 die gleichen Eigenschaften von obj1 überschreiben.
+- die Reihenfolge der Objekte im Spread-Operator bestimmt, welche Eigenschaften behalten werden.
+
+warum macht man das?
+- um mehrere Objekte zu einem einzigen Objekt zu kombinieren.
 
 = Scope
 ==block Scope with let and const
@@ -866,3 +979,504 @@ img.addEventListener("load", function() {
   console.log("Image has been loaded");
 });
 ```
+
+== TimingEvents
+setTimeout()	Sets a clock timeout (runs once)
+setInterval()	Sets a clock interval (runs repeatedly)
+clearTimeout()	Clears a timeout
+clearInterval()	Clears an inteval
+
+== Event Management
+=== Adding Events
+```javascript
+element.addEventListener(event, function, useCapture);
+```
+
+=== Removing Events
+```javascript
+element.removeEventListener(event, function, useCapture);
+```
+
+= Console. - Methods
+== Common Console Methods
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Method], [Description],
+  ),
+
+  `console.log()`,        [Outputs a message to the console],
+  `console.error()`,      [Outputs an error message to the console],
+  `console.warn()`,       [Outputs a warning message to the console],
+  `console.info()`,       [Outputs an informational message to the console],
+  `console.debug()`,      [Outputs a debug message to the console],
+  `console.table()`,      [Displays data as a table in the console],
+  `console.clear()`,      [Clears the console],
+  `console.time()`,       [Starts a timer with a name],
+  `console.timeEnd()`,    [Stops the timer and logs the elapsed time],
+)
+
+= Optional chaining
+was ist optional chaining?
+- Es ist eine Möglichkeit, auf verschachtelte Objekteigenschaften zuzugreifen, ohne dass ein Fehler ausgelöst wird, wenn eine der Eigenschaften nicht existiert.
+```javascript
+const user = {
+  profile: {
+    name: "Alice",
+    address: {
+      city: "Wonderland"
+    }
+  }
+};
+const city = user.profile?.address?.city;
+console.log(city); // Output: "Wonderland"
+const zip = user.profile?.address?.zip;
+console.log(zip); // Output: undefined
+```
+
+= Eingabe von Konsole verlangen
+```javascript
+const userName = prompt("Please enter your name:");
+console.log("Hello, " + userName + "!");
+const userAge = prompt("Please enter your age:");
+console.log("You are " + userAge + " years old.");  
+```
+or with readline (Node.js)
+```javascript
+const readline = require('readline').createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+readline.question('Please enter your name: ', name => {
+  console.log(`Hello, ${name}!`);
+  readline.close();
+});
+```
+
+= Errors 
+== Common JavaScript Errors
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Error Type], [Description],
+  ),
+
+  `SyntaxError`,        [Occurs when there is a syntax mistake in the code],
+  `ReferenceError`,     [Occurs when a non-existent variable is referenced],
+  `TypeError`,          [Occurs when a value is not of the expected type],
+  `RangeError`,         [Occurs when a number is outside the allowable range],
+  `EvalError`,          [Occurs when the eval() function is used incorrectly],
+  `URIError`,           [Occurs when there is an error in URI handling functions],
+)
+
+== try...catch
+```javascript
+try {
+  // Code that may throw an error
+  let result = riskyOperation();
+  console.log("Result: " + result);
+} catch (error) {
+  // Code to handle the error
+  console.error("An error occurred: " + error.message);
+} finally {
+  // Code that will run regardless of an error occurring
+  console.log("Execution completed.");
+}
+```
+finally block is optional but always runs after try and catch blocks.
+
+== Silent Errors
+In JavaScript, silent errors occur when an operation fails but does not throw an error or exception.
+This can lead to unexpected behavior in the program, as the failure goes unnoticed.
+Example of a silent error:
+```javascript
+let obj = {};
+console.log(obj.nonExistentProperty.toString()); // Silent error, will throw TypeError
+```
+
+== throw statement
+```javascript
+function divide(a, b) {
+  if (b === 0) {
+    throw new Error("Division by zero is not allowed.");
+  }
+  return a / b;
+}
+try {
+  let result = divide(10, 0);
+  console.log("Result: " + result);
+} catch (error) {
+  console.error("An error occurred: " + error.message);
+}
+```
+
+== Error Object Properties
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Property], [Description],
+  ),
+
+  `name`,        [The name of the error type (e.g., "TypeError")],
+  `message`,     [A description of the error],
+)
+
+= NPM - Node Package Manager
+== Common NPM Commands
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Command], [Description],
+  ),
+
+  `npm init`,            [Initializes a new Node.js project and creates a package.json file],
+  `npm install <package>`, [Installs a package and adds it to the dependencies in package.json],
+  `npm uninstall <package>`, [Removes a package and updates package.json],
+  `npm update`,          [Updates all packages to their latest versions based on the version ranges specified in package.json],
+  `npm list`,            [Lists all installed packages in the current project],
+  `npm start`,           [Runs the start script defined in package.json],
+  `npm test`,            [Runs the test script defined in package.json],
+)
+== what is node.js
+- Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.
+- It allows developers to run JavaScript code outside of a web browser, enabling server-side scripting and building scalable network applications.
+- Node.js uses an event-driven, non-blocking I/O model, making it efficient and suitable for real-time applications.
+- It has a rich ecosystem of libraries and modules available through the Node Package Manager (NPM).
+
+= File API 
+Speicherzugriffe Aufwändigkeit:
+- L1 -> 3 Cycles
+- L2 -> 14 Cycles
+- RAM -> 250 Cycles
+- Disk -> 41,000,000 Cycles
+- Network -> 240,000,000 Cycles
+
+== synchrones Lesen einer Datei
+```javascript
+const fs = require('fs');
+const data = fs.readFileSync('example.txt', 'utf8');
+console.log(data);
+```
+
+== asynchrones Lesen einer Datei
+```javascript
+const fs = require('fs');
+fs.readFile('example.txt', 'utf8', (err, data) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(data);
+});
+```
+=== Achtung Zeichenkodierung
+```javascript
+const fs = require('fs');
+fs.readFile('example.txt', 'utf8', (err, data) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(data);
+});
+```
+Wenn keine Kodierung angegeben ist, wird ein Buffer zurückgegeben.
+
+=== was ist dieser Err Block?
+- Der Err-Block überprüft, ob beim Lesen der Datei ein Fehler aufgetreten ist.
+- Wenn ein Fehler aufgetreten ist, wird der Fehler im Konsolenfenster ausgegeben und die Funktion wird mit return beendet.
+
+=== Was ist ein Callback?
+- Ein Callback ist eine Funktion, die als Argument an eine andere Funktion übergeben wird und nach Abschluss einer asynchronen Operation aufgerufen wird.
+- Callbacks werden häufig in asynchronen Programmiermustern verwendet, um sicherzustellen, dass bestimmte Codeabschnitte erst ausgeführt werden, wenn eine Operation abgeschlossen ist.
+
+Beispiel:
+```javascript
+function fetchData(callback) {
+  setTimeout(() => {
+    const data = "Sample Data";
+    callback(data);
+  }, 1000);
+}
+fetchData((data) => {
+  console.log("Received data: " + data);
+});
+```
+In diesem Beispiel wird die Funktion fetchData eine Sekunde lang verzögert, bevor sie die Callback-Funktion mit den abgerufenen Daten aufruft.
+
+Woher kommt die callback im obigen Beispiel?
+- Die Callback-Funktion wird als Argument an die fetchData-Funktion übergeben.
+
+Wo wird die Callback funktion definiert
+- Die Callback-Funktion wird inline als anonyme Funktion definiert, die einen Parameter hat: data.
+```javascript
+fetchData(
+  
+  (data) => {
+  console.log("Received data: " + data); //Hier wird die Callback-Funktion definiert Aachte auf die Klammern!
+}
+
+);
+```
+
+=== schreib Lese-Berechtigung (2tes argument)
+- Das zweite Argument in den fs-Funktionen (wie readFile und writeFile) ist ein Optionsobjekt, das verschiedene Einstellungen für die Dateioperationen festlegt.
+Beispiel:
+```javascript
+const fs = require('fs');
+const options = { encoding: 'utf8', flag: 'r' }; // Lese-Berechtigung
+fs.readFile('example.txt', options, (err, data) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(data);
+});
+```
+
+Es gibt:
+- r: read (lesen)
+- w: write (schreiben)
+- a: append (anhängen)
+- r+: read and write (lesen und schreiben)
+- w+: write and read (schreiben und lesen), position at start, file is created if not exists
+- a+: append and read (anhängen und lesen), position at end, file is created if not exists
+
+== Datei information abrufen
+```javascript
+const fs = require('fs');
+fs.stat('example.txt', (err, stats) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(`File Size: ${stats.size} bytes`);
+  console.log(`Created At: ${stats.birthtime}`);
+  console.log(`Last Modified: ${stats.mtime}`);
+});
+```
+=== was ist stats?
+- stats ist ein Objekt, das Informationen über die Datei enthält, die von der fs.stat-Funktion zurückgegeben werden.
+Es enthält Eigenschaften wie:
+- size: Die Größe der Datei in Bytes
+- birthtime: Das Erstellungsdatum der Datei
+- mtime: Das Datum der letzten Änderung der Datei
+- isFile(): Gibt true zurück, wenn der Pfad eine Datei ist
+- isDirectory(): Gibt true zurück, wenn der Pfad ein Verzeichnis ist
+- isSymbolicLink(): Gibt true zurück, wenn der Pfad ein symbolischer Link ist
+ - symbolischer Link ist eine Datei, die auf eine andere Datei oder ein anderes Verzeichnis verweist.
+```javascript
+console.log(`File Size: ${stats.size} bytes`); // Größe der Datei in Bytes
+console.log(`Created At: ${stats.birthtime}`); // Erstellungsdatum der Datei
+console.log(`Last Modified: ${stats.mtime}`); // Datum der letzten Änderung der Datei
+```
+
+== Platform unabhängiger Pfad
+```javascript
+const path = require('path');
+const filePath = path.join(__dirname, 'folder', 'file.txt');
+console.log(filePath); // Output: platform-specific path to 'folder/file.txt'
+```
+
+=== methods of path module
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Method], [Description],
+  ),
+
+  `path.join()`,        [Joins multiple path segments into a single path],
+  `path.resolve()`,     [Resolves a sequence of paths into an absolute path],
+  `path.basename()`,    [Returns the last portion of a path],
+  `path.dirname()`,     [Returns the directory name of a path],
+  `path.extname()`,     [Returns the file extension of a path],
+)
+
+
+== Datei schreiben
+Das Schreiben einer Datei ist asynchron.
+```javascript
+const fs = require('fs');
+const content = 'Hello, World!'; 
+fs.writeFile('output.txt', content, 'utf8', (err) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log('File has been written successfully.');
+});
+```
+=== was ist das 3te argument?
+- Das dritte Argument in der fs.writeFile-Funktion ist die Zeichenkodierung, die angibt, wie der Inhalt in die Datei geschrieben werden soll.
+- In diesem Fall wird 'utf8' verwendet, was bedeutet, dass der Inhalt als UTF-8-kodierter Text geschrieben wird.
+
+=== Datei anhängen
+```javascript
+const fs = require('fs');
+const content = '\nThis is an appended line.';
+fs.appendFile('output.txt', content, 'utf8', (err) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log('Content has been appended successfully.');
+});
+```
+= Streams
+== wann Streams verwenden?
+- Streams sollten verwendet werden, wenn große Datenmengen verarbeitet werden müssen, die nicht vollständig in den Arbeitsspeicher geladen werden können.
+- Sie sind besonders nützlich für das Lesen und Schreiben von Dateien, Netzwerkkommunikation und Datenverarbeitung in Echtzeit.
+
+== Was sind Streams?
+Streams sind Objekte, die es ermöglichen, Daten schrittweise zu lesen oder zu schreiben, anstatt die gesamte Datenmenge auf einmal zu verarbeiten.
+Dies ist besonders nützlich für große Datenmengen, da es den Speicherverbrauch reduziert und die Leistung verbessert.
+Streams können in vier Haupttypen unterteilt werden:
+- Readable Streams: Ermöglichen das Lesen von Daten (z.B. fs.createReadStream()).
+- Writable Streams: Ermöglichen das Schreiben von Daten (z.B. fs.createWriteStream()).
+- Duplex Streams: Können sowohl gelesen als auch geschrieben werden (z.B. net.Socket).
+- Transform Streams: Verändern die Daten während des Lesens oder Schreibens (z.B. zlib.createGzip()).
+
+== fs-Modul methods
+- fs.access()	Checks if a file or directory exists and if it is accessible
+- fs.mkdir()	Creates a new directory
+- fs.readdir()	Reads the contents of a directory
+- fs.rename()	Renames or moves a file or directory
+- fs.rmdir()	Removes a directory
+- fs.link()	Creates a hard link to a file
+- fs.symlink()	Creates a symbolic link to a file or directory
+- fs.truncate()	Truncates a file to a specified length
+- fs.copyFile()	Copies a file from one location to another
+- fs.chmod()	Changes the permissions of a file or directory
+- fs.chown()	Changes the owner and group of a file or directory
+- fs.watchFile()	Watches for changes to a file
+- fs.unwatchFile()	Stops watching for changes to a file
+
+= JSON
+== methods to work with JSON
+#table(
+  columns: (1fr, 2fr),
+  inset: 10pt,
+  align: horizon,
+  table.header(
+    [Method], [Description],
+  ),
+
+  `JSON.parse()`,        [Converts a JSON string into a JavaScript object],
+  `JSON.stringify()`,     [Converts a JavaScript object into a JSON string],
+)
+== JSON.parse()
+```javascript
+const jsonString = '{"name": "Alice", "age": 30, "city": "Wonderland"}';
+const jsonObject = JSON.parse(jsonString);
+console.log(jsonObject.name); // Output: Alice
+console.log(jsonObject.age);  // Output: 30
+console.log(jsonObject.city); // Output: Wonderland
+```
+=== was wen nacht JSON ein Attribut fehlt?
+```javascript
+const jsonString = '{"name": "Alice", "city": "Wonderland"}';
+const jsonObject = JSON.parse(jsonString);
+console.log(jsonObject.name); // Output: Alice
+console.log(jsonObject.age);  // Output: undefined
+console.log(jsonObject.city); // Output: Wonderland
+```
+
+== JSON.stringify()
+```javascript
+const jsonObject = { name: "Bob", age: 25, city: "Builderland" };
+const jsonString = JSON.stringify(jsonObject);
+console.log(jsonString); // Output: '{"name":"Bob","age":25,"city":"Builderland"}'
+```
+== reviver function
+```javascript
+const jsonString = '{"name": "Charlie", "age": "35", "city": "Chocolate Factory"}';
+const jsonObject = JSON.parse(jsonString, (key, value) => {
+  if (key === 'age') {
+    return Number(value); // Convert age to a number
+  }
+  return value; // Return the value unchanged for other keys
+});
+console.log(jsonObject.name); // Output: Charlie
+console.log(jsonObject.age);  // Output: 35 (as a number)
+console.log(jsonObject.city); // Output: Chocolate Factory
+```
+
+== JSON syntax
+- Data is in name/value pairs
+- Data is separated by commas
+- Curly braces hold objects
+- Square brackets hold arrays
+- key must be strings and should be in double quotes
+
+```JSON
+{
+  "name": "John",
+  "age": 31,
+  "city": "New York"
+}
+```
+
+== data types in JSON
+- String
+- Number
+- Object
+- Array
+- Boolean
+- null
+
+== json vs xml example
+JSON:
+```JSON
+{
+  "employee": {
+    "name": "John Doe",
+    "age": 30,
+    "department": "Sales"
+  }
+}
+```
+XML:
+```XML
+<employee>
+  <name>John Doe</name>
+  <age>30</age>
+  <department>Sales</department>
+</employee>
+```
+
+== JSON object vs JavaScript object
+- A JSON object is a string representation of data that follows the JSON syntax rules.
+- A JavaScript object is a data structure in JavaScript that can hold various data types and has methods and properties.
+```javascript
+const jsonString = '{"name": "Alice", "age": 30}'; // JSON object (string)
+const jsonObject = JSON.parse(jsonString); // Convert JSON string to JavaScript object
+console.log(jsonObject.name); // Output: Alice
+console.log(jsonObject.age);  // Output: 30
+const jsObject = { name: "Bob", age: 25 }; // JavaScript object
+console.log(jsObject.name); // Output: Bob
+console.log(jsObject.age);  // Output: 25
+```
+
+Mit Arrays ist es das gleiche:
+```javascript
+const jsonString = '["Apple", "Banana", "Cherry"]'; // JSON array (string)
+const jsonArray = JSON.parse(jsonString); // Convert JSON string to JavaScript array
+console.log(jsonArray[0]); // Output: Apple
+console.log(jsonArray[1]); // Output: Banana
+console.log(jsonArray[2]); // Output: Cherry
+const jsArray = ["Dog", "Cat", "Mouse"]; // JavaScript array
+console.log(jsArray[0]); // Output: Dog
+console.log(jsArray[1]); // Output: Cat
+console.log(jsArray[2]); // Output: Mouse
+```
+
