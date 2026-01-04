@@ -725,7 +725,6 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
   - Interrupts IRQ0…IRQ239 (Peripherals, auch software-triggerbar)
   - Sind eigentlich das gleiche, aber unterschiedliche Prioritäten und Vektoren
  
-
 #image("assets_CT/F12_InterruptsVSSystemException.png", width: 90%)
 #image("assets_CT/F12_System_Exceptions_Overview.png", width: 90%)
 
@@ -735,6 +734,8 @@ Buch vegleich: finish -> Satz fertig lesen, save -> Buchzeichen, load address ->
  - *Context Save/Restore bei ISR Entry/Return*
   - *Hardware* stackt automatisch: xPSR, PC, LR, R12, R0–R3 , EX stored
   - Am schluss von myISR `BX LR` (LR = EXC_RETURN Wert) → Hardware entstackt automatisch
+  - nicht automatisch gesichert: R4-R11
+#image("assets_CT/F12_autosave.png", width: 90%)
 
 - to understand the basic functionality of the Nested Vectored Interrupt Controller (NVIC)
 - *NVIC Grundfunktionen*
@@ -743,6 +744,7 @@ Buch vegleich: finish -> Satz fertig lesen, save -> Buchzeichen, load address ->
  - CPU rechnet vector addresse aus, basierend auf IRQ-Nummer
  - Vektor-Tabelle: Liste von Adressen für jeden Exception/Interrupt (im Flash bei 0x0000_0000)
  - Alle Register werden automatisch gespeichert -> Entwickler muss nur ISR schreiben
+ 
 
 - *Vector Table*
 #image("assets_CT/F12_Vector_table.png", width: 90%)
@@ -774,6 +776,9 @@ Buch vegleich: finish -> Satz fertig lesen, save -> Buchzeichen, load address ->
 *Wichig:* IRQ set by HW - cleared by SW 
 
 - *Enable/Disable Interputs*
+ - Alle Ein/Ausschalten in asm: (CPSID i / CPSIE i)
+ - All Ein/Ausschalten in C: `__disable_irq()`, `__enable_irq()`
+
 ```yasm
 LDR R1, =0x10000040 ;enable Interup mask
 LDR R0, =REG_SETENA0
@@ -781,6 +786,7 @@ STR R1, [R0]
 ```
 Man kann die Vits auch ein- und ausschalten, weil aktive bits einen Effekt auf das Register haben
 #image("assets_CT/F12_Enalbe_Disable_Interrupts.png", width: 50%)
+*Achtung* 0x08 ist bit 3 (IRQ3) setzten (0b0000_1000), am besten 1 und dann shiften -> `LSLS R1, R1, #IRQn`. Achtung shift vlt zu gross, aufteilen.
 #image("assets_CT/F12_Setana.png", width: 100%)
 
 - *Data Consistency Issues*
@@ -807,42 +813,66 @@ MyISR
   - Methoden: `NVIC_EnableIRQ(IRQn_Type IRQn)`, `NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)`
 
 = Lecture_Increasing_System_Performance
-
-== Lecture_Increasing_system_Performance
-#example[
-#emph[At the end of this lesson you will be able]
-- to explain different types of bus architectures
-- to understand the difference between von Neumann and Harvard architecture
-- to understand RISC and CISC paradigms
-- to describe the idea of pipelining
-- to calculate processing performance improvement through pipelining
-- to describe the basics of parallel computing
-]
+- *Optimierung ist ein Trade-off*
+  - Geschwindigkeit vs. Komplexität vs. Energieverbrauch vs. Kosten
+  - Meistens: mehr Geschwindigkeit → mehr Komplexität/Kosten/Energie
 
 - *Bus-/Speicherarchitektur*
   - von Neumann: Code+Data über eine Schnittstelle → Bottleneck
   - Harvard: getrennte Interfaces → mehr Durchsatz
+  - Meiste System sind Harvard (Cortex-M)
 
 - *ISA Paradigmen*
-  - CISC: komplexe Instruktionen
-  - RISC: wenige, einfache Instruktionen; Load/Store; gut pipeline-bar
+  - RISC(Reduced Instruction Set Computer): wenige, einfache Instruktionen; Load/Store; gut pipeline-bar
+   - Vorteile: einfach und schnell, Mehr Register auf CPU (weniger Speicherzugriffe), mehrere data pfade möglich, höhere Taktfrequenz, besser für Compiler, einfaches Pipelining
+   - Nachteile: mehr Instruktionen pro Programm, grösserer Code (mehr Speicher
+  - CISC(Complex Instruction Set Computer): viele, komplexe Instruktionen; direkt auf Speicher operierend; schwer pipeline-bar
+    - Vorteile: kompakter Code (weniger Speicher), weniger Instruktionen pro Programm, komplexe Operationen in einer Instruktion
+    - Nachteile: komplexe Hardware, schwerer zu pipeline-en, längere Taktzyklen, schwieriger für Compiler
+#image("assets_CT/F13_RISC_vs_CISC.png", width: 90%)
+
 
 - *Pipelining (FE/DE/EX)*
-  - Durchsatz nach “Füllen” ≈ 1 Instruktion pro Pipeline-Takt
-  - Pipeline-Takt wird von langsamster Stage bestimmt
+  - Es gibt mehrere Stages (z.B. Fetch, Decode, Execute) -> wenn eine Stage von fetch zu decode geht, kann die fetch Stage schon die nächste Instruktion holen
+  - Erhöht Instruktionsdurchsatz (IPS), nicht Latenz (Zeit pro Instruktion)
+  - Ideal: 1 Instruktion pro Takt (nach Füllen der Pipeline)
+  - Pipeline-Takt wird von *langsamster Stage bestimmt*
   - Hazards:
     - Data hazard (z.B. LDR braucht Bus → stall)
     - Control hazard (Branch-Entscheid spät → bubbles)
 
 #formula[
-  *Instruction Throughput (Idee)*  
+  *Instruction Throughput*  
   - ohne Pipeline: IPS = 1 / (Instruktions-Delay)  
   - mit Pipeline: IPS ≈ 1 / (max Stage-Delay)  // nach dem Füllen
+  - Instruction Delac für eine Instruktion = Summe aller Stage-Delays (FE + DE + EX)
+  - was dedeutet max Stage-Delay?  
+   - die langsamste Stage bestimmt den Takt der gesamten Pipeline
+]
+
+#formula[
+  *Special Operations Pipeline pause*  
+  - Data Hazard: wenn eine Instruktion auf das Resultat einer vorherigen angewiesen ist (z.B. LDR gefolgt von ADD auf dasselbe Register)  
+   - Lösung: Pipeline *stallen* (nops einfügen(s)) oder Forwarding (Daten direkt weiterleiten)
+   - stallen heisst, dass die Pipeline für einige Zyklen angehalten wird, um Datenabhängigkeiten zu lösen.
 ]
 
 - *Optimierungen / Parallelität*
-  - Branch prediction, Prefetch, Out-of-order (bei grossen CPUs; kann Security-Risiken bringen)
-  - Parallel Computing: SIMD, Multithreading, Multicore, Multiprocessor
+  - Parallel Computing:
+   - Straming/Vector Processing (gleiche Operation auf viele Daten)
+   - Multithreading (mehrere Threads auf einer CPU)
+    - Zeitliche Aufteilung (time-slicing) eines Prozessors auf mehrere Threads
+    - Scheduler verwaltet Kontextwechsel, er teilt CPU-Zeit zu
+   - Multicore (mehrere CPU-Kerne auf einem Chip)
+    - All on one Chip, wenniger treffic, billiger, shared memory
+   - Multiprocessor (System mit mehreren Chips)
+    - Mehrere physikalische Prozessoren, mehr Leistung, komplexe Kommunikation, teurer, höhere Distanz zwischen Prozessoren
+
+- *instructions*
+#image("assets_CT/F13_SIMD.png", width: 90%)
+
+- *Hazards*
+ - Branch prediction, Prefetch, Out-of-order (bei grossen CPUs; kann Security-Risiken bringen)
 
 = Stolpersteine
 - HIER SCREENS VON Aufgaben die ich nicht geschaft habe

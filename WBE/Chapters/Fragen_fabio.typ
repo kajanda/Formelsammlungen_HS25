@@ -413,6 +413,45 @@ greetBob(); // Output: Hello, Bob
 farewellBob(); // Output: Goodbye, Bob
 ```
 
+== Function höherer Ordnung
+Eine Funktion höherer Ordnung ist eine Funktion, die eine andere Funktion als Argument nimmt oder eine Funktion zurückgibt.
+```javascript
+function higherOrderFunction(callback) {
+  return function() {
+    console.log('Before callback');
+    callback();
+    console.log('After callback');
+  };
+}
+const sayHello = function() {
+  console.log('Hello!');
+};
+const wrappedFunction = higherOrderFunction(sayHello);
+wrappedFunction();
+// Output:
+// Before callback
+// Hello!
+// After callback
+```
+
+= Modul Systeme 
+Was sind Module?
+Module sind wiederverwendbare Code-Einheiten, die Funktionen, Objekte oder Variablen kapseln und exportieren können, um sie in anderen Teilen einer Anwendung zu verwenden.
+== ES6 Modules
+```javascript
+// mathModule.js
+export function add(a, b) {
+  return a + b;
+}
+export function subtract(a, b) {
+  return a - b;
+}
+// main.js
+import { add, subtract } from './mathModule.js';
+console.log(add(5, 3)); // Output: 8
+console.log(subtract(5, 3)); // Output: 2
+```
+
 = Objekte
 == this Keyword
 In JavaScript, the this keyword refers to the object that is executing the current function.
@@ -425,6 +464,29 @@ const person = {
   }
 };
 console.log(person.fullName()); // Output: John Doe
+```
+
+== Konstruktor 
+```javascript
+function Person(firstName, lastName) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+}
+const person1 = new Person("Alice", "Smith");
+const person2 = new Person("Bob", "Johnson");
+console.log(person1.firstName); // Output: Alice
+console.log(person2.lastName);  // Output: Johnson
+```
+
+== Reference Data Type
+Arrays and Objects are reference data types.
+When you assign an array or object to a variable, you are assigning a reference to that array or object, not the actual value.
+```javascript
+const originalArray = [1, 2, 3];
+const referenceArray = originalArray;
+referenceArray.push(4);
+console.log(originalArray); // Output: [1, 2, 3, 4]
+console.log(referenceArray); // Output: [1, 2, 3, 4]
 ```
 
 == Prototype Inheritance
@@ -447,6 +509,71 @@ obj.a = function () { return "A"; };
 console.log(obj.a()); // A (vom obj)
 console.log(obj.b()); // B (von proto1)
 console.log(obj.c()); // C (von proto2)
+```
+
+== getPrototypeOf
+```javascript
+const animal = {
+  speak: function() {
+    console.log(`${this.name} makes a noise.`);
+  }
+};
+function Dog(name) {
+  this.name = name;
+}
+Dog.prototype = animal;
+const dog = new Dog('Rex');
+console.log(Object.getPrototypeOf(dog) === animal); // Output: true
+```
+
+== Prototye chain
+```javascript
+const grandParent = {
+  grandParentMethod: function() {
+    console.log("This is a method from the grandparent.");
+  }
+};
+const parent = Object.create(grandParent);
+parent.parentMethod = function() {
+  console.log("This is a method from the parent.");
+};
+const child = Object.create(parent);
+child.childMethod = function() {
+  console.log("This is a method from the child.");
+};
+child.childMethod();        // Output: This is a method from the child.
+child.parentMethod();      // Output: This is a method from the parent.
+child.grandParentMethod(); // Output: This is a method from the grandparent.
+```
+
+=== Add Properties to Prototypes
+```javascript
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+Person.prototype.greet = function() {
+  console.log(`Hello, my name is ${this.name}`);
+};
+const alice = new Person('Alice', 30);
+alice.greet(); // Output: Hello, my name is Alice
+const bob = new Person('Bob', 25);
+bob.greet(); // Output: Hello, my name is Bob
+```
+
+=== delete prototype property
+```javascript
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+Person.prototype.greet = function() {
+  console.log(`Hello, my name is ${this.name}`);
+};
+const alice = new Person('Alice', 30);
+alice.greet(); // Output: Hello, my name is Alice
+delete Person.prototype.greet;
+alice.greet(); // Error: alice.greet is not a function
 ```
 
 == Creating Objects mit Prototypes
@@ -1480,3 +1607,51 @@ console.log(jsArray[1]); // Output: Cat
 console.log(jsArray[2]); // Output: Mouse
 ```
 
+= Testing 
+== Jasimne framework
+Jasmine is a behavior-driven development framework for testing JavaScript code.
+It provides a clean and easy-to-read syntax for writing tests, making it simple to understand the behavior of the code being tested.
+```javascript
+describe("A suite is just a function", function() {
+  it("and so is a spec", function() {
+    const a = true;
+    expect(a).toBe(true);
+  });
+});
+```
+== describe block
+- The describe block is used to group related tests together.
+```javascript
+describe("Math operations", function() {
+  it("should add two numbers correctly", function() {
+    const sum = 2 + 3;
+    expect(sum).toBe(5);
+  });
+
+  it("should subtract two numbers correctly", function() {
+    const difference = 5 - 2;
+    expect(difference).toBe(3);
+  });
+});
+```
+== it block
+- The it block is used to define a single test case.
+```javascript
+it("should multiply two numbers correctly", function() {
+  const product = 4 * 3;
+  expect(product).toBe(12);
+});
+```
+
+== SpyOn 
+- SpyOn is used to create a spy for a function, allowing you to track its calls and arguments.
+```javascript
+const calculator = {
+  add: function(a, b) {
+    return a + b;
+  }
+};
+spyOn(calculator, 'add');
+calculator.add(2, 3);
+expect(calculator.add).toHaveBeenCalledWith(2, 3);
+```
