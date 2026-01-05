@@ -1,16 +1,24 @@
-#import "../../style.typ": formula, example, steps, remark
+#import "../../style.typ": formula, example, steps, remark, math
 
 /**
  * 
+ * Done
  * Gauss algorithmus (mit und ohne pivotisierung)
  * LR Zerlegung
  * QR Zerlegung (Gram-Schmidt)
- * Fehler für gestörte lieneare Gleichungssysteme
  * Jacobi Verfahren
  * Gauß-Seidel Verfahren
+ * B-Matritzen
  * Fehlerabschätzung für iterative Verfahren
- * Eigenwerte und Eigenvektoren
+ * Konvergenzkriterien
+ * Fehler für gestörte lieneare Gleichungssysteme
+ * 
+ * todo
+ * Determinanten
+ * QR Householder
+ * Mises iteration
  * komplexe Zahlen
+ * Eigenwerte und Eigenvektoren
  * 
  */
 
@@ -243,86 +251,195 @@ Folgende Aussagen sind äquivalent:
 
 #steps[
   *Schritt 1:* Zerlegung: $bold(A) = bold(L) + bold(D) + bold(R)$
+
+  *Schritt 2:* Iterationsformel aufstellen
+  
+  *Schritt 3:* Startvektor $bold(x)^((0))$ wählen
+
+  *Schritt 4:* Konvergenz prüfen.
+]
+
+#formula[
+  *Interationsformel:*
+
+  $ bold(A) = bold(D) + bold(L) + bold(R) $
+
+  $ bold(D) bold(x)^((k+1)) = -(bold(L) + bold(R)) bold(x)^((k)) + bold(b) $
+  
+  $ bold(x)^((k+1)) = -bold(D)^(-1)(bold(L) + bold(R)) bold(x)^((k)) + bold(D)^(-1) bold(b) $
+
+
+
+
+  *Konvergenz Prüfen Formel*
+  $ B = D^(-1)(L + R) $
+
+  Falls $||B|| < 1$ -> konvergiert für jeden Startvektor $x^((0))$.
+  Falls $||B|| >= 1$ -> keine Konvergenz garantiert.
+
+  *Diagonaldominanz:*\
+  Zeilenweise
+  $ |a_(i i)| > sum_(j=1, j != i)^n |a_(i j)| , quad forall i = 1, ..., n $
+
+  Spaltenweise :\
+  $ |a_(i i)| > sum_(j=1, j != i)^n |a_(j i)| , quad forall i = 1, ..., n $
+
+
+]
+
+
+#example[
+  *Gegeben:*
+  $ bold(A) x = bold(b) quad "mit" quad bold(A) = mat(4, -1, 1; -2, 5, 1; 1, -2, 5) quad "und" quad bold(b) = vec(5, 11, 12) $
+  
+  *Schritt 1 Zerlegung:*
+  $ bold(L) = mat(0, 0, 0; -2, 0, 0; 1, -2, 0), quad bold(D) = mat(4, 0, 0; 0, 5, 0; 0, 0, 5), quad bold(R) = mat(0, -1, 1; 0, 0, 1; 0, 0, 0) $
+  
+  *Schritt 2 Iterationsformel:*
+  $ bold(x)^((n+1)) &= -bold(D)^(-1) ((bold(L) + bold(R)) bold(x)^((n)) - bold(b)) $
+  $ &= -mat(0.25, 0, 0; 0, 0.2, 0; 0, 0, 0.2) mat(0, -1, 1; -2, 0, 1; 1, -2, 0) bold(x)^((n)) + mat(0.25, 0, 0; 0, 0.2, 0; 0, 0, 0.2) vec(5, 11, 12) $
+  $ &= mat(0, 0.25, -0.25; 0.4, 0, -0.2; -0.2, 0.4, 0) bold(x)^((n)) + vec(1.25, 2.2, 2.4) $
+
+
+  *Schritt 3 Startwert:* $ bold(x)^((0)) = vec(0, 0, 0) $
+  $bold(x)^((1)) = vec(1.25, 2.2, 2.4) $, $bold(x)^((2)) = vec(0.5125, 2.03, 2.295)$, $bold(x)^((3)) = vec(0.80125, 2.059, 2.282) $
+]
+
+== Gauß-Seidel
+
+Das Gauß-Seidel Verfahren ist eine Modifikation des Jacobi-Verfahrens. Vorteile sind schnellere Konvergenz und weniger Speicherbedarf (da kein Zwischenspeicher für den alten Vektor benötigt wird).
+
+#steps[
+  *Schritt 1:* Zerlegung: $bold(A) = bold(L) + bold(D) + bold(R)$ (wie Jacobi)
   
   *Schritt 2:* Startvektor $bold(x)^((0))$ wählen
   
-  *Schritt 3:* Für jede Komponente $i$:
-  $ x_i^((k+1)) = (b_i - sum_(j!=i) a_(i j) x_j^((k))) / (a_(i i)) $
+  *Schritt 3:* Für jede Komponente $i$ *sequentiell* von oben nach unten:
+  - Nutze *neue* $x_j^((k+1))$ für $j < i$ (bereits berechnet!)
+  - Nutze *alte* $x_j^((k))$ für $j > i$ (noch nicht berechnet)
   
-  *Schritt 4:* Alle gleichzeitig berechnen
+  *Schritt 4:* Alle Komponenten in dieser Iteration berechnen
   
   *Schritt 5:* Konvergenz: Matrix diagonaldominant?
   
   *Schritt 6:* Abbruch: $||bold(x)^((k+1)) - bold(x)^((k))|| < epsilon$
 ]
 
-=== Beispiel 4.4: Jacobi-Iteration
+#formula[
+  $ (bold(D) + bold(L)) bold(x)^((k+1)) = -bold(R) bold(x)^((k)) + bold(b) $
+  
+  $ bold(x)^((k+1)) = -(bold(D) + bold(L))^(-1) bold(R) bold(x)^((k)) + (bold(D) + bold(L))^(-1) bold(b) $
 
-#example[
-  *Gegeben:*
-  $ 4x_1 + x_2 &= 5 \
-    x_1 + 3x_2 &= 7 $
-  Start: $bold(x)^((0)) = vec(0, 0)$
-  
-  *Schritt 1:* Zerlegung erkannt
-  
-  *Schritt 2:* Startwert: $bold(x)^((0)) = vec(0, 0)$
-  
-  *Schritt 3+4:* Erste Iteration ($k=0$):
-  $ x_1^((1)) = (5 - 1 dot 0) / 4 = 1.25 $
-  $ x_2^((1)) = (7 - 1 dot 0) / 3 = 2.33 $
-  
-  *Iteration 2* ($k=1$):
-  $ x_1^((2)) = (5 - 1 dot 2.33) / 4 = 0.67 $
-  $ x_2^((2)) = (7 - 1 dot 1.25) / 3 = 1.92 $
-  
-  *Iteration 3* ($k=2$):
-  $ x_1^((3)) = (5 - 1 dot 1.92) / 4 = 0.77 $
-  $ x_2^((3)) = (7 - 1 dot 0.67) / 3 = 2.11 $
-  
-  *Schritt 5:* Diagonaldominanz:
-  $|4| > |1|$ ✓, $|3| > |1|$ ✓
-  
-  *Schritt 6:* Konvergiert gegen $(1, 2)$
-]
+  *Allgemein für Komponente $i$:*
 
-=== Vorgehen: Gauß-Seidel
-
-#steps[
-  *Wie Jacobi, aber in Schritt 3:*
-  
-  Für Komponente $i$:
-  - Nutze *neue* $x_j^((k+1))$ für $j < i$
-  - Nutze *alte* $x_j^((k))$ für $j > i$
-  
-  Sequentiell von oben nach unten!
-  
-  Meist schnellere Konvergenz.
+  $ x_i^((k+1)) = frac(1, a_(i i)) ( b_i - sum_(j=1)^(i-1) a_(i j) x_j^((k+1)) - sum_(j=i+1)^n a_(i j) x_j^((k))) $
 ]
 
 === Beispiel 4.5: Gauß-Seidel
 
 #example[
-  *Gegeben:* System aus 4.4
+  *Schritt 1:* Zerlegung:
+  $ bold(L) = mat(0, 0, 0; -2, 0, 0; 1, -2, 0), quad bold(D) = mat(4, 0, 0; 0, 5, 0; 0, 0, 5), quad bold(R) = mat(0, -1, 1; 0, 0, 1; 0, 0, 0) $
   
-  Start: $bold(x)^((0)) = vec(0, 0)$
+  *Schritt 2:* Startvektor:
+  $ bold(x)^((0)) = vec(0, 0, 0) $
   
-  *Iteration 1* ($k=0$):
-  $ x_1^((1)) = (5 - 1 dot 0) / 4 = 1.25 $
-  $ x_2^((1)) = (7 - 1 dot 1.25) / 3 = 1.92 $ (nutzt neues $x_1^((1))$!)
+  *Schritt 3+4:* Iteration 1 ($k=0$) - für jede Komponente sequentiell:
+  
+  *Komponente 1:*
+  $ x_1^((1)) = frac(1, 4)(5 - 0 - 0) = 1.25 $
+  
+  *Komponente 2* (nutze neues $x_1^((1)) = 1.25$):
+  $ x_2^((1)) = frac(1, 5)(11 - (-2) dot 1.25 - 0) = frac(1, 5)(13.5) = 2.7 $
+  
+  *Komponente 3* (nutze neue $x_1^((1)) = 1.25, x_2^((1)) = 2.7$):
+  $ x_3^((1)) = frac(1, 5)(12 - 1 dot 1.25 - (-2) dot 2.7) = frac(1, 5)(16.15) = 3.23 $
+  
+  $ bold(x)^((1)) = vec(1.25, 2.7, 3.23) $
   
   *Iteration 2* ($k=1$):
-  $ x_1^((2)) = (5 - 1 dot 1.92) / 4 = 0.77 $
-  $ x_2^((2)) = (7 - 1 dot 0.77) / 3 = 2.08 $
   
-  *Iteration 3* ($k=2$):
-  $ x_1^((3)) = (5 - 1 dot 2.08) / 4 = 0.73 $
-  $ x_2^((3)) = (7 - 1 dot 0.73) / 3 = 2.09 $
+  *Komponente 1:*
+  $ x_1^((2)) = frac(1, 4)(5 - (-1) dot 2.7 - 1 dot 3.23) = frac(1, 4)(3.47) = 0.87 $
   
-  *Vergleich:* Schnellere Konvergenz als Jacobi!
+  *Komponente 2* (nutze neues $x_1^((2)) = 0.87$):
+  $ x_2^((2)) = frac(1, 5)(11 - (-2) dot 0.87 - 1 dot 3.23) = frac(1, 5)(9.51) = 1.90 $
   
-  Lösung: $(1, 2)$
+  *Komponente 3* (nutze neue $x_1^((2)), x_2^((2))$):
+  $ x_3^((2)) = frac(1, 5)(12 - 1 dot 0.87 - (-2) dot 1.90) = frac(1, 5)(13.93) = 2.79 $
+  
+  $ bold(x)^((2)) = vec(0.87, 1.90, 2.79) $
+  
+  *Schritt 5:* Diagonaldominanz:
+  $|4| > |-1| + |1| = 2$ ✓, $|5| > |-2| + |1| = 3$ ✓, $|5| > |1| + |-2| = 3$ ✓
+  
+  *Schritt 6:* Konvergiert schneller als Jacobi zum gleichen Vektor!
 ]
+
+
+== Fehlerabschätzung
+
+#formula[
+  Von Jacobi: $B = D^(-1)(L + R) $\
+  Von Gauss-Seidel: $B =-(D + L)^(-1) R $
+
+  $ bold(x)^((n+1)) = bold(B) bold(x)^((n)) + bold(c) =: bold(F)(bold(x)^((n))) $
+
+  
+  *A-priori Abschätzung:*
+  $ ||bold(x)^((n)) - bold(overline(x))|| <= frac(||bold(B)||^n, 1 - ||bold(B)||) ||bold(x)^((1)) - bold(x)^((0))|| $
+
+  $ n >= (log(||bold(x)^((n)) - bold(overline(x))||) + log(1 - ||bold(B)||) - log(||bold(x)^((1)) - bold(x)^((0))||)) / log(||bold(B)||) $
+
+  
+  *A-posteriori Abschätzung:*
+  $ ||bold(x)^((n)) - bold(overline(x))|| <= frac(||bold(B)||, 1 - ||bold(B)||) ||bold(x)^((n)) - bold(x)^((n-1))|| $
+]
+
+
+
+== Fehler für gestörte LGS
+
+#formula[
+
+#math[
+$ tilde(A)= Delta bold(A) + bold(A) $
+]
+
+*Konditionszahl*
+#math[
+  $ kappa_infinity (bold(A)) = ||bold(A)||_infinity ||bold(A)^(-1)||_infinity $
+]
+
+*Nur $b$ gestört:*
+absoluter Fehler:
+#math[
+$ ||tilde(bold(x))||_infinity <= ||bold(A)^(-1)||_infinity ||tilde(bold(b))||_infinity $
+]
+
+relativer Fehler:\
+#math[
+  $ (||tilde(bold(x))||_infinity)/(||bold(x)||_infinity)  <= (||bold(A)^(-1)||_infinity ||tilde(bold(b))||_infinity)/(||bold(x)||_infinity) \ "oder:" quad
+  kappa_infinity (bold(A)) (||tilde(bold(b))||_infinity)/(||bold(b)||_infinity). $
+]
+
+- Nur $bold(A)$ gestört:
+
+#math[
+$ (||tilde(bold(x))||_infinity)/(||bold(x)||_infinity) <= (kappa_infinity (bold(A)) (||Delta bold(A)||_infinity)/(||bold(A)||_infinity))/(1 - kappa_infinity (bold(A)) (||Delta bold(A)||_infinity)/(||bold(A)||_infinity)). $
+]
+
+- $bold(A)$ und $b$ gestört:
+
+#math[
+$ (||bold(x) - tilde(bold(x))||_infinity)/(||bold(x)||_infinity) <= (kappa_infinity (bold(A)))/(1 - kappa_infinity (bold(A)) (||Delta bold(A)||_infinity)/(||bold(A)||_infinity)) ((||Delta bold(A)||_infinity) / (||bold(A)||_infinity) + (||tilde(bold(b))||_infinity) / (||bold(b)||_infinity)). $
+]
+- Direkter Weg:
+#math[
+$ bold(x) = bold(A)^(-1) bold(b), quad tilde(bold(x)) = tilde(bold(A))^(-1) tilde(bold(b)), quad "Fehler" = (||bold(x) - tilde(bold(x))||_infinity)/(||bold(x)||_infinity). $
+]
+]
+
 
 === Definition 4.6: Eigenwert
 
@@ -332,15 +449,14 @@ Folgende Aussagen sind äquivalent:
   $lambda in bb(C)$ = Eigenwert, $bold(v) != bold(0)$ = Eigenvektor
 ]
 
-=== Vorgehen: Eigenwerte (2×2)
+=== Vorgehen: Eigenwerte
 
 #steps[
-  *Schritt 1:* $bold(A) = mat(a, b; c, d)$
+  *Schritt 1:* bilde $A - lambda I$
   
-  *Schritt 2:* Charakteristisches Polynom:
-  $ p(lambda) = lambda^2 - (a+d)lambda + (a d - b c) $
+  *Schritt 2:* finde Charakteristisches Polynom (char).
   
-  *Schritt 3:* Lösen: $lambda_(1,2) = ...$
+  *Schritt 3:* löse $"char" = 0$ (finde $lambda$)
   
   *Schritt 4:* Für jeden $lambda$: $(bold(A) - lambda bold(I)) bold(v) = bold(0)$
 ]
@@ -350,24 +466,42 @@ Folgende Aussagen sind äquivalent:
 #example[
   *Gegeben:* $bold(A) = mat(4, 1; 2, 3)$
   
-  *Schritt 1:* Matrix identifiziert: $a=4, b=1, c=2, d=3$
+  *Schritt 1:* Bilde $bold(A) - lambda bold(I)$:
+  $ bold(A) - lambda bold(I) = mat(4 - lambda, 1; 2, 3 - lambda) $
   
-  *Schritt 2:* Charakteristisches Polynom:
-  $ p(lambda) &= lambda^2 - (4+3)lambda + (4 dot 3 - 1 dot 2) \
-              &= lambda^2 - 7lambda + 10 $
+  *Schritt 2:* Charakteristisches Polynom (Determinante):
+  $ det(bold(A) - lambda bold(I)) = (4 - lambda)(3 - lambda) - 1 dot 2 $
+  $ = lambda^2 - 7lambda + 12 - 2 $
+  $ p(lambda) = lambda^2 - 7lambda + 10 $
   
-  *Schritt 3:* Nullstellen (pq-Formel):
+  *Schritt 3:* Löse $p(lambda) = 0$ (pq-Formel):
   $ lambda_(1,2) = 7/(2) plus.minus sqrt((7/(2))^2 - 10) $
-  $ lambda_(1,2) = 7/(2) plus.minus sqrt((2.25)) = 7/(2) plus.minus 3/(2) $
+  $ lambda_(1,2) = 7/(2) plus.minus sqrt(49/4 - 10) = 7/(2) plus.minus sqrt(9/4) = 7/(2) plus.minus 3/(2) $
   $ lambda_1 = 5, quad lambda_2 = 2 $
   
   *Schritt 4:* Eigenvektor zu $lambda_1 = 5$:
-  $ (bold(A) - 5 bold(I)) bold(v) = mat(-1, 1; 2, -2) vec(v_1, v_2) = vec(0, 0) $
-  $ arrow.r -v_1 + v_2 = 0 arrow.r bold(v)_1 = vec(1, 1) $
+  $ (bold(A) - 5 bold(I)) bold(v) = vec(0) $
+  $ mat(4 - 5, 1; 2, 3 - 5) vec(v_1, v_2) = vec(0, 0) $
+  $ mat(-1, 1; 2, -2) vec(v_1, v_2) = vec(0, 0) $
+  
+  *Beobachtung:* Zeile 2 ist $-2$ mal Zeile 1:
+  $ mat(-1, 1; 2, -2) = mat(-1, 1; -2 dot (-1), -2 dot 1) $
+  
+  Dies führt zur Zeilenreduktion:
+  $ mat(-1, 1; 0, 0) vec(v_1, v_2) = vec(0, 0) $
+  
+  Aus der (einzigen unabhängigen) Gleichung: $-v_1 + v_2 = 0 => v_2 = v_1$
+  
+  $ bold(v)_1 = bold(v)_2 = u dot vec(1, 1), quad u in RR quad text("(Eigenvektor zu") lambda_1 = 5 text(")") $
   
   Eigenvektor zu $lambda_2 = 2$:
-  $ (bold(A) - 2 bold(I)) bold(v) = mat(2, 1; 2, 1) vec(v_1, v_2) = vec(0, 0) $
-  $ arrow.r 2v_1 + v_2 = 0 arrow.r bold(v)_2 = vec(1, -2) $
+  $ (bold(A) - 2 bold(I)) bold(v) = vec(0) $
+  $ mat(4 - 2, 1; 2, 3 - 2) vec(v_1, v_2) = vec(0, 0) $
+  $ mat(2, 1; 2, 1) vec(v_1, v_2) = vec(0, 0) $
+  
+  Erste Gleichung: $2v_1 + v_2 = 0 => v_2 = -2v_1$
+  
+  $ bold(v)_2 = vec(1, -2) quad text("(Eigenvektor zu") lambda_2 = 2 text(")") $
 ]
 
 === Vorgehen: Potenzmethode
@@ -414,4 +548,159 @@ Folgende Aussagen sind äquivalent:
           &approx 5 $
   
   *Ergebnis:* Größter EW $lambda_1 = 5$ (vgl. 4.7)
+]
+
+
+== komplexe Zahlen
+
+
+=== Darstellungen
+
+
+#formula[
+*Normalform (kartesisch):*
+$ z = x + i y $
+
+*Trigonometrische Form (polar):*
+$ z = r (cos(phi) + i sin(phi)) $
+
+*Exponentialform:*
+$ z = r e^(i phi) $
+
+Dabei gilt: $r >= 0$ und $phi$ ist der Winkel.
+]
+
+=== Umrechnen: Normalform -> Polar/Expo
+
+
+#example[
+
+Gegeben $z = x + i y$:
+
+*Betrag:*
+$ r = |z| = sqrt(x^2 + y^2) $
+
+*Winkel:*
+$ phi = arg(z) $
+
+
+Praktisch rechnet man zuerst
+$ phi_0 = arctan(y/x) $
+und korrigiert dann den Quadranten:
+
+- falls $x > 0$: $ phi = phi_0 $
+- falls $x < 0$ und $y >= 0$: $ phi = phi_0 + pi $
+- falls $x < 0$ und $y < 0$: $ phi = phi_0 - pi $
+- falls $x = 0$ und $y > 0$: $ phi = pi/2 $
+- falls $x = 0$ und $y < 0$: $ phi = -pi/2 $
+
+Hinweis: Viele Taschenrechner/Programmiersprachen haben `atan2(y, x)`,
+das liefert direkt den richtigen Winkel:
+$ phi = a t a n 2(y, x) $.
+
+Dann:
+$ z = r (cos(phi) + i sin(phi)) = r e^(i phi) $.
+
+]
+
+=== Umrechnen: Polar/Expo -> Normalform
+
+#example[
+
+
+Gegeben $z = r (cos(phi) + i sin(phi))$ oder $z = r e^(i phi)$:
+
+*Realteil und Imaginärteil:*
+$ x = r cos(phi) $
+$ y = r sin(phi) $
+
+Also:
+$ z = x + i y = r cos(phi) + i r sin(phi) $.
+]
+
+#colbreak()
+
+=== algebraische Operationen
+
+*Konjugation:* $z^* = x - i y $ \
+*Betrag:* $|z| = sqrt(x^2 + y^2) $
+
+=== Grundrechenarten komplexer Zahlen
+Gegeben seien zwei komplexe Zahlen in der Normalform:\
+$z_1 = x_1 + i y_1 quad$,$quad z_2 = x_2 + i y_2.$
+
+
+
+*Summe*
+
+$ z_1 + z_2 = (x_1 + x_2) + i (y_1 + y_2) $
+
+*Differenz*
+
+$ z_1 - z_2 = (x_1 - x_2) + i (y_1 - y_2) $
+
+*Produkt*
+$ z_1 z_2 = (x_1 + i y_1)(x_2 + i y_2) $
+
+Ausmultiplizieren und $i^2=-1$ benutzen:
+$ z_1 z_2 = (x_1 x_2 - y_1 y_2) + i (x_1 y_2 + x_2 y_1) $
+
+$ z_1 z_2
+= (r_1 e^(i phi_1))(r_2 e^(i phi_2))
+= (r_1 r_2) e^(i (phi_1 + phi_2)). $
+
+*Division*
+
+Für $z_2 != 0$ gilt:
+$ (z_1)/(z_2) = (x_1 + i y_1)/(x_2 + i y_2). $
+
+Mit dem konjugiert Komplexen $z_2^* = x_2 - i y_2$:
+
+$ (z_1)/(z_2)
+= (z_1 z_2^*)/(z_2 z_2^*)
+= ((x_1 + i y_1)(x_2 - i y_2))/((x_2 + i y_2)(x_2 - i y_2)) $
+
+Nenner:
+$ (x_2 + i y_2)(x_2 - i y_2) = x_2^2 + y_2^2 $
+
+Zähler:
+$ (x_1 + i y_1)(x_2 - i y_2)
+= (x_1 x_2 + y_1 y_2) + i (y_1 x_2 - x_1 y_2) $
+
+Damit:
+$ (z_1)/(z_2)
+= (x_1 x_2 + y_1 y_2)/(x_2^2 + y_2^2)
+  + i (y_1 x_2 - x_1 y_2)/(x_2^2 + y_2^2) $
+
+In Exponentialform:\
+Für $z_2 != 0$ (also $r_2 > 0$):
+$ (z_1)/(z_2)
+= (r_1 e^(i phi_1))/(r_2 e^(i phi_2))
+= (r_1/r_2) e^(i (phi_1 - phi_2)). $
+
+*Wurzel*
+#formula[
+Die $n$-ten Wurzeln von $z = r e^(i phi)$ sind:
+$ z_k = r^(1/n) e^(i (phi + 2 k pi)/n) quad "für" quad "k = 0,1, ... , n-1" $ 
+]
+
+#example[
+  *Gegeben:* $z = 4$ (reelle Zahl), gesucht: kubische Wurzeln ($n=3$)
+  
+  *Schritt 1:* In Exponentialform umwandeln:
+  $ r = |4| = 4, quad phi = 0 $
+  $ z = 4 e^(i dot 0) $
+  
+  *Schritt 2:* Wurzeln berechnen mit Formel:
+  $ z_k = 4^(1/3) e^(i (0 + 2 k pi)/3) quad "für" quad k = 0, 1, 2 $
+  
+  *Schritt 3:* Die drei Wurzeln:
+  
+  $ z_0 = 4^(1/3) e^(i dot 0) = 4^(1/3) approx 1.587 $
+  
+  $ z_1  = 4^(1/3) (-0.5 + i 0.866) $
+  
+  $ z_2  = 4^(1/3) (-0.5 - i 0.866) $
+  
+  *Geometrisch:* Die drei Wurzeln liegen gleichmäßig auf einem Kreis mit Radius $4^(1/3) approx 1.587$, verteilt um $120°$ auseinander.
 ]
