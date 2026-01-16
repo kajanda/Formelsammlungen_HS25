@@ -443,7 +443,6 @@ Wenn `K` gerade (z.B. 40=0b00101000) → `i_min=3` ⇒ `x=3`
 ]
 
 = Lecture_Branches
-== Lecture_Branches
 #image("assets_CT/F7_Overview_Branches.png", width: 100%)
 
 - * Unconditional Branches *
@@ -875,9 +874,85 @@ MyISR
  - Branch prediction, Prefetch, Out-of-order (bei grossen CPUs; kann Security-Risiken bringen)
 
 = Stolpersteine
-- HIER SCREENS VON Aufgaben die ich nicht geschaft habe
+== Umrechnen hex in neg dezimal
+- Beispiel: 0xFF = -1
+  - MSB = 1 → negativ
+  - Betrag berechnen: 0x100 - 0xFF = 0x01 = 1
+  - Vorzeichen setzen: -1
+- Beispiel: 0xFF5422A2 = - (0x100000000 - 0xFF5422A2) = - (4294967296 - 4288676674) = -6290622
 
 = Häufige Code Snippets
-- Hier einige nützliche Code-Snippets
+== Maximum
+```asm
+    CMP   R1, R2
+    BGE   r1_is_max      ; signed: R1 >= R2
+    MOV   R0, R2         ; sonst ist R2 max
+    B     done
+r1_is_max:
+    MOV   R0, R1
+done:
+```
+== Minimum
+```asm
+    CMP  R1, R2
+    BLS  r1_is_min     ; unsigned: R1 <= R2
+    MOV  R0, R2
+    B    done
+r1_is_min:
+    MOV  R0, R1
+done:
+```
+
+== Toggle
+```asm  
+    LDRB  R0, [R4]      ; aktueller LED-Wert (8-bit)
+    MOVS  R1, #0x04     ; Maske für Bit2
+    EORS  R0, R0, R1    ; toggelt genau Bit2
+    STRB  R0, [R4]      ; zurückschreiben
+```
+
+= absolute
+```asm  
+    ;R0 -> value (signed)
+    CMP  R0, #0
+    BGE  value_is_positive
+    ; value < 0
+    RSBS R0, R0, #0     ; R0 = -R0
+    B    done
+value_is_positive:
+    ; value >= 0 (R0 bleibt gleich)
+done:
+```
+== LED Toggel depending on actual led state
+```asm
+    LDR   R0, =GPIO_PORTF_DATA_R
+    LDR   R1, [R0]
+    ANDS  R1, R1, #0x01        ; check if LED is on (bit 0)
+    BEQ   led_is_off
+    ; LED is on, turn it off
+    BIC   R1, R1, #0x01
+    STR   R1, [R0]
+    B     done
+led_is_off:
+    ; LED is off, turn it on
+    ORR   R1, R1, #0x01
+    STR   R1, [R0]
+done:
+```
+
+== Sume eines Arrays
+```asm
+    MOVS  R2, #0          ; sum = 0
+sum_loop:
+    CMP   R1, #0
+    BEQ   done
+    LDRB  R3, [R0]        ; load byte
+    ADDS  R2, R2, R3      ; sum += byte
+    ADDS  R0, R0, #1      ; ptr++
+    SUBS  R1, R1, #1      ; n--
+    B     sum_loop
+done:
+```
+
 
 ]
