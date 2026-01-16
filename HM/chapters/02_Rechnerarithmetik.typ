@@ -29,7 +29,7 @@
 
 #formula[
 
-  $ B^(n + |e|) $
+  $ B^(n + |e|) +1$
 ] 
 
 === Vorgehen: Zahlensystem-Umwandlung
