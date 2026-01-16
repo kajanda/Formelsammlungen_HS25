@@ -1,23 +1,35 @@
-#import "../../style.typ": formula, example, steps
+#import "../../style.typ": formula, example, steps, remark, variables
 
 == Definition 2.1: Maschinenzahlen
 
+  *Bias*: Fester Wert, der zum Exponenten addiert wird, um negative Exponenten darzustellen.
+
+  #variables[
+    *B*: Basis des Zahlensystems\
+    *n*: Anzahl der Mantissenstellen\
+    *e_min*: Minimaler Exponent\
+    *e_max*: Maximaler Exponent
+  ]
 
   Unter Normalisierung $m_1 != 0$ (falls $x != 0$):
 #formula[
   $ bb(M) = {x in bb(R) | x = 0.m_1 m_2 dots.h m_n dot B^(e - "bias")} union {0} $
 
   *Wert:* $x = sum_(i=1)^n m_i dot B^(-i) dot B^e$
+
+  $x_min = B^(e_min - "bias")$
+
+  $x_max = (1-B^(-n)) dot B^(e_max)$
 ]
+
 
 *Anzahl möglicher Zahlen*
 
-|M| : Mantissenstellen
 |e| : Stellen Exponent
 
 #formula[
 
-  $ B^(|M| dot |e|) $
+  $ B^(n + |e|) $
 ] 
 
 === Vorgehen: Zahlensystem-Umwandlung
@@ -160,13 +172,36 @@
 
 == Definition 2.4: Konditionszahl
 
+
 Die Konditionszahl gibt an , wie stark sich der relative Fehler des Ergebnisses ändert, wenn sich der relative Fehler der Eingabe ändert.
+
+*Wenn nur die Konditionszahl verlangt wird ist es immer die relative Konditionszahl*
 
 #formula[
   *Absolute:* $kappa = |f'(x)|$
   
   *Relative:* $kappa_"rel" = (|x dot f'(x)|) / (|f(x)|)$
 ]
+
+
+*Absoluter Fehler bei Funktionsauswertungen:*
+
+#formula[
+  $ |f(tilde(x)) - f(x)| approx |f'(x)| dot |tilde(x) - x| $
+  
+]
+
+*Relativer Fehler bei Funktionsauswertungen:*
+
+#formula[
+  $ (|f(tilde(x)) - f(x)|) / (|f(x)|) approx (|f'(x)| dot |x|) / (|f(x)|) dot (|tilde(x) - x|) / (|x|) $
+
+  $  underbrace((|f(tilde(x)) - f(x)|) / (|f(x)|), "relativer Fehler von f(x)") approx K(x) dot underbrace((|tilde(x) - x|) / (|x|), "relativer Fehler von x") $
+
+  $ K(x) approx ("relativer Fehler von f(x)") / ("relativer Fehler von x") $
+
+]
+
 
 === Vorgehen: Konditionszahl berechnen
 

@@ -379,6 +379,8 @@ Das Gauß-Seidel Verfahren ist eine Modifikation des Jacobi-Verfahrens. Vorteile
 
 == Fehlerabschätzung
 
+
+
 #formula[
   Von Jacobi: $B = D^(-1)(L + R) $\
   Von Gauss-Seidel: $B =-(D + L)^(-1) R $
@@ -399,6 +401,14 @@ Das Gauß-Seidel Verfahren ist eine Modifikation des Jacobi-Verfahrens. Vorteile
 
 
 == Fehler für gestörte LGS
+
+#remark[
+  Die Unedndlichnorm einer Matrix ist das Maximum der absoluten Zeilensummen einer Matrix.
+  $ ||bold(A)||_infinity = max_(1 <= i <= n) sum_(j=1)^n |a_(i j)| $
+
+  Die Unedndlichnorm eines Vektors ist das Maximum der absoluten Einträge eines Vektors.
+  $ ||bold(b)||_infinity = max_(1 <= i <= n) | $
+]
 
 #formula[
 
@@ -513,7 +523,7 @@ $ bold(x) = bold(A)^(-1) bold(b), quad tilde(bold(x)) = tilde(bold(A))^(-1) tild
   $ bold(w)^((k)) = bold(A) bold(v)^((k-1)) $
   
   *Schritt 3:* Normieren:
-  $ bold(v)^((k)) = bold(w)^((k)) / ||bold(w)^((k))|| $
+  $ bold(v)^((k)) = bold(w)^((k)) / (||bold(w)^((k))||) $
   
   *Schritt 4:* Eigenwert approximieren:
   $ lambda approx (bold(v)^((k)))^T bold(A) bold(v)^((k)) $
