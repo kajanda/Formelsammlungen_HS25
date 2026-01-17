@@ -450,6 +450,58 @@ $ bold(x) = bold(A)^(-1) bold(b), quad tilde(bold(x)) = tilde(bold(A))^(-1) tild
 ]
 ]
 
+#steps[
+  *Schritt 1:* Berechne $kappa_infinity (bold(A))$
+  
+  *Schritt 2:* Wähle die passende Formel (nur $b$, nur $A$, oder beides gestört)
+  
+  *Schritt 3:* Setze die Werte ein und berechne den Fehler
+]
+
+#example[
+  *Gegeben:* Lineares Gleichungssystem $A x = b$ mit gestörtem $b$:
+  
+  $ A = mat(2, 0, 3; 1, -2, 1; 0, 3, 1), quad bold(b) = vec(4, 2 epsilon, 2 + epsilon) $
+  
+  Dabei ist $epsilon$ eine kleine Störung (z.B. Rundungsfehler).
+  
+  *Schritt 1:* Berechne $kappa_infinity (bold(A))$
+  
+  Zeilensummen von $A$:
+  - Zeile 1: $|2| + |0| + |3| = 5$
+  - Zeile 2: $|1| + |-2| + |1| = 4$
+  - Zeile 3: $|0| + |3| + |1| = 4$
+  
+  $ ||A||_infinity = max(5, 4, 4) = 5 $
+  
+  Zeilensummen von $A^(-1)$:
+  - Zeile 1: $|5| + |-9| + |-6| = 5 + 9 + 6 = 20$
+  - Zeile 2: $|1| + |-2| + |-1| = 1 + 2 + 1 = 4$
+  - Zeile 3: $|-3| + |6| + |4| = 3 + 6 + 4 = 13$
+  
+  $ ||A^(-1)||_infinity = max(20, 4, 13) = 20 $
+  
+  $ kappa_infinity(A) = ||A||_infinity dot ||A^(-1)||_infinity = 5 dot 20 = 100 $
+  
+  *Schritt 2:* Wähle die passende Formel
+  
+  Da nur $b$ gestört ist (mit Störung $epsilon$), verwenden wir:
+  
+  $ (||tilde(x) - x||_infinity) / (||x||_infinity) <= kappa_infinity(A) (||Delta b||_infinity) / (||b||_infinity) $
+  
+  *Schritt 3:* Setze die Werte ein und berechne den Fehler
+  
+  - Originales $b = vec(4, 2epsilon, 2+epsilon)$ (eigentlich sollte dies $vec(4, 2, 2)$ sein, Störung ist $epsilon$)
+  - Gestörtes $tilde(b) = vec(0, 2epsilon, epsilon)$
+  - $||b||_infinity = 4$
+  
+  $ (||tilde(x) - x||_infinity) / (||x||_infinity) approx kappa_infinity(A) dot frac(epsilon, 4) $
+  
+  *Interpretation:* 
+  - Wenn $kappa_infinity(A)$ klein ist: kleine Störungen führen zu kleinen Fehlern (gut konditioniert)
+  - Wenn $kappa_infinity(A)$ groß ist: kleine Störungen können zu großen Fehlern führen (schlecht konditioniert)
+]
+
 
 === Definition 4.6: Eigenwert
 

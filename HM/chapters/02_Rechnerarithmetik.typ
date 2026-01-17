@@ -29,7 +29,7 @@
 
 #formula[
 
-  $ B^(n + |e|) +1$
+  $ B^(n + |e|) +1$ (+1 nur falls 0 auch enthalten)
 ] 
 
 === Vorgehen: Zahlensystem-Umwandlung
@@ -202,6 +202,8 @@ Die Konditionszahl gibt an , wie stark sich der relative Fehler des Ergebnisses 
 
 ]
 
+#remark[Achtung: auch wenn relatve Fehler mit mehreren Parametert angegeben werden muss man nichts rchenen!
+zB: $ abs((tilde(x) - x) / x) $ ist schon der relative Fehler von $x$!]
 
 === Vorgehen: Konditionszahl berechnen
 
