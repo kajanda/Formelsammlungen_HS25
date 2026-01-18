@@ -186,7 +186,7 @@ Folgende Aussagen sind äquivalent:
   
   *Lösung:* $(x_1, x_2, x_3) = (-1, -4, 3)$ 
 ]
-
+#colbreak()
 == QR Zerlegung
 #formula[
   Eine Matrix $bold(Q) in RR^(n times n)$ heisst *orthogonal*, wenn ihre Spaltenvektoren paarweise orthogonal sind:
@@ -245,6 +245,79 @@ Folgende Aussagen sind äquivalent:
   
   *Schritt 5:* 
   $ bold(R) = bold(Q)^T bold(A) = mat(0.6, 0.8; -0.8, 0.6) mat(3, 1; 4, 2) = mat(5, 2.2; 0, 0.4) $
+]
+
+=== Householder-Transformation
+
+Die Householder-Reflexion ist ein numerisch stabiles Verfahren zur Berechnung der QR-Zerlegung. Sie nutzt Householder-Matrizen, um Spalten einer Matrix schrittweise zu triangularisieren.
+
+#formula[
+  *Householder:*
+  
+  Für einen Vektor $bold(a)$ und Einheitsvektor $bold(e)_1$:
+  
+  $ bold(v)_i := bold(a)_i + "sign"(a_(i 1)) ||bold(a)_i|| dot bold(e)_1 $
+  
+  $ bold(u)_i := frac(bold(v)_i, ||bold(v)_i||) $
+  
+  $ bold(H)_i := bold(I)_n - 2 bold(u)_i bold(u)_i^T $
+]
+
+
+#steps[
+  *Schritt 1:* Für jede Spalte $i$ von $bold(A)$:
+  - Berechne $bold(v)_i$ und $bold(u)_i$
+  - Konstruiere Householder-Matrix $bold(H)_i$
+  - Wende $bold(H)_i$ auf $bold(A)$ an, um Nullen unterhalb der Diagonale zu erzeugen
+  
+  *Schritt 2:* Das Produkt aller Householder-Matrizen ergibt $bold(Q)^T$
+  
+  *Schritt 3:* $bold(R)$ ist die transformierte Matrix nach Anwendung aller Householder-Matrizen
+]
+=== Beispiel 4.10: QR-Zerlegung mit Householder
+
+#example[
+  *Gegeben:* Das Gleichungssystem $bold(A) x = b$ mit
+  
+  $ bold(A) = mat(3, 2; 4, 1), quad bold(b) = vec(13, 18) $
+  
+  *Schritt 1: Householder für erste Spalte*
+  
+  $ bold(a)_1 = vec(3, 4) $
+  
+  $ ||bold(a)_1|| = sqrt(3^2 + 4^2) = sqrt(25) = 5 $
+  
+  $ bold(v)_1 = vec(3, 4) + 1 dot 5 dot vec(1, 0) = vec(3, 4) + vec(5, 0) = vec(8, 4) $
+  
+  $ ||bold(v)_1|| = sqrt(64 + 16) = sqrt(80) = 4 sqrt(5) $
+  
+  $ bold(u)_1 = frac(1, 4sqrt(5)) vec(8, 4) = vec(frac(2, sqrt(5)), frac(1, sqrt(5))) $
+  
+  $ bold(u)_1 bold(u)_1^T = vec(frac(2, sqrt(5)), frac(1, sqrt(5))) (frac(2, sqrt(5)), frac(1, sqrt(5))) = mat(frac(4, 5), frac(2, 5); frac(2, 5), frac(1, 5)) $
+  
+  $ bold(H)_1 = bold(I) - 2 bold(u)_1 bold(u)_1^T = mat(1, 0; 0, 1) - 2 mat(frac(4, 5), frac(2, 5); frac(2, 5), frac(1, 5)) = mat(-frac(3, 5), -frac(4, 5); -frac(4, 5), frac(3, 5)) $
+  
+  *Anwendung auf Matrix:*
+  
+  $ bold(Q)_1 bold(A) = mat(-frac(3, 5), -frac(4, 5); -frac(4, 5), frac(3, 5)) mat(3, 2; 4, 1) = mat(-5, -2; 0, 2) $
+  
+  *QR-Zerlegung:*
+  
+  $ bold(Q) = bold(H)_1^T = bold(H)_1 = mat(-frac(3, 5), -frac(4, 5); -frac(4, 5), frac(3, 5)) $
+  
+  $ bold(R) = bold(Q)_1 bold(A) = mat(-5, -2; 0, 2) $
+  
+  *Verifikation:* $ bold(Q) bold(R) = mat(-frac(3, 5), -frac(4, 5); -frac(4, 5), frac(3, 5)) mat(-5, -2; 0, 2) = mat(3, 2; 4, 1) = bold(A) $ 
+  
+  *Lösen des Systems:*
+  
+  $ bold(Q)^T bold(b) = mat(-frac(3, 5), -frac(4, 5); -frac(4, 5), frac(3, 5)) vec(13, 18) = vec(-frac(39, 5) - frac(72, 5), -frac(52, 5) + frac(54, 5)) = vec(-frac(111, 5), frac(2, 5)) $
+  
+  Rückwärtssubstitution aus $bold(R) x = bold(Q)^T bold(b)$:
+  
+  $ 2 x_2 = frac(2, 5) quad -> quad x_2 = frac(1, 5) $
+  
+  $ -5 x_1 - 2 x_2 = -frac(111, 5) quad -> quad -5 x_1 - frac(2, 5) = -frac(111, 5) quad -> quad x_1 = frac(109, 25) $
 ]
 
 === Vorgehen: Jacobi-Verfahren
@@ -694,7 +767,7 @@ $ z = x + i y = r cos(phi) + i r sin(phi) $.
 Gegeben seien zwei komplexe Zahlen in der Normalform:\
 $z_1 = x_1 + i y_1 quad$,$quad z_2 = x_2 + i y_2.$
 
-
+#formula[
 
 *Summe*
 
@@ -747,6 +820,7 @@ $ (z_1)/(z_2)
 #formula[
 Die $n$-ten Wurzeln von $z = r e^(i phi)$ sind:
 $ z_k = r^(1/n) e^(i (phi + 2 k pi)/n) quad "für" quad "k = 0,1, ... , n-1" $ 
+]
 ]
 
 #example[

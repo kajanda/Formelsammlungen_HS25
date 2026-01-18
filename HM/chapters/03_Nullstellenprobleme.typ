@@ -28,7 +28,6 @@
   *Globale Konvergenz:* Jeder Startwert führt zur Konvergenz.
 ]
 
-=== Interpretationen der Abschätzungen
 
 === Abschätzungen der Fixpunktiteration
   #formula[
@@ -130,11 +129,11 @@
   $ F'(x) = 3x^2 $
   Bei $overline(x) approx 0.339$: $|F'(0.339)| = 3 dot 0.339^2 approx 0.34 < 1$
 ]
-
+ #colbreak()
 === Vorgehen: Fixpunktiteration
 
 #steps[
-  *Schritt 1:* Fixpunktform $x = F(x)$ aufstellen
+  *Schritt 1:* Fixpunktform $x = F(x)$ aufstellen (wie oben)
   
   *Schritt 2:* Startwert $x_0$ wählen
   
@@ -236,10 +235,8 @@
   *Schritt 2:* Zwei Startwerte $x_0$ und $x_1$ wählen (nahe Nullstelle)
   
   *Schritt 3:* Iterieren: $x_(n+1) = x_n - (f(x_n) dot (x_n - x_(n-1))) / (f(x_n) - f(x_(n-1)))$
-  
-  *Schritt 4:* Konvergenz: Superlinear (Ordnung ≈ 1.618, besser als linear, schlechter als quadratisch)
-  
-  *Schritt 5:* Abbruch bei $|f(x_n)| < epsilon$ oder $|x_(n+1) - x_n| < epsilon$
+    
+  *Schritt 4:* Abbruch bei $|f(x_n)| < epsilon$ oder $|x_(n+1) - x_n| < epsilon$
 ]
 
 === Beispiel 3.6: Sekantenverfahren für $x^2 = 2$
@@ -256,15 +253,12 @@
   $ f(x_1) = 1.5^2 - 2 = 0.25 $
   $ x_2 &= x_1 - (f(x_1) dot (x_1 - x_0)) / (f(x_1) - f(x_0)) $
   $ &= 1.5 - (0.25 dot (1.5 - 1)) / (0.25 - (-1)) $
-  $ &= 1.5 - (0.25 dot 0.5) / (1.25) $
   $ &= 1.5 - 0.1 = 1.4 $
   
   $ f(x_2) = 1.4^2 - 2 = -0.04 $
   $ x_3 &= 1.4 - (-0.04 dot (1.4 - 1.5)) / (-0.04 - 0.25) $
-  $ &= 1.4 - (-0.04 dot (-0.1)) / (-0.29) $
   $ &= 1.4 - 0.004 / (-0.29) approx 1.414 $
   
-  *Schritt 4:* Konvergenz: Superlinear (besser als Fixpunktiteration, weniger Ableitungen als Newton)
   
-  *Schritt 5:* $|f(x_3)| approx |1.414^2 - 2| approx 0$ → Konvergiert schnell
+  *Schritt 4:* $|f(x_3)| approx |1.414^2 - 2| approx 0$ → Konvergiert schnell
 ]

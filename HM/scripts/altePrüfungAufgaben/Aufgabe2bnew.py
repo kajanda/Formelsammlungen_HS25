@@ -13,11 +13,12 @@ def jacobi_fixpoint(A, b, x0, omega = 1.15, tolerance=1e-5, max_iterations=10000
     c = omega * (np.linalg.inv(D) @ b)
     
     x = x0
+    x1=0
     
     for iteration in range(max_iterations):
         x_new = B @ x + c
         
-        if np.linalg.norm(x_new - x, norm) < tolerance:
+        if np.linalg.norm(B,norm)/(1-np.linalg.norm(B,norm))  * np.linalg.norm(x_new-x, norm) < tolerance:
             return x_new, iteration + 1, B, c
         
         x = x_new
