@@ -272,7 +272,10 @@ Folgende Aussagen sind äquivalent:
 
 
   *Konvergenz Prüfen Formel*
-  $ B = D^(-1)(L + R) $
+  $ B = -D^(-1)(L + R) $
+  $ c = D^(-1) b $
+  Somit ist $ bold(x)^((n+1)) = bold(B) bold(x)^((n)) + bold(c) =: bold(F)(bold(x)^((n))) $
+
 
   Falls $||B|| < 1$ -> konvergiert für jeden Startvektor $x^((0))$.
   Falls $||B|| >= 1$ -> keine Konvergenz garantiert.
