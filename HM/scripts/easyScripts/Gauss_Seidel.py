@@ -41,6 +41,8 @@ def gauss_seidel_fixpoint(A, b, x0, tolerance=1e-5, norm=np.inf, max_iterations=
     """
     Löse Ax = b mit Gauss-Seidel als Fixpunktiteration: x_(n+1) = M*x_n + c.
     
+    Konvergenzkriterium: ||M||_norm < 1 ist notwendig für Konvergenz!
+    
     Args:
         A: Koeffizientenmatrix (n x n)
         b: Rechte-Seite-Vektor (n,)
@@ -50,11 +52,12 @@ def gauss_seidel_fixpoint(A, b, x0, tolerance=1e-5, norm=np.inf, max_iterations=
         max_iterations: Maximale Iterationen
     
     Returns:
-        Tuple: (x, num_iterations, M, c)
+        Tuple: (x, num_iterations, M, c, converges)
             - x: Lösungsvektor
             - num_iterations: Benötigte Iterationen
             - M: Iterationsmatrix M = (D + L)^(-1) * R
             - c: Konstanter Vektor c = (D + L)^(-1) * b
+            - converges: True wenn ||M|| < 1 (Konvergenz theoretisch möglich)
     """
     D = np.diag(np.diag(A))
     L = np.tril(A, -1)
@@ -64,17 +67,24 @@ def gauss_seidel_fixpoint(A, b, x0, tolerance=1e-5, norm=np.inf, max_iterations=
     M = -DL_inv @ R
     c = DL_inv @ b
     
+    # Konvergenzkriterium überprüfen
+    M_norm = np.linalg.norm(M, norm)
+    converges = M_norm < 1.0
+    
+    if not converges:
+        print(f"WARNUNG: ||M||_{norm} = {M_norm} >= 1.0 => Gauss-Seidel-Verfahren konvergiert NICHT!")
+    
     x = x0.copy()
     
     for iteration in range(max_iterations):
         x_new = M @ x + c
         
         if np.linalg.norm(x_new - x, norm) < tolerance:
-            return x_new, iteration + 1, M, c
+            return x_new, iteration + 1, M, c, converges
         
         x = x_new
     
-    return x, max_iterations, M, c
+    return x, max_iterations, M, c, converges
 
 
 A = np.array([[7, -2, -2],
@@ -90,5 +100,6 @@ print(f"Benötigte Iterationen: {iterations}")
 result = gauss_seidel_fixpoint(A, b, x0, tolerance=1e-9, norm=np.inf, max_iterations=10000)
 print(f"\nx (Fixpunktiteration): {result[0]}")
 print(f"Benötigte Iterationen: {result[1]}")
+print(f"||M||_inf = {np.linalg.norm(result[2], np.inf):.6f} (konvergiert: {result[4]})")
 print(f"M:\n{result[2]}")
 print(f"c: {result[3]}")
