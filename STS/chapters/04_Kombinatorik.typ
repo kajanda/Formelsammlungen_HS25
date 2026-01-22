@@ -15,7 +15,7 @@
     + Passende Formel aus Übersichtstabelle auswählen
     + Werte für $n$, $k$ einsetzen und berechnen
   ]
-    
+    #colbreak()
   #table(
     columns: 3,
     [*Art*], [*Mit Wiederholung*], [*Ohne Wiederholung*],

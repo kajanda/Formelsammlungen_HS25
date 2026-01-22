@@ -24,7 +24,7 @@
   table.cell(fill: vi_farbe1)[$mu$],
   table.cell(fill: vi_farbe1)[$overline(X) = 1/n sum_(i=1)^n X_i$],
   table.cell(fill: vi_farbe1)[$U = (overline(X) - mu)/(sigma\/sqrt(n))$],
-  table.cell(fill: vi_farbe1)[*Standardnormalverteilung*(Table 2) \ $c = u_p$ mit $p = (1+gamma)/2$],
+  table.cell(fill: vi_farbe1)[*Standardnormalverteilung*(Table 1) \ $c = u_p$ mit $p = (1+gamma)/2$],
   table.cell(fill: vi_farbe1)[$theta_u = overline(X) - c dot sigma/sqrt(n)$ \ $theta_o = overline(X) + c dot sigma/sqrt(n)$],
   
   // Row 2: Normalverteilung (Varianz unbekannt) - BLAU
@@ -48,7 +48,7 @@
   table.cell(fill: vi_farbe4)[$p$],
   table.cell(fill: vi_farbe4)[$overline(X) = 1/n sum_(i=1)^n X_i$ \ $X_i$ 0/1-wertig mit $P(X_i = 1) = p$],
   table.cell(fill: vi_farbe4)[$U = (overline(X) - p)/sqrt(p(1-p)\/n)$],
-  table.cell(fill: vi_farbe4)[*Standardnormalverteilung* (näherungsweise), Tabelle 2 \ $c = u_q$ mit $q = (1+gamma)/2$],
+  table.cell(fill: vi_farbe4)[*Standardnormalverteilung* (näherungsweise), Tabelle 1 \ $c = u_q$ mit $q = (1+gamma)/2$],
   table.cell(fill: vi_farbe4)[$theta_u = overline(X) - c dot sqrt((overline(X) dot (1 - overline(X)))/n)$ \ $theta_o = overline(X) + c dot sqrt((overline(X) dot (1 - overline(X)))/n)$],
   
   // Row 5: beliebig mit n > 30 - Vertrauensintervall
