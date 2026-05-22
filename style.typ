@@ -1,4 +1,4 @@
-#let user_id = "kaiseja1"
+#let user_id = "leisifa1"
 
 // Define box styles
 #let info_box(body, fill, stroke) = block(
@@ -14,6 +14,7 @@
 #let steps(body)   = info_box(body, rgb("#fff8e1"), rgb("#ffb74d"))
 #let variables(body) = info_box(body, rgb("#ffe6e6"), rgb("#ff6b6b"))
 #let remark(body) = info_box(body, rgb("#ffffff"), rgb("#dd5de4"))
+#let definition(body) = info_box(body, rgb("#e0f7fa"), rgb("#4dd0e1"))
 
 #let default_style(body) = {
   set document(title: "Zusammenfassung", author: "Jan Kaiser (kaiseja1)")
