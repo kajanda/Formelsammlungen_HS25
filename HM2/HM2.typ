@@ -1,6 +1,8 @@
 #import "../style.typ": default_style, formula, example, steps
 #show: default_style
 
+#set page(margin: 2cm)
+
 #align(center)[
   #text(size: 14pt, weight: "bold")[HM1-Zusammenfassung]
 

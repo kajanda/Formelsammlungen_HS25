@@ -351,7 +351,7 @@ Ausgehend von
 #formula[
 *Startspalte (summierte Trapezregel):*
 #math()[$
-T_(j 0) = T_f(frac(b-a, 2^j)), quad j=0,1,dots,m
+T_(j 0) = T_f (frac(b-a, 2^j)), quad j=0,1,dots,m
 $]
 ]
 werden die weiteren Einträge rekursiv berechnet durch

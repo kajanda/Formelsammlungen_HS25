@@ -1,4 +1,4 @@
-#let user_id = "leisifa1"
+#let user_id = "leisifa1, kaiseja1"
 
 // Define box styles
 #let info_box(body, fill, stroke) = block(

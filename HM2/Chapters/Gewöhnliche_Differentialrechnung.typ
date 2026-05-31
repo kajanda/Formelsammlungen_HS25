@@ -102,10 +102,133 @@ Dadurch kann man qualitativ erkennen, wie sich Lösungen verhalten und warum Ein
 Prüfungsrelevant ist vor allem das Interpretieren: Wo steigen Lösungen? Wo fallen sie? Wo sind stationäre Bereiche?
 ]
 
-== Klassisches Euler-Verfahren
+#definition[
+Ein *Richtungsfeld* visualisiert die Steigung einer Differentialgleichung
+$
+y' = f(t, y)
+$
+in vielen Punkten $(t, y)$.
 
-#definition()[
-Das klassische Euler-Verfahren verwendet die Steigung am linken Randpunkt $(x_i, y_i)$.
+An jedem Gitterpunkt wird ein kleines Linienstück mit Steigung
+$
+f(t, y)
+$
+eingezeichnet.
+]
+
+#formula[
+Gegeben ist die Differentialgleichung
+#math()[
+$
+"dy"/"dt" = -1/2 dot y dot t^2
+$
+]
+
+Für jeden Punkt $(t_i, y_j)$ berechnet man also die Steigung mit
+#math()[
+$
+m_("ij") = -1/2 dot y_j dot t_i^2.
+$
+]
+]
+
+#steps[
+*Vorgehen beim Zeichnen eines Richtungsfelds:*
+1. Gitterpunkte $(t_i, y_j)$ festlegen
+2. An jedem Punkt die Steigung
+   $
+   m_("ij") = -1/2 dot y_j dot t_i^2
+   $
+   berechnen
+3. In jeden Punkt ein kleines Linienstück mit dieser Steigung einzeichnen
+4. Falls ein Anfangswert gegeben ist, die ungefähre Lösungskurve durch diesen Punkt skizzieren
+]
+
+#example[
+*Beispiel:*
+
+Gegeben ist
+$
+"dy"/"dt" = -1/2 dot y dot t^2,"   "y(0) = 3  
+$
+mit den Gitterpunkten
+$
+(t_i, y_j) = (i, j), quad i, j = 0, 1, 2, 3.
+$
+
+*Steigungen berechnen:*
+
+Für $t = 0$ gilt immer:
+$
+"dy"/"dt" = -1/2 dot y dot 0^2 = 0.
+$
+
+Für $t = 1$ gilt:
+$
+"dy"/"dt" = -1/2 dot y.
+$
+
+Für $t = 2$ gilt:
+$
+"dy"/"dt" = -1/2 dot y dot 4 = -2y.
+$
+
+Für $t = 3$ gilt:
+$
+"dy"/"dt" = -1/2 dot y dot 9 = -9/2 dot y.
+$
+
+Daraus ergibt sich die Tabelle:
+
+#table(
+  columns: 5,
+  align: center,
+  stroke: 0.6pt,
+  inset: 6pt,
+  table.header(
+    [*$"dy"/"dt"$*], [*$t_0 = 0$*], [*$t_1 = 1$*], [*$t_2 = 2$*], [*$t_3 = 3$*]
+  ),
+
+  [*$y_0 = 0$*], [$0$], [$0$], [$0$], [$0$],
+  [*$y_1 = 1$*], [$0$], [$-1/2$], [$-2$], [$-9/2$],
+  [*$y_2 = 2$*], [$0$], [$-1$], [$-4$], [$-9$],
+  [*$y_3 = 3$*], [$0$], [$-3/2$], [$-6$], [$-27/2$],
+)
+
+*Interpretation:*
+- Entlang der Linie $y = 0$ sind alle Steigungen $0$
+- Bei $t = 0$ sind ebenfalls alle Steigungen $0$
+- Für $t > 0$ und $y > 0$ sind die Steigungen negativ
+- Je grösser $t$ und $y$, desto steiler fällt die Lösung
+
+*Lösungskurve zum Anfangswert $y(0) = 3$:*
+
+Die DGL ist trennbar:
+$
+1/y "dy" = -1/2 t^2 "dt".
+$
+
+Integrieren liefert:
+$
+ln abs(y) = -t^3/6 + C.
+$
+
+Also:
+$
+y(t) = C e^(-t^3/6).
+$
+
+Mit $y(0) = 3$ folgt:
+$
+y(t) = 3 e^(-t^3/6).
+$
+
+Das ist die Lösungskurve, die im Richtungsfeld durch den Punkt $(0, 3)$ verläuft.
+]
+#image("../Assets/image1.png")
+#colbreak()
+#colbreak()
+== Klassisches Euler-Verfahren
 
 #formula[
 #math()[$
@@ -115,7 +238,6 @@ $]
 #math()[$
 y_(i+1) = y_i + h f(x_i, y_i)
 $]
-]
 ]
 
 #steps()[
@@ -130,7 +252,7 @@ $]
 #example()[
 *Beispiel:* Gegeben ist das Anfangswertproblem
 $
-y'(t) = t^2 + 0.1 y(t), quad y(-1.5)=0
+f(t,y(t))= y'(t) = t^2 + 0.1 y(t), quad y(-1.5)=0
 $
 auf dem Intervall $[-1.5, 1.5]$ mit $n=5$.
 
@@ -157,7 +279,7 @@ $
 
 Neue Stelle:
 $
-t_1 = -0.9
+t_1 = t_0 + h  = -0.9
 $
 
 *Lösung nach dem ersten Schritt:* \
@@ -166,30 +288,19 @@ $
 $
 ]
 
-#remark()[
-Das Euler-Verfahren ist einfach, aber meist relativ ungenau. Es benutzt nur eine einzige Steigungsinformation.
-]
-
+#colbreak()
 == Mittelpunkt-Verfahren
 
 #definition()[
-Das Mittelpunkt-Verfahren benutzt zuerst einen halben Euler-Schritt zum Mittelpunkt und verwendet dort die Steigung für den ganzen Schritt.
+Das Mittelpunkt-Verfahren benutzt zuerst einen halben Euler-Schritt zum Mittelpunkt und verwendet dortige Steigung.
 
 #formula[
 #math()[$
-x_(h/2) = x_i + frac(h, 2)
+x_(h/2) = x_i + frac(h, 2)"        " y_(h/2) = y_i + frac(h, 2) f(x_i, y_i)
 $]
 
 #math()[$
-y_(h/2) = y_i + frac(h, 2) f(x_i, y_i)
-$]
-
-#math()[$
-x_(i+1) = x_i + h
-$]
-
-#math()[$
-y_(i+1) = y_i + h f(x_(h/2), y_(h/2))
+x_(i+1) = x_i + h"        "y_(i+1) = y_i + h f(x_(h/2), y_(h/2))
 $]
 ]
 ]
@@ -237,10 +348,11 @@ $
 Das Mittelpunkt-Verfahren ist genauer als Euler und hat Ordnung $p=2$.
 ]
 
+#colbreak()
 == Modifiziertes Euler-Verfahren
 
 #definition()[
-Beim modifizierten Euler-Verfahren werden zwei Steigungen gemittelt: eine am Startpunkt und eine nach einem ganzen Euler-Prognoseschritt.
+Beim modifizierten Euler mittelt man zwei Steigungen: am *Startpunkt* und nach einem *ganzen Euler-Prognoseschritt*.
 
 #formula[
 #math()[$
@@ -301,11 +413,15 @@ $
 $
 ]
 
-#remark()[
-Das modifizierte Euler-Verfahren wird oft auch Heun-Verfahren genannt. Im Skript wird betont, dass es hier in der Literatur Inkonsistenzen gibt. Die Ordnung ist ebenfalls $p=2$.
-]
-
 == Fehlerordnung: Konsistenz und Konvergenz
+
+#variables()[
+  $h$: Schrittweite
+
+  $p$: Konsistenz- bzw. Konvergenzordnung
+
+  $C$: Konstante, die nicht von $h$ abhängt
+]
 
 #definition()[
 Ein Verfahren hat Konsistenzordnung bzw. Konvergenzordnung $p$, wenn der Fehler sich wie eine Konstante mal $h^p$ verhält.
@@ -320,11 +436,12 @@ $]
 Je grösser $p$, desto schneller sinkt der Fehler bei kleiner werdendem $h$.
 ]
 
+
 #definition()[
 Für das Euler-Verfahren gilt laut Skript für den lokalen Fehler:
 #formula[
 #math()[$
-phi(x_n, h) = frac(h^2, 2) y''(z)
+phi(x_n, h) = h^2 / 2 dot y''(z)
 $]
 ]
 wobei $z in [x_n, x_n+h]$.
@@ -332,7 +449,7 @@ wobei $z in [x_n, x_n+h]$.
 Für den globalen Fehler gilt:
 #formula[
 #math()[$
-abs(y(x_n)-y_n) <= frac(h, 2) max_(x in [x_0, x_n]) abs(y''(x)) dot C~
+abs(y(x_n)-y_n) <= h / 2 dot max_(x in [x_0, x_n]) abs(y''(x)) dot C~
 $]
 ]
 ]
@@ -352,10 +469,7 @@ p = 4 " für klassisches Runge-Kutta"
 $]
 ]
 
-
-#remark()[
-Im log-log-Diagramm entspricht die Konvergenzordnung der Steigung der Geraden.
-]
+#colbreak()
 
 == Klassisches vierstufiges Runge-Kutta-Verfahren
 

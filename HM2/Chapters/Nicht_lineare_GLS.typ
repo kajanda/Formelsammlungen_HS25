@@ -132,12 +132,72 @@ $]
 3. Danach an der gefragten Stelle auswerten
 ]
 
+#formula()[
+*Ableitungsregeln:*
+
+*Konstantenregel:*
+#math()[$ (c)' = 0 $]
+
+*Faktorregel:*
+#math()[$ (c dot f(x))' = c dot f'(x) $]
+
+*Summenregel:*
+#math()[$ (f(x) plus.minus g(x))' = f'(x) plus.minus g'(x) $]
+
+*Potenzregel:*
+#math()[$ (x^n)' = n dot x^(n-1) $]
+
+*Produktregel:*
+#math()[$ (f(x) dot g(x))' = f'(x) g(x) + f(x) g'(x) $]
+
+*Quotientenregel:*
+#math()[$ (frac(f(x), g(x)))' = frac(f'(x) g(x) - f(x) g'(x), g(x)^2) $]
+
+*Kettenregel:*
+#math()[$ (f(g(x)))' = f'(g(x)) dot g'(x) $]
+
+*Umkehrregel:*
+#math()[$ (f^(-1))'(y) = frac(1, f'(x)) quad "mit" quad y = f(x) $]
+]
+
+#formula()[
+*Elementare Ableitungen:*
+
+#table(
+  columns: 2,
+  align: left,
+  stroke: none,
+  [*$f(x)$*], [*$f'(x)$*],
+  [$x^n$], [$n dot x^(n-1)$],
+  [$e^x$], [$e^x$],
+  [$a^x$], [$a^x dot ln(a)$],
+  [$ln(x)$], [$frac(1, x)$],
+  [$log_a(x)$], [$frac(1, x dot ln(a))$],
+  [$sin(x)$], [$cos(x)$],
+  [$cos(x)$], [$-sin(x)$],
+  [$tan(x)$], [$frac(1, cos^2(x)) = 1 + tan^2(x)$],
+  [$cot(x)$], [$-frac(1, sin^2(x))$],
+  [$arcsin(x)$], [$frac(1, sqrt(1 - x^2))$],
+  [$arccos(x)$], [$-frac(1, sqrt(1 - x^2))$],
+  [$arctan(x)$], [$frac(1, 1 + x^2)$],
+  [$sinh(x)$], [$cosh(x)$],
+  [$cosh(x)$], [$sinh(x)$],
+  [$tanh(x)$], [$frac(1, cosh^2(x))$],
+  [$sqrt(x)$], [$frac(1, 2 sqrt(x))$],
+  [$frac(1, x)$], [$-frac(1, x^2)$],
+)
+]
+
 #example()[
 *Beispiel:*
 
 *Gegeben:*
 $
 f(x,y) = 3x y^2 + ln(x^3 y^2)
+$
+an der Stelle:
+$
+(-1,1)
 $
 
 *x-Ableitung wählen:*
@@ -188,7 +248,8 @@ mat(
   dots, dots, dots, dots;
   frac(partial f_m, partial x_1)(x), frac(partial f_m, partial x_2)(x), dots, frac(partial f_m, partial x_n)(x)
 )
-$]
+$
+]
 
 *Linearisierung in $x^(0)$:*
 #math()[$
@@ -215,7 +276,7 @@ f(x_1, x_2) = vec(
 )
 $
 
-*Partielle Ableitungen bestimmen:*
+*Partielle Ableitungen bestimmen (Jacobi-Matrix):*
 $
 D f(x_1, x_2) = mat(
   2x_1, 1;
@@ -261,6 +322,9 @@ Nahe bei $x^(0)$ gilt:
 $
 f(x) approx g(x).
 $
+
+Je weiter weg man sich vom Punkt $x^0$ entfernt umso (ungenauer/nichtsaussagender) wird die linearisierung
+
 ]
 
 == Problemstellung
@@ -272,19 +336,19 @@ f: RR^n -> RR^n,
 $
 also ein Vektor
 $
-x^* in RR^n
+arrow(x) in RR^n
 $
 mit
 $
-f(x^*) = 0.
+f(arrow(x)) = 0.
 $
 ]
 
 #formula()[
 #math()[$
-f(x^*) = 0
+f(arrow(x)) = 0
 quad <=> quad
-f_i(x^*) = 0
+f_i(arrow(x)) = 0
 quad "für alle" quad i = 1, dots, n
 $]
 ]
@@ -308,6 +372,8 @@ $]
 folgt mit
 #math()[$
 delta^(n) = x^(n+1) - x^(n)
+:= -(D f(x^"(n)"))^"-1" * f(x^"(n)")
+
 $]
 
 die Newton-Gleichung
@@ -396,7 +462,7 @@ $
 === Quadratisch-konvergentes Newton-Verfahren
 
 #definition()[
-Liegt der Startvektor nahe genug bei einer Nullstelle $x^*$, ist $D f(x^*)$ regulär und ist $f$ genügend glatt, dann konvergiert das Newton-Verfahren lokal *quadratisch*.
+Liegt der Startvektor nahe genug bei einer Nullstelle $x^*$, ist $D f(x^*)$ regulär und ist $f$ genügend glatt (3 mal stetig differenzierbar), dann konvergiert das Newton-Verfahren lokal *quadratisch*.
 ]
 
 #variables()[
@@ -406,6 +472,108 @@ Liegt der Startvektor nahe genug bei einer Nullstelle $x^*$, ist $D f(x^*)$ regu
 - $norm(x^(n+1) - x^(n)) <= norm(x^(n+1)) epsilon$
 - $norm(f(x^(n+1))) <= epsilon$
 ]
+
+
+=== Quadratisch-konvergentes Newton-Verfahren
+
+#steps[
+*Vorgehen beim quadratisch-konvergenten Newton-Verfahren:*
+1. Startvektor $x^(0)$ nahe bei der gesuchten Nullstelle wählen
+2. Funktionswert $f(x^(n))$ und Jacobi-Matrix $D f(x^(n))$ berechnen
+3. Das lineare Gleichungssystem
+   $
+   D f(x^(n)) delta^(n) = -f(x^(n))
+   $
+   nach $delta^(n)$ lösen
+4. Neuen Näherungsvektor mit
+   $
+   x^(n+1) = x^(n) + delta^(n)
+   $
+   berechnen
+5. Abbrechen, sobald Abbruchbedingung erreicht ist
+]
+
+
+#example[
+*Beispiel:*
+
+Gegeben ist
+$
+f(x_1, x_2) =
+mat(
+  2x_1 + 4x_2;
+  4x_1 + 8x_2^3
+)
+$
+und gesucht ist die Lösung von
+$
+f(x_1, x_2) = mat(0; 0).
+$
+
+Die Jacobi-Matrix ist
+$
+D f(x_1, x_2) =
+mat(
+  2, 4;
+  4, 24x_2^2
+).
+$
+
+$x^(0)$ wählen:
+$
+x^(0) = mat(4; 2)
+$
+
+$f(x^(0))$ berechnen:
+$
+f(4,2) = mat(16; 80)
+$
+
+$D f(x^(0))$ berechnen:
+$
+D f(4,2) = mat(
+  2, 4;
+  4, 96
+)
+$
+
+Newton-Korrektur $delta^(0)$ bestimmen:
+$
+mat(
+  2, 4;
+  4, 96
+)
+delta^(0) = -mat(16; 80)
+$
+
+Lösen ergibt:
+$
+delta^(0) = -mat(76/11; 6/11)
+$
+
+Neuen Näherungsvektor berechnen:
+$
+x^(1) = x^(0) + delta^(0)
+= mat(4; 2) - mat(76/11; 6/11)
+= mat(-32/11; 16/11)
+$
+
+Also:
+$
+x^(1) approx mat(-2.909; 1.455)
+$
+
+Die Iteration konvergiert gegen
+$
+mat(-2; 1).
+$
+]
+
+#remark()[
+*Merke:*
+Die Newton-Iteration ist lokal sehr schnell, benötigt aber einen guten Startvektor und eine invertierbare Jacobi-Matrix.
+]
+
 
 === Vereinfachtes Newton-Verfahren
 
@@ -532,7 +700,7 @@ $
 
 *Dämpfung testen* ($k_"max" = 4$):
 - $k = 0$: $x^(0) + delta^(0) approx -3.5357$, $|f| approx 1.2952 > 1.1071$ ✗
-- $k = 1$: $x^(0) + delta^(0) \/ 2 approx -0.7679$, $|f| approx 0.6550 < 1.1071$ ✓
+- $k = 1$: $x^(0) + delta^(0) \/ 2 approx -0.7679$, $|f| approx 0.6550 < 1.1071$
 
 Das kleinste passende $k$ ist also $k = 1$.
 
