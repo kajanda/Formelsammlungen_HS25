@@ -387,12 +387,22 @@ $
 f(x)=1/x, quad [a,b]=[2,4]
 $
 
-Erste Spalte aus der summierten Trapezregel:
+Erste Spalte aus der summierten Trapezregel $T_(j 0)=T_f (h_j)$ mit den Schrittweiten $h_j=(b-a)/2^j$:
 $
-T_(00)=0.75, quad
-T_(10)=0.7083333, quad\
-T_(20)=0.6970238, quad
-T_(30)=0.6941218
+h_0=2, quad h_1=1, quad h_2=0.5, quad h_3=0.25
+$
+
+Dabei gilt allgemein
+$
+T_f (h_j)=h_j (frac(f(a) + f(b), 2) + sum_(i=1)^(2^j-1) f(a+i h_j) )
+$
+
+und damit
+$
+T_(00)=T_f (2)=0.75, quad
+T_(10)=T_f (1)=0.7083333, quad\
+T_(20)=T_f (0.5)=0.6970238, quad
+T_(30)=T_f (0.25)=0.6941218
 $
 
 Nun extrapolieren:
@@ -437,15 +447,4 @@ Die zweite Spalte der Romberg-Tafel entspricht der Simpson-Regel. Insbesondere g
 $
 T_(01)=S_f
 $.
-]
-
-== Merkpunkte
-
-#steps()[
-*Was du für Prüfungen sicher können solltest:*
-1. Rechteck-, Trapez- und Simpson-Regel direkt anwenden
-2. Summierte Formeln mit gegebener Schrittweite $h$ oder Intervallzahl $n$ aufstellen
-3. Fehlerabschätzungen korrekt einsetzen
-4. Gauss-Formeln $G_1$, $G_2$, $G_3$ anwenden
-5. Eine Romberg-Tafel schrittweise ausfüllen
 ]
